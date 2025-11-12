@@ -15,6 +15,13 @@ class AppColors {
   static const Color successGreen = Color(0xFF388E3C);
   static const Color warningOrange = Color(0xFFFF9800);
   static const Color infoBlue = Color(0xFF1976D2);
+  
+  // Dark Mode Colors
+  static const Color darkBackground = Color(0xFF121212);
+  static const Color darkSurface = Color(0xFF1E1E1E);
+  static const Color darkCard = Color(0xFF2C2C2C);
+  static const Color darkText = Color(0xFFE0E0E0);
+  static const Color darkTextSecondary = Color(0xFFB0B0B0);
 }
 
 class AppTextStyles {

@@ -3,7 +3,9 @@ import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/product_provider.dart';
 import '../../providers/order_provider.dart';
+import '../../models/order_model.dart';
 import '../../utils/constants.dart';
+import '../../utils/helpers.dart';
 import 'seller_products_screen.dart';
 import 'seller_orders_screen.dart';
 import 'add_product_screen.dart';
@@ -111,7 +113,7 @@ class _SellerHomeScreenState extends State<SellerHomeScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Hello, ${user?.name.split(' ').first ?? 'Seller'}!',
+                      'Hello, ${user != null && user.name.isNotEmpty ? user.name.split(' ').first : 'Seller'}!',
                       style: AppTextStyles.heading2,
                     ),
                     Text(
@@ -254,7 +256,7 @@ class _SellerHomeScreenState extends State<SellerHomeScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Order #${order.id.substring(0, 8)}',
+                                  'Order #${order.id.length >= 8 ? order.id.substring(0, 8) : order.id}',
                                   style: AppTextStyles.bodyMedium.copyWith(
                                     fontWeight: FontWeight.bold,
                                   ),

@@ -101,9 +101,22 @@ class _SellerOrdersScreenState extends State<SellerOrdersScreen> {
           children: [
             const Text('Select a rider to deliver this order:'),
             const SizedBox(height: AppSpacing.md),
-            ...availableRiders.map((rider) => ListTile(
+            if (availableRiders.isEmpty)
+              Container(
+                padding: const EdgeInsets.all(AppSpacing.md),
+                decoration: BoxDecoration(
+                  color: AppColors.lightGrey,
+                  borderRadius: BorderRadius.circular(AppBorderRadius.md),
+                ),
+                child: const Text(
+                  'No available riders at the moment. Please try again later.',
+                  textAlign: TextAlign.center,
+                ),
+              )
+            else
+              ...availableRiders.map((rider) => ListTile(
                   leading: CircleAvatar(
-                    child: Text(rider.name[0]),
+                    child: Text(rider.name.isNotEmpty ? rider.name[0] : '?'),
                   ),
                   title: Text(rider.name),
                   subtitle:
