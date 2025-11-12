@@ -1,5 +1,54 @@
 enum OrderStatus { pending, confirmed, pickupReady, inTransit, delivered, cancelled }
 
+class OrderTracking {
+  final String id;
+  final String orderId;
+  final OrderStatus status;
+  final String description;
+  final String? location;
+  final DateTime timestamp;
+  final String? riderNote;
+
+  OrderTracking({
+    required this.id,
+    required this.orderId,
+    required this.status,
+    required this.description,
+    this.location,
+    required this.timestamp,
+    this.riderNote,
+  });
+
+  factory OrderTracking.fromJson(Map<String, dynamic> json) {
+    return OrderTracking(
+      id: json['id'] ?? '',
+      orderId: json['orderId'] ?? '',
+      status: OrderStatus.values.firstWhere(
+        (e) => e.toString() == 'OrderStatus.${json['status']}',
+        orElse: () => OrderStatus.pending,
+      ),
+      description: json['description'] ?? '',
+      location: json['location'],
+      timestamp: json['timestamp'] != null
+          ? DateTime.parse(json['timestamp'])
+          : DateTime.now(),
+      riderNote: json['riderNote'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'orderId': orderId,
+      'status': status.toString().split('.').last,
+      'description': description,
+      'location': location,
+      'timestamp': timestamp.toIso8601String(),
+      'riderNote': riderNote,
+    };
+  }
+}
+
 class OrderModel {
   final String id;
   final String buyerId;
@@ -17,6 +66,8 @@ class OrderModel {
   final DateTime createdAt;
   final DateTime? deliveredAt;
   final String deliveryType;
+  final List<OrderTracking> trackingHistory;
+  final String? trackingCode;
 
   OrderModel({
     required this.id,
@@ -35,6 +86,8 @@ class OrderModel {
     required this.createdAt,
     this.deliveredAt,
     this.deliveryType = 'okada',
+    this.trackingHistory = const [],
+    this.trackingCode,
   });
 
   factory OrderModel.fromJson(Map<String, dynamic> json) {
@@ -64,6 +117,10 @@ class OrderModel {
           ? DateTime.parse(json['deliveredAt'])
           : null,
       deliveryType: json['deliveryType'] ?? 'okada',
+      trackingHistory: (json['trackingHistory'] as List? ?? [])
+          .map((tracking) => OrderTracking.fromJson(tracking))
+          .toList(),
+      trackingCode: json['trackingCode'],
     );
   }
 
@@ -85,6 +142,8 @@ class OrderModel {
       'createdAt': createdAt.toIso8601String(),
       'deliveredAt': deliveredAt?.toIso8601String(),
       'deliveryType': deliveryType,
+      'trackingHistory': trackingHistory.map((tracking) => tracking.toJson()).toList(),
+      'trackingCode': trackingCode,
     };
   }
 }

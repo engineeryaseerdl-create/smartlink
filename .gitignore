@@ -3,6 +3,7 @@ node_modules/
 
 # Flutter/Dart specific
 .dart_tool/
+.flutter-plugins
 .flutter-plugins-dependencies
 .packages
 .pub-cache/
@@ -10,6 +11,20 @@ node_modules/
 build/
 .gradle/
 .android/
+.ios/
+.symlinks/
+.fvm/
+flutter_*.log
+.flutter-plugins-dependencies
+
+# Build directories for all platforms
+build/
+android/app/build/
+ios/build/
+macos/build/
+windows/build/
+linux/build/
+web/build/
 
 # IDE/Editor files
 .vscode/
@@ -49,3 +64,14 @@ lcov.info
 *.swp
 *.swo
 *~
+
+# Large executable files
+*.exe
+acli.exe
+
+# Cache files
+*.cache
+*.dill
+*.dill.track.dill
+*.incremental.dill
+*.dill.deps

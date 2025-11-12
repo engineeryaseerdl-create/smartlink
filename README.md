@@ -4,33 +4,6 @@
 
 ## Overview
 
-SmartLink is a comprehensive Flutter mobile application that connects buyers, sellers, and transporters (Okadas & Cars) across Nigeria. The app facilitates e-commerce transactions and local/interstate delivery services.
-
-## Features
-
-### 🛒 For Buyers
-- Browse products from various categories (Groceries, Electronics, Cars, Phones, etc.)
-- Search and filter products
-- Place orders with real-time tracking
-- View order history and status
-- Rate sellers and riders
-
-### 🏪 For Sellers
-- List and manage products
-- Track and manage customer orders
-- Assign nearby riders for deliveries
-- View sales dashboard and analytics
-- Upload product images and descriptions
-
-### 🏍️ For Riders (Okada & Car)
-- View assigned deliveries
-- Accept and manage delivery requests
-- Track earnings
-- Update delivery status
-- View delivery history
-
-## Project Structure
-
 ```
 lib/
 ├── models/           # Data models (User, Product, Order, Rider)

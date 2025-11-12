@@ -16,6 +16,11 @@ class AppColors {
   static const Color warningOrange = Color(0xFFFF9800);
   static const Color infoBlue = Color(0xFF1976D2);
   
+  // Header Gradient Colors
+  static const Color headerGradientStart = Color(0xFF00A86B);
+  static const Color headerGradientEnd = Color(0xFF008C5A);
+  static const Color headerOverlay = Color(0x1A000000);
+  
   // Dark Mode Colors
   static const Color darkBackground = Color(0xFF121212);
   static const Color darkSurface = Color(0xFF1E1E1E);
@@ -88,4 +93,75 @@ class AppConstants {
   static const String appName = 'SmartLink';
   static const String appTagline = 'Linking Buyers, Sellers & Riders Across Nigeria';
   static const int splashDuration = 2;
+}
+
+// Animation Constants
+class AppAnimations {
+  static const Duration fast = Duration(milliseconds: 200);
+  static const Duration medium = Duration(milliseconds: 300);
+  static const Duration slow = Duration(milliseconds: 500);
+  static const Duration pageTransition = Duration(milliseconds: 350);
+  
+  static const Curve defaultCurve = Curves.easeInOut;
+  static const Curve bounceIn = Curves.elasticIn;
+  static const Curve bounceOut = Curves.elasticOut;
+  static const Curve slideIn = Curves.decelerate;
+}
+
+// Responsive breakpoints
+class AppBreakpoints {
+  static const double mobile = 480;
+  static const double tablet = 768;
+  static const double desktop = 1024;
+  static const double largeDesktop = 1440;
+}
+
+// Responsive utilities
+class ResponsiveUtils {
+  static bool isMobile(BuildContext context) {
+    return MediaQuery.of(context).size.width < AppBreakpoints.tablet;
+  }
+  
+  static bool isTablet(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    return width >= AppBreakpoints.tablet && width < AppBreakpoints.desktop;
+  }
+  
+  static bool isDesktop(BuildContext context) {
+    return MediaQuery.of(context).size.width >= AppBreakpoints.desktop;
+  }
+  
+  static bool isLargeDesktop(BuildContext context) {
+    return MediaQuery.of(context).size.width >= AppBreakpoints.largeDesktop;
+  }
+  
+  static double getResponsivePadding(BuildContext context) {
+    if (isDesktop(context)) return AppSpacing.xxl;
+    if (isTablet(context)) return AppSpacing.lg;
+    return AppSpacing.md;
+  }
+  
+  static int getGridCrossAxisCount(BuildContext context) {
+    if (isLargeDesktop(context)) return 6;
+    if (isDesktop(context)) return 4;
+    if (isTablet(context)) return 3;
+    return 2;
+  }
+  
+  static double getMaxContentWidth(BuildContext context) {
+    if (isDesktop(context)) return 1200;
+    return MediaQuery.of(context).size.width;
+  }
+  
+  static EdgeInsets getResponsivePagePadding(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    if (isDesktop(context)) {
+      final horizontalPadding = (screenWidth - getMaxContentWidth(context)) / 2;
+      return EdgeInsets.symmetric(
+        horizontal: horizontalPadding.clamp(AppSpacing.xl, AppSpacing.xxl * 2),
+        vertical: AppSpacing.lg,
+      );
+    }
+    return EdgeInsets.all(getResponsivePadding(context));
+  }
 }
