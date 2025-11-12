@@ -29,9 +29,10 @@ class OrderDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Order #${order.id.substring(0, 8)}'),
+        title: Text('Order #${order.id.length >= 8 ? order.id.substring(0, 8) : order.id}'),
         backgroundColor: AppColors.primaryGreen,
         foregroundColor: AppColors.white,
+        iconTheme: const IconThemeData(color: AppColors.white),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(AppSpacing.lg),

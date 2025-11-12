@@ -149,7 +149,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
+                    const Text(
                       "Don't have an account? ",
                       style: AppTextStyles.bodyMedium,
                     ),
@@ -176,31 +176,31 @@ class _LoginScreenState extends State<LoginScreen> {
                     color: AppColors.lightGreen,
                     borderRadius: BorderRadius.circular(AppBorderRadius.md),
                   ),
-                  child: Column(
+                  child: const Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
+                      Text(
                         'Demo Accounts:',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 14,
                         ),
                       ),
-                      const SizedBox(height: AppSpacing.sm),
-                      const Text(
+                      SizedBox(height: AppSpacing.sm),
+                      Text(
                         'Buyer: buyer@test.com',
                         style: TextStyle(fontSize: 12),
                       ),
-                      const Text(
+                      Text(
                         'Seller: seller@test.com',
                         style: TextStyle(fontSize: 12),
                       ),
-                      const Text(
+                      Text(
                         'Rider: rider@test.com',
                         style: TextStyle(fontSize: 12),
                       ),
-                      const SizedBox(height: AppSpacing.xs),
-                      const Text(
+                      SizedBox(height: AppSpacing.xs),
+                      Text(
                         'Password: any password',
                         style: TextStyle(
                           fontSize: 12,

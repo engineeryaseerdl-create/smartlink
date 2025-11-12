@@ -41,6 +41,7 @@ class AuthService {
       role: role,
       location: location,
       isVerified: false,
+      createdAt: DateTime.now(),
     );
 
     final prefs = await SharedPreferences.getInstance();

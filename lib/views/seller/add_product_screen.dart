@@ -23,8 +23,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
   final _priceController = TextEditingController();
   final _stockController = TextEditingController();
   ProductCategory _selectedCategory = ProductCategory.groceries;
-  String _imageUrl =
-      'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg';
+  final ImagePicker _picker = ImagePicker();
+  List<File> _selectedImages = [];
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -35,11 +36,112 @@ class _AddProductScreenState extends State<AddProductScreen> {
     super.dispose();
   }
 
-  void _handleAddProduct() {
+  Future<void> _pickImages() async {
+    try {
+      final List<XFile> images = await _picker.pickMultiImage(
+        maxWidth: 1024,
+        maxHeight: 1024,
+        imageQuality: 85,
+      );
+      
+      if (images.isNotEmpty) {
+        setState(() {
+          _selectedImages = images.map((xfile) => File(xfile.path)).toList();
+        });
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error picking images: $e'),
+          backgroundColor: AppColors.errorRed,
+        ),
+      );
+    }
+  }
+
+  Future<void> _takePicture() async {
+    try {
+      final XFile? image = await _picker.pickImage(
+        source: ImageSource.camera,
+        maxWidth: 1024,
+        maxHeight: 1024,
+        imageQuality: 85,
+      );
+      
+      if (image != null) {
+        setState(() {
+          _selectedImages.add(File(image.path));
+        });
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error taking picture: $e'),
+          backgroundColor: AppColors.errorRed,
+        ),
+      );
+    }
+  }
+
+  void _removeImage(int index) {
+    setState(() {
+      _selectedImages.removeAt(index);
+    });
+  }
+
+  void _showImageSourceDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Select Image Source'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.photo_library),
+              title: const Text('Gallery'),
+              onTap: () {
+                Navigator.pop(context);
+                _pickImages();
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.camera_alt),
+              title: const Text('Camera'),
+              onTap: () {
+                Navigator.pop(context);
+                _takePicture();
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _handleAddProduct() async {
     if (!_formKey.currentState!.validate()) return;
+    
+    if (_selectedImages.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please add at least one product image'),
+          backgroundColor: AppColors.warningOrange,
+        ),
+      );
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+    });
 
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     final user = authProvider.currentUser!;
+
+    // For now, we'll use the file paths as image URLs
+    // In a real app, you'd upload these to a server/cloud storage
+    final imageUrls = _selectedImages.map((file) => file.path).toList();
 
     final product = ProductModel(
       id: 'prod_${DateTime.now().millisecondsSinceEpoch}',
@@ -50,12 +152,17 @@ class _AddProductScreenState extends State<AddProductScreen> {
       sellerId: user.id,
       sellerName: user.name,
       sellerLocation: user.location ?? '',
-      images: [_imageUrl],
+      images: imageUrls,
       stockQuantity: int.parse(_stockController.text),
       createdAt: DateTime.now(),
     );
 
     context.read<ProductProvider>().addProduct(product);
+    
+    setState(() {
+      _isLoading = false;
+    });
+    
     Navigator.pop(context);
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
@@ -80,6 +187,119 @@ class _AddProductScreenState extends State<AddProductScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Image Upload Section
+              Text('Product Images',
+                  style: AppTextStyles.bodyMedium
+                      .copyWith(fontWeight: FontWeight.w600)),
+              const SizedBox(height: AppSpacing.sm),
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(AppSpacing.md),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).brightness == Brightness.dark 
+                      ? AppColors.darkCard 
+                      : AppColors.lightGrey,
+                  borderRadius: BorderRadius.circular(AppBorderRadius.md),
+                  border: Border.all(
+                    color: _selectedImages.isEmpty 
+                        ? Colors.grey.withOpacity(0.3)
+                        : AppColors.primaryGreen.withOpacity(0.3),
+                    width: 1,
+                  ),
+                ),
+                child: Column(
+                  children: [
+                    if (_selectedImages.isEmpty) ...[
+                      Icon(
+                        Icons.add_a_photo,
+                        size: 48,
+                        color: Colors.grey.shade600,
+                      ),
+                      const SizedBox(height: AppSpacing.sm),
+                      Text(
+                        'Add product images',
+                        style: AppTextStyles.bodyMedium.copyWith(
+                          color: Colors.grey.shade600,
+                        ),
+                      ),
+                      const SizedBox(height: AppSpacing.sm),
+                      ElevatedButton.icon(
+                        onPressed: _showImageSourceDialog,
+                        icon: const Icon(Icons.add),
+                        label: const Text('Select Images'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primaryGreen,
+                          foregroundColor: AppColors.white,
+                        ),
+                      ),
+                    ] else ...[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            '${_selectedImages.length} image(s) selected',
+                            style: AppTextStyles.bodyMedium.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.primaryGreen,
+                            ),
+                          ),
+                          TextButton.icon(
+                            onPressed: _showImageSourceDialog,
+                            icon: const Icon(Icons.add),
+                            label: const Text('Add More'),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: AppSpacing.sm),
+                      SizedBox(
+                        height: 120,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: _selectedImages.length,
+                          itemBuilder: (context, index) {
+                            return Container(
+                              margin: const EdgeInsets.only(right: AppSpacing.sm),
+                              child: Stack(
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(AppBorderRadius.md),
+                                    child: Image.file(
+                                      _selectedImages[index],
+                                      width: 120,
+                                      height: 120,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                  Positioned(
+                                    top: 4,
+                                    right: 4,
+                                    child: GestureDetector(
+                                      onTap: () => _removeImage(index),
+                                      child: Container(
+                                        padding: const EdgeInsets.all(4),
+                                        decoration: const BoxDecoration(
+                                          color: AppColors.errorRed,
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: const Icon(
+                                          Icons.close,
+                                          color: AppColors.white,
+                                          size: 16,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+              const SizedBox(height: AppSpacing.md),
               CustomTextField(
                 label: 'Product Title',
                 hint: 'Enter product title',
@@ -120,7 +340,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       .copyWith(fontWeight: FontWeight.w600)),
               const SizedBox(height: AppSpacing.sm),
               DropdownButtonFormField<ProductCategory>(
-                value: _selectedCategory,
+                initialValue: _selectedCategory,
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: AppColors.lightGrey,
@@ -143,8 +363,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
               ),
               const SizedBox(height: AppSpacing.xl),
               CustomButton(
-                text: 'Add Product',
-                onPressed: _handleAddProduct,
+                text: _isLoading ? 'Adding Product...' : 'Add Product',
+                onPressed: _isLoading ? null : () => _handleAddProduct(),
                 width: double.infinity,
               ),
             ],

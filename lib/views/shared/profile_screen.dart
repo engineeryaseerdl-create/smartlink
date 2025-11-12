@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
+import '../../providers/theme_provider.dart';
 import '../../utils/constants.dart';
 import '../auth/login_screen.dart';
+import 'settings_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -10,6 +12,7 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
+    final themeProvider = Provider.of<ThemeProvider>(context);
     final user = authProvider.currentUser;
 
     return SafeArea(
@@ -72,16 +75,18 @@ class ProfileScreen extends StatelessWidget {
                   trailing: Switch(
                     value: true,
                     onChanged: (value) {},
-                    activeColor: AppColors.primaryGreen,
+                    activeThumbColor: AppColors.primaryGreen,
                   ),
                 ),
                 ListTile(
                   leading: const Icon(Icons.dark_mode, color: AppColors.primaryGreen),
                   title: const Text('Dark Mode'),
                   trailing: Switch(
-                    value: false,
-                    onChanged: (value) {},
-                    activeColor: AppColors.primaryGreen,
+                    value: themeProvider.isDarkMode,
+                    onChanged: (value) {
+                      themeProvider.toggleTheme();
+                    },
+                    activeThumbColor: AppColors.primaryGreen,
                   ),
                 ),
               ],
@@ -90,6 +95,17 @@ class ProfileScreen extends StatelessWidget {
             _buildProfileCard(
               context,
               [
+                ListTile(
+                  leading: const Icon(Icons.settings, color: AppColors.primaryGreen),
+                  title: const Text('Settings'),
+                  trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const SettingsScreen()),
+                    );
+                  },
+                ),
                 ListTile(
                   leading: const Icon(Icons.help, color: AppColors.primaryGreen),
                   title: const Text('Help & Support'),
@@ -138,13 +154,14 @@ class ProfileScreen extends StatelessWidget {
   }
 
   Widget _buildProfileCard(BuildContext context, List<Widget> children) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: isDark ? AppColors.darkCard : AppColors.white,
         borderRadius: BorderRadius.circular(AppBorderRadius.md),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: (isDark ? Colors.white : Colors.black).withOpacity(0.05),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),

@@ -124,7 +124,7 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
                       Container(
                         width: 50,
                         height: 50,
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           color: AppColors.primaryGreen,
                           shape: BoxShape.circle,
                         ),

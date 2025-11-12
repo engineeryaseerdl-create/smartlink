@@ -225,7 +225,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
+                    const Text(
                       'Already have an account? ',
                       style: AppTextStyles.bodyMedium,
                     ),

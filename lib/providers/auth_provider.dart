@@ -79,4 +79,20 @@ class AuthProvider with ChangeNotifier {
     _currentUser = user;
     notifyListeners();
   }
+
+  Future<void> updateUserProfile(UserModel updatedUser) async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      await _authService.updateUser(updatedUser);
+      _currentUser = updatedUser;
+      _isLoading = false;
+      notifyListeners();
+    } catch (e) {
+      _isLoading = false;
+      notifyListeners();
+      rethrow;
+    }
+  }
 }

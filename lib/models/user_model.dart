@@ -8,8 +8,11 @@ class UserModel {
   final UserRole role;
   final String? location;
   final String? profileImage;
+  final String? profileImageUrl;
+  final String? bio;
   final double? rating;
   final bool isVerified;
+  final DateTime createdAt;
 
   UserModel({
     required this.id,
@@ -19,8 +22,11 @@ class UserModel {
     required this.role,
     this.location,
     this.profileImage,
+    this.profileImageUrl,
+    this.bio,
     this.rating,
     this.isVerified = false,
+    required this.createdAt,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -35,8 +41,13 @@ class UserModel {
       ),
       location: json['location'],
       profileImage: json['profileImage'],
+      profileImageUrl: json['profileImageUrl'],
+      bio: json['bio'],
       rating: json['rating']?.toDouble(),
       isVerified: json['isVerified'] ?? false,
+      createdAt: json['createdAt'] != null
+          ? DateTime.parse(json['createdAt'])
+          : DateTime.now(),
     );
   }
 
@@ -49,8 +60,11 @@ class UserModel {
       'role': role.toString().split('.').last,
       'location': location,
       'profileImage': profileImage,
+      'profileImageUrl': profileImageUrl,
+      'bio': bio,
       'rating': rating,
       'isVerified': isVerified,
+      'createdAt': createdAt.toIso8601String(),
     };
   }
 
@@ -62,8 +76,11 @@ class UserModel {
     UserRole? role,
     String? location,
     String? profileImage,
+    String? profileImageUrl,
+    String? bio,
     double? rating,
     bool? isVerified,
+    DateTime? createdAt,
   }) {
     return UserModel(
       id: id ?? this.id,
@@ -73,8 +90,11 @@ class UserModel {
       role: role ?? this.role,
       location: location ?? this.location,
       profileImage: profileImage ?? this.profileImage,
+      profileImageUrl: profileImageUrl ?? this.profileImageUrl,
+      bio: bio ?? this.bio,
       rating: rating ?? this.rating,
       isVerified: isVerified ?? this.isVerified,
+      createdAt: createdAt ?? this.createdAt,
     );
   }
 }
