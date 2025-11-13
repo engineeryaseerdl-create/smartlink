@@ -90,10 +90,21 @@ class _SplashScreenState extends State<SplashScreen>
                       ),
                     ],
                   ),
-                  child: const Icon(
-                    Icons.link,
-                    size: 60,
-                    color: AppColors.primaryGreen,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(30),
+                    child: Image.asset(
+                      'assets/images/android-chrome-192x192.png',
+                      width: 120,
+                      height: 120,
+                      fit: BoxFit.contain,
+                      errorBuilder: (context, error, stackTrace) {
+                        return const Icon(
+                          Icons.link,
+                          size: 60,
+                          color: AppColors.primaryGreen,
+                        );
+                      },
+                    ),
                   ),
                 ),
                 const SizedBox(height: AppSpacing.lg),

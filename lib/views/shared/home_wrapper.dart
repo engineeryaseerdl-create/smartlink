@@ -27,6 +27,7 @@ class HomeWrapper extends StatefulWidget {
 
 class _HomeWrapperState extends State<HomeWrapper> {
   int _selectedIndex = 0;
+  UserRole? _lastUserRole;
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +38,12 @@ class _HomeWrapperState extends State<HomeWrapper> {
       return const Scaffold(
         body: Center(child: CircularProgressIndicator()),
       );
+    }
+
+    // Reset selected index if user role changed
+    if (_lastUserRole != user.role) {
+      _selectedIndex = 0;
+      _lastUserRole = user.role;
     }
 
     if (ResponsiveUtils.isDesktop(context)) {
@@ -50,13 +57,18 @@ class _HomeWrapperState extends State<HomeWrapper> {
     final pages = _getPages(user.role);
     final sidebarItems = _getSidebarItems(user.role);
 
+    // Ensure selectedIndex is within bounds
+    if (_selectedIndex >= pages.length) {
+      _selectedIndex = 0;
+    }
+
     return ResponsiveWrapper(
       showSidebarOnDesktop: true,
       sidebar: DesktopSidebar(
         selectedIndex: _selectedIndex,
         onItemTap: (index) {
           setState(() {
-            _selectedIndex = index;
+            _selectedIndex = index.clamp(0, pages.length - 1);
           });
         },
         items: sidebarItems,

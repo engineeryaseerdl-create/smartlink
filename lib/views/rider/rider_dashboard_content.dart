@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
-import '../../providers/rider_provider.dart';
 import '../../utils/constants.dart';
+import '../../utils/helpers.dart';
 import '../../widgets/responsive_wrapper.dart';
+import '../../providers/rider_provider.dart';
 
 class RiderDashboardContent extends StatelessWidget {
   const RiderDashboardContent({super.key});
@@ -60,7 +61,7 @@ class RiderDashboardContent extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Ready to deliver, ${user?.name.split(' ').first ?? 'Rider'}!',
+                  'Ready to deliver, ${Helpers.getFirstName(user?.name, 'Rider')}!',
                   style: AppTextStyles.heading1.copyWith(
                     color: AppColors.primaryGreen,
                   ),
@@ -101,7 +102,7 @@ class RiderDashboardContent extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Hello, ${user?.name.split(' ').first ?? 'Rider'}!',
+              'Hello, ${Helpers.getFirstName(user?.name, 'Rider')}!',
               style: AppTextStyles.heading2,
             ),
             Text(

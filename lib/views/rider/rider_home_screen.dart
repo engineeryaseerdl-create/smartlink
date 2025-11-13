@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/order_provider.dart';
 import '../../utils/constants.dart';
+import '../../utils/helpers.dart';
 import '../../models/order_model.dart';
 import '../../widgets/custom_button.dart';
 import '../shared/profile_screen.dart';
@@ -70,7 +71,7 @@ class _RiderHomeScreenState extends State<RiderHomeScreen> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Hello, ${user?.name.split(' ').first ?? 'Rider'}!',
+                    Text('Hello, ${Helpers.getFirstName(user?.name, 'Rider')}!',
                         style: AppTextStyles.heading2),
                     Text('Rider Dashboard',
                         style: AppTextStyles.bodyMedium
@@ -144,18 +145,32 @@ class _RiderHomeScreenState extends State<RiderHomeScreen> {
 
   Widget _buildStatCard(String label, String value, IconData icon, Color color) {
     return Container(
-      padding: const EdgeInsets.all(AppSpacing.md),
+      padding: const EdgeInsets.all(AppSpacing.sm),
       decoration: BoxDecoration(
         color: color.withOpacity(0.1),
         borderRadius: BorderRadius.circular(AppBorderRadius.md),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, color: color, size: 32),
-          const SizedBox(height: AppSpacing.sm),
-          Text(value, style: AppTextStyles.heading2.copyWith(color: color)),
-          Text(label, style: AppTextStyles.bodySmall.copyWith(color: color)),
+          Icon(icon, color: color, size: 24),
+          const SizedBox(height: AppSpacing.xs),
+          Text(
+            value, 
+            style: AppTextStyles.bodyLarge.copyWith(
+              color: color, 
+              fontWeight: FontWeight.bold
+            ),
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          ),
+          Text(
+            label, 
+            style: AppTextStyles.bodySmall.copyWith(color: color),
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          ),
         ],
       ),
     );
@@ -182,7 +197,7 @@ class _RiderHomeScreenState extends State<RiderHomeScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Order #${delivery.id.substring(0, 8)}',
+              Text('Order #${delivery.id.length >= 8 ? delivery.id.substring(0, 8) : delivery.id}',
                   style: AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.bold)),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: 4),
@@ -322,7 +337,7 @@ class _RiderHomeScreenState extends State<RiderHomeScreen> {
                             backgroundColor: AppColors.successGreen,
                             child: Icon(Icons.done, color: AppColors.white),
                           ),
-                          title: Text('Order #${delivery.id.substring(0, 8)}'),
+                          title: Text('Order #${delivery.id.length >= 8 ? delivery.id.substring(0, 8) : delivery.id}'),
                           subtitle: Text(delivery.buyerLocation),
                           trailing: const Text('₦500',
                               style: TextStyle(

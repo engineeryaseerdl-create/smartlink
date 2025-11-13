@@ -6,7 +6,6 @@ import '../../providers/order_provider.dart';
 import '../../models/product_model.dart';
 import '../../utils/constants.dart';
 import '../../widgets/product_card.dart';
-import '../../widgets/responsive_wrapper.dart';
 import '../../widgets/animated_widgets.dart';
 import 'product_detail_screen.dart';
 

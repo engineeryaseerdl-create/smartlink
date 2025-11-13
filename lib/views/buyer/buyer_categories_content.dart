@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import '../../providers/product_provider.dart';
 import '../../models/product_model.dart';
 import '../../utils/constants.dart';
-import '../../widgets/responsive_wrapper.dart';
 
 class BuyerCategoriesContent extends StatelessWidget {
   const BuyerCategoriesContent({super.key});

@@ -72,4 +72,10 @@ class Helpers {
         return 'Other';
     }
   }
+
+  static String getFirstName(String? fullName, String defaultName) {
+    if (fullName == null || fullName.isEmpty) return defaultName;
+    final parts = fullName.split(' ');
+    return parts.isNotEmpty ? parts.first : defaultName;
+  }
 }

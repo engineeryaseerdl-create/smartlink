@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import '../../providers/order_provider.dart';
 import '../../providers/auth_provider.dart';
 import '../../utils/constants.dart';
-import '../../widgets/responsive_wrapper.dart';
 import '../../widgets/order_card.dart';
 import 'order_detail_screen.dart';
 
@@ -153,7 +152,7 @@ class BuyerOrdersContent extends StatelessWidget {
                       Expanded(
                         flex: 1,
                         child: Text(
-                          '₦${order.total.toStringAsFixed(0)}',
+                          '₦${order.totalAmount.toStringAsFixed(0)}',
                           style: AppTextStyles.heading3,
                           textAlign: TextAlign.right,
                         ),

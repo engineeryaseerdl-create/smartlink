@@ -100,7 +100,7 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Hello, ${user?.name.split(' ').first ?? 'User'}!',
+                            'Hello, ${user?.name?.split(' ').first ?? 'User'}!',
                             style: AppTextStyles.heading2,
                           ),
                           Row(

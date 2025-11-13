@@ -24,7 +24,11 @@
     "sellerId": "seller2",
     "sellerName": "Tech Hub Nigeria",
     "sellerLocation": "Computer Village, Lagos",
-    "images": ["https://images.pexels.com/photos/788946/pexels-photo-788946.jpeg"],
+    "images": [
+      "https://images.pexels.com/photos/788946/pexels-photo-788946.jpeg",
+      "https://images.pexels.com/photos/1591056/pexels-photo-1591056.jpeg",
+      "https://images.pexels.com/photos/699122/pexels-photo-699122.jpeg"
+    ],
     "rating": 4.8,
     "reviewCount": 45,
     "stockQuantity": 15,
@@ -56,7 +60,12 @@
     "sellerId": "seller2",
     "sellerName": "Tech Hub Nigeria",
     "sellerLocation": "Computer Village, Lagos",
-    "images": ["https://images.pexels.com/photos/1201996/pexels-photo-1201996.jpeg"],
+    "images": [
+      "https://images.pexels.com/photos/1201996/pexels-photo-1201996.jpeg",
+      "https://images.pexels.com/photos/1444416/pexels-photo-1444416.jpeg",
+      "https://images.pexels.com/photos/2251206/pexels-photo-2251206.jpeg",
+      "https://images.pexels.com/photos/2047905/pexels-photo-2047905.jpeg"
+    ],
     "rating": 4.6,
     "reviewCount": 34,
     "stockQuantity": 8,
@@ -72,7 +81,13 @@
     "sellerId": "seller3",
     "sellerName": "AutoMart NG",
     "sellerLocation": "Lekki, Lagos",
-    "images": ["https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg"],
+    "images": [
+      "https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg",
+      "https://images.pexels.com/photos/919073/pexels-photo-919073.jpeg",
+      "https://images.pexels.com/photos/1149137/pexels-photo-1149137.jpeg",
+      "https://images.pexels.com/photos/244206/pexels-photo-244206.jpeg",
+      "https://images.pexels.com/photos/358070/pexels-photo-358070.jpeg"
+    ],
     "rating": 4.9,
     "reviewCount": 12,
     "stockQuantity": 1,
@@ -104,7 +119,11 @@
     "sellerId": "seller4",
     "sellerName": "Fashion Palace",
     "sellerLocation": "Oshodi, Lagos",
-    "images": ["https://images.pexels.com/photos/1598505/pexels-photo-1598505.jpeg"],
+    "images": [
+      "https://images.pexels.com/photos/1598505/pexels-photo-1598505.jpeg",
+      "https://images.pexels.com/photos/2529148/pexels-photo-2529148.jpeg",
+      "https://images.pexels.com/photos/1464625/pexels-photo-1464625.jpeg"
+    ],
     "rating": 4.3,
     "reviewCount": 56,
     "stockQuantity": 40,

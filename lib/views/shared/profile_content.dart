@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/theme_provider.dart';
 import '../../utils/constants.dart';
-import '../../widgets/responsive_wrapper.dart';
 import 'settings_screen.dart';
 
 class ProfileContent extends StatelessWidget {

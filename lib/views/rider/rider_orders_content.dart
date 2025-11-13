@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../utils/constants.dart';
-import '../../widgets/responsive_wrapper.dart';
 
 class RiderOrdersContent extends StatelessWidget {
   const RiderOrdersContent({super.key});

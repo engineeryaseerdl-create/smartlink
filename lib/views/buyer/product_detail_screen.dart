@@ -8,10 +8,24 @@ import '../../utils/constants.dart';
 import '../../utils/helpers.dart';
 import '../../widgets/custom_button.dart';
 
-class ProductDetailScreen extends StatelessWidget {
+class ProductDetailScreen extends StatefulWidget {
   final ProductModel product;
 
   const ProductDetailScreen({super.key, required this.product});
+
+  @override
+  State<ProductDetailScreen> createState() => _ProductDetailScreenState();
+}
+
+class _ProductDetailScreenState extends State<ProductDetailScreen> {
+  final PageController _pageController = PageController();
+  int _currentImageIndex = 0;
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 
   void _showOrderConfirmation(BuildContext context) {
     showModalBottomSheet(
@@ -20,7 +34,7 @@ class ProductDetailScreen extends StatelessWidget {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      builder: (context) => _OrderConfirmationSheet(product: product),
+      builder: (context) => _OrderConfirmationSheet(product: widget.product),
     );
   }
 
@@ -33,16 +47,7 @@ class ProductDetailScreen extends StatelessWidget {
             expandedHeight: 300,
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(
-              background: Image.network(
-                product.images.first,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return Container(
-                    color: AppColors.lightGrey,
-                    child: const Icon(Icons.image, size: 100),
-                  );
-                },
-              ),
+              background: _buildImageCarousel(),
             ),
           ),
           SliverToBoxAdapter(
@@ -52,7 +57,7 @@ class ProductDetailScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    product.title,
+                    widget.product.title,
                     style: AppTextStyles.heading2,
                   ),
                   const SizedBox(height: AppSpacing.sm),
@@ -61,14 +66,14 @@ class ProductDetailScreen extends StatelessWidget {
                       const Icon(Icons.star, color: AppColors.gold, size: 20),
                       const SizedBox(width: 4),
                       Text(
-                        '${product.rating} (${product.reviewCount} reviews)',
+                        '${widget.product.rating} (${widget.product.reviewCount} reviews)',
                         style: AppTextStyles.bodyMedium,
                       ),
                     ],
                   ),
                   const SizedBox(height: AppSpacing.lg),
                   Text(
-                    Helpers.formatCurrency(product.price),
+                    Helpers.formatCurrency(widget.product.price),
                     style: AppTextStyles.heading1.copyWith(
                       color: AppColors.primaryGreen,
                     ),
@@ -93,7 +98,7 @@ class ProductDetailScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              product.sellerName,
+                              widget.product.sellerName,
                               style: AppTextStyles.bodyLarge.copyWith(
                                 fontWeight: FontWeight.w600,
                               ),
@@ -107,7 +112,7 @@ class ProductDetailScreen extends StatelessWidget {
                                 ),
                                 const SizedBox(width: 4),
                                 Text(
-                                  product.sellerLocation,
+                                  widget.product.sellerLocation,
                                   style: AppTextStyles.bodyMedium.copyWith(
                                     color: AppColors.grey,
                                   ),
@@ -128,7 +133,7 @@ class ProductDetailScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: AppSpacing.sm),
                   Text(
-                    product.description,
+                    widget.product.description,
                     style: AppTextStyles.bodyLarge,
                   ),
                   const SizedBox(height: AppSpacing.md),
@@ -137,7 +142,7 @@ class ProductDetailScreen extends StatelessWidget {
                       const Icon(Icons.inventory, color: AppColors.grey),
                       const SizedBox(width: AppSpacing.sm),
                       Text(
-                        'Stock: ${product.stockQuantity} available',
+                        'Stock: ${widget.product.stockQuantity} available',
                         style: AppTextStyles.bodyMedium.copyWith(
                           color: AppColors.grey,
                         ),
@@ -169,6 +174,195 @@ class ProductDetailScreen extends StatelessWidget {
           icon: Icons.shopping_cart,
           width: double.infinity,
         ),
+      ),
+    );
+  }
+
+  Widget _buildImageCarousel() {
+    return Stack(
+      children: [
+        PageView.builder(
+          controller: _pageController,
+          onPageChanged: (index) {
+            setState(() {
+              _currentImageIndex = index;
+            });
+          },
+          itemCount: widget.product.images.length,
+          itemBuilder: (context, index) {
+            return GestureDetector(
+              onTap: () => _showImageGallery(context, index),
+              child: Image.network(
+                widget.product.images[index],
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    color: AppColors.lightGrey,
+                    child: const Icon(Icons.image, size: 100),
+                  );
+                },
+              ),
+            );
+          },
+        ),
+        // Image indicators
+        if (widget.product.images.length > 1)
+          Positioned(
+            bottom: 16,
+            left: 0,
+            right: 0,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(
+                widget.product.images.length,
+                (index) => Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 4),
+                  width: 8,
+                  height: 8,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: _currentImageIndex == index
+                        ? AppColors.white
+                        : AppColors.white.withOpacity(0.5),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        // Image counter
+        if (widget.product.images.length > 1)
+          Positioned(
+            top: 16,
+            right: 16,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                color: Colors.black.withOpacity(0.7),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Text(
+                '${_currentImageIndex + 1}/${widget.product.images.length}',
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+
+  void _showImageGallery(BuildContext context, int initialIndex) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => _ImageGalleryScreen(
+          images: widget.product.images,
+          initialIndex: initialIndex,
+          productTitle: widget.product.title,
+        ),
+      ),
+    );
+  }
+}
+
+class _ImageGalleryScreen extends StatefulWidget {
+  final List<String> images;
+  final int initialIndex;
+  final String productTitle;
+
+  const _ImageGalleryScreen({
+    required this.images,
+    required this.initialIndex,
+    required this.productTitle,
+  });
+
+  @override
+  State<_ImageGalleryScreen> createState() => _ImageGalleryScreenState();
+}
+
+class _ImageGalleryScreenState extends State<_ImageGalleryScreen> {
+  late PageController _pageController;
+  late int _currentIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentIndex = widget.initialIndex;
+    _pageController = PageController(initialPage: widget.initialIndex);
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.white),
+        title: Text(
+          widget.productTitle,
+          style: const TextStyle(color: Colors.white),
+        ),
+        actions: [
+          Container(
+            margin: const EdgeInsets.only(right: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: Colors.black.withOpacity(0.7),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Text(
+              '${_currentIndex + 1}/${widget.images.length}',
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ],
+      ),
+      body: PageView.builder(
+        controller: _pageController,
+        onPageChanged: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+        itemCount: widget.images.length,
+        itemBuilder: (context, index) {
+          return InteractiveViewer(
+            panEnabled: false,
+            boundaryMargin: const EdgeInsets.all(20),
+            minScale: 0.5,
+            maxScale: 3,
+            child: Center(
+              child: Image.network(
+                widget.images[index],
+                fit: BoxFit.contain,
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    color: AppColors.lightGrey,
+                    child: const Icon(
+                      Icons.image,
+                      size: 100,
+                      color: Colors.grey,
+                    ),
+                  );
+                },
+              ),
+            ),
+          );
+        },
       ),
     );
   }
