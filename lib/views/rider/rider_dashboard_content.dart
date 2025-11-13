@@ -191,7 +191,7 @@ class RiderDashboardContent extends StatelessWidget {
 
   Widget _buildStatCard(String label, String value, IconData icon, Color color, [bool isDesktop = false]) {
     return Container(
-      padding: EdgeInsets.all(isDesktop ? AppSpacing.md : AppSpacing.xs),
+      padding: EdgeInsets.all(isDesktop ? AppSpacing.sm : 4),
       decoration: BoxDecoration(
         color: color.withOpacity(0.1),
         borderRadius: BorderRadius.circular(AppBorderRadius.lg),
@@ -202,21 +202,30 @@ class RiderDashboardContent extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, color: color, size: isDesktop ? 28 : 20),
-          SizedBox(height: AppSpacing.xs),
-          Text(
-            value,
-            style: isDesktop
-              ? AppTextStyles.bodyLarge.copyWith(color: color, fontWeight: FontWeight.bold)
-              : AppTextStyles.bodyMedium.copyWith(color: color, fontWeight: FontWeight.bold),
-            overflow: TextOverflow.ellipsis,
-            maxLines: 1,
+          Flexible(
+            child: Icon(icon, color: color, size: isDesktop ? 24 : 16),
           ),
-          Text(
-            label,
-            style: AppTextStyles.bodySmall.copyWith(color: color),
-            overflow: TextOverflow.ellipsis,
-            maxLines: 1,
+          const SizedBox(height: 2),
+          Flexible(
+            child: Text(
+              value,
+              style: isDesktop
+                ? AppTextStyles.bodyMedium.copyWith(color: color, fontWeight: FontWeight.bold)
+                : AppTextStyles.bodySmall.copyWith(color: color, fontWeight: FontWeight.bold),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+            ),
+          ),
+          Flexible(
+            child: Text(
+              label,
+              style: TextStyle(
+                fontSize: isDesktop ? 10 : 8,
+                color: color,
+              ),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+            ),
           ),
         ],
       ),
