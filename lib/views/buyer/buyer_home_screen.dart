@@ -60,7 +60,7 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
         },
         type: BottomNavigationBarType.fixed,
         selectedItemColor: AppColors.primaryGreen,
-        unselectedItemColor: AppColors.grey,
+        unselectedItemColor: AppColors.textSecondary,
         items: [
           const BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -124,13 +124,13 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
                               const Icon(
                                 Icons.location_on,
                                 size: 16,
-                                color: AppColors.grey,
+                                color: AppColors.textSecondary,
                               ),
                               const SizedBox(width: 4),
                               Text(
                                 user?.location ?? 'Location',
                                 style: AppTextStyles.bodyMedium.copyWith(
-                                  color: AppColors.grey,
+                                  color: AppColors.textSecondary,
                                 ),
                               ),
                             ],
@@ -182,7 +182,7 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
                       hintText: 'Search products...',
                       prefixIcon: const Icon(Icons.search),
                       filled: true,
-                      fillColor: AppColors.lightGrey,
+                      fillColor: AppColors.backgroundLight,
                       border: OutlineInputBorder(
                         borderRadius:
                             BorderRadius.circular(AppBorderRadius.md),
@@ -268,13 +268,13 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
                     const Icon(
                       Icons.search_off,
                       size: 80,
-                      color: AppColors.grey,
+                      color: AppColors.mutedGreen,
                     ),
                     const SizedBox(height: AppSpacing.md),
                     Text(
                       'No products found',
                       style: AppTextStyles.bodyLarge.copyWith(
-                        color: AppColors.grey,
+                        color: AppColors.textSecondary,
                       ),
                     ),
                   ],
@@ -332,7 +332,7 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
         padding: const EdgeInsets.all(AppSpacing.sm),
         decoration: BoxDecoration(
           color:
-              isSelected ? AppColors.primaryGreen : AppColors.lightGrey,
+              isSelected ? AppColors.primaryGreen : AppColors.backgroundLight,
           borderRadius: BorderRadius.circular(AppBorderRadius.md),
         ),
         child: Column(
@@ -340,7 +340,7 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
           children: [
             Icon(
               icon,
-              color: isSelected ? AppColors.white : AppColors.darkGrey,
+              color: isSelected ? AppColors.white : AppColors.textPrimary,
               size: 32,
             ),
             const SizedBox(height: AppSpacing.xs),
@@ -349,7 +349,7 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
               textAlign: TextAlign.center,
               maxLines: 2,
               style: AppTextStyles.bodySmall.copyWith(
-                color: isSelected ? AppColors.white : AppColors.darkGrey,
+                color: isSelected ? AppColors.white : AppColors.textPrimary,
                 fontWeight: FontWeight.w600,
               ),
             ),

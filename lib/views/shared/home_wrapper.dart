@@ -35,9 +35,16 @@ class _HomeWrapperState extends State<HomeWrapper> {
     final authProvider = Provider.of<AuthProvider>(context);
     final user = authProvider.currentUser;
 
+    // If user is null, redirect to login
     if (user == null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.of(context).pushReplacementNamed('/login');
+      });
       return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
+        backgroundColor: AppColors.primaryGreen,
+        body: Center(
+          child: CircularProgressIndicator(color: AppColors.white),
+        ),
       );
     }
 

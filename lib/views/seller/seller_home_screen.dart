@@ -64,7 +64,7 @@ class _SellerHomeScreenState extends State<SellerHomeScreen> {
         },
         type: BottomNavigationBarType.fixed,
         selectedItemColor: AppColors.primaryGreen,
-        unselectedItemColor: AppColors.grey,
+        unselectedItemColor: AppColors.textSecondary,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.dashboard),

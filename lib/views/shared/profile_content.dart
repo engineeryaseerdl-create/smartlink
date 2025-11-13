@@ -35,7 +35,7 @@ class ProfileContent extends StatelessWidget {
               padding: EdgeInsets.all(ResponsiveUtils.isDesktop(context) 
                 ? AppSpacing.xl : AppSpacing.lg),
               decoration: BoxDecoration(
-                color: AppColors.white,
+                color: Theme.of(context).cardColor,
                 borderRadius: BorderRadius.circular(AppBorderRadius.lg),
                 boxShadow: [
                   BoxShadow(
@@ -46,8 +46,8 @@ class ProfileContent extends StatelessWidget {
                 ],
               ),
               child: ResponsiveUtils.isDesktop(context)
-                ? _buildDesktopUserInfo(user)
-                : _buildMobileUserInfo(user),
+                ? _buildDesktopUserInfo(context, user)
+                : _buildMobileUserInfo(context, user),
             ),
             
             SizedBox(height: ResponsiveUtils.isDesktop(context) 
@@ -61,7 +61,7 @@ class ProfileContent extends StatelessWidget {
     );
   }
 
-  Widget _buildDesktopUserInfo(user) {
+  Widget _buildDesktopUserInfo(BuildContext context, user) {
     return Row(
       children: [
         Container(
@@ -97,7 +97,7 @@ class ProfileContent extends StatelessWidget {
               Text(
                 user?.email ?? 'email@example.com',
                 style: AppTextStyles.bodyLarge.copyWith(
-                  color: AppColors.grey,
+                  color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.7),
                 ),
               ),
               const SizedBox(height: AppSpacing.xs),
@@ -121,7 +121,7 @@ class ProfileContent extends StatelessWidget {
                     Text(
                       user!.location!,
                       style: AppTextStyles.bodyMedium.copyWith(
-                        color: AppColors.grey,
+                        color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.7),
                       ),
                     ),
                   ],
@@ -134,7 +134,7 @@ class ProfileContent extends StatelessWidget {
     );
   }
 
-  Widget _buildMobileUserInfo(user) {
+  Widget _buildMobileUserInfo(BuildContext context, user) {
     return Column(
       children: [
         Container(
@@ -160,7 +160,7 @@ class ProfileContent extends StatelessWidget {
         Text(
           user?.email ?? 'email@example.com',
           style: AppTextStyles.bodyMedium.copyWith(
-            color: AppColors.grey,
+            color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.7),
           ),
           textAlign: TextAlign.center,
         ),
@@ -187,7 +187,7 @@ class ProfileContent extends StatelessWidget {
               Text(
                 user!.location!,
                 style: AppTextStyles.bodyMedium.copyWith(
-                  color: AppColors.grey,
+                  color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.7),
                 ),
               ),
             ],
@@ -211,7 +211,7 @@ class ProfileContent extends StatelessWidget {
         
         Container(
           decoration: BoxDecoration(
-            color: AppColors.white,
+            color: Theme.of(context).cardColor,
             borderRadius: BorderRadius.circular(AppBorderRadius.lg),
             boxShadow: [
               BoxShadow(
@@ -259,8 +259,14 @@ class ProfileContent extends StatelessWidget {
                 icon: Icons.logout,
                 title: 'Logout',
                 trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-                onTap: () {
-                  authProvider.logout();
+                onTap: () async {
+                  await authProvider.logout();
+                  if (context.mounted) {
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                      '/login',
+                      (route) => false,
+                    );
+                  }
                 },
                 isDestructive: true,
               ),

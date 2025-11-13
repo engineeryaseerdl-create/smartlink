@@ -25,8 +25,9 @@ class RiderOrdersContent extends StatelessWidget {
               padding: EdgeInsets.all(ResponsiveUtils.isDesktop(context) 
                 ? AppSpacing.xl * 2 : AppSpacing.xl),
               decoration: BoxDecoration(
-                color: AppColors.lightGrey,
+                color: AppColors.backgroundLight,
                 borderRadius: BorderRadius.circular(AppBorderRadius.lg),
+                border: Border.all(color: AppColors.lightGreen),
               ),
               child: Center(
                 child: Column(
@@ -34,21 +35,21 @@ class RiderOrdersContent extends StatelessWidget {
                     Icon(
                       Icons.delivery_dining_outlined,
                       size: ResponsiveUtils.isDesktop(context) ? 120 : 80,
-                      color: AppColors.grey,
+                      color: AppColors.mutedGreen,
                     ),
                     SizedBox(height: ResponsiveUtils.isDesktop(context) 
                       ? AppSpacing.lg : AppSpacing.md),
                     Text(
                       'No deliveries yet',
                       style: ResponsiveUtils.isDesktop(context)
-                        ? AppTextStyles.heading3.copyWith(color: AppColors.grey)
-                        : AppTextStyles.bodyLarge.copyWith(color: AppColors.grey),
+                        ? AppTextStyles.heading3.copyWith(color: AppColors.textPrimary)
+                        : AppTextStyles.bodyLarge.copyWith(color: AppColors.textPrimary),
                     ),
                     const SizedBox(height: AppSpacing.sm),
                     Text(
                       'Your delivery history will appear here',
                       style: AppTextStyles.bodyMedium.copyWith(
-                        color: AppColors.grey,
+                        color: AppColors.textSecondary,
                       ),
                       textAlign: TextAlign.center,
                     ),

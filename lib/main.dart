@@ -9,6 +9,9 @@ import 'providers/cart_provider.dart';
 import 'providers/theme_provider.dart';
 import 'utils/constants.dart';
 import 'views/shared/splash_screen.dart';
+import 'views/shared/onboarding_screen.dart';
+import 'views/shared/auth_wrapper.dart';
+import 'views/auth/login_screen.dart';
 
 void main() {
   runApp(const SmartLinkApp());
@@ -46,8 +49,8 @@ class SmartLinkApp extends StatelessWidget {
             elevation: 0,
             centerTitle: true,
             backgroundColor: AppColors.white,
-            foregroundColor: AppColors.darkGrey,
-            iconTheme: IconThemeData(color: AppColors.darkGrey),
+            foregroundColor: AppColors.textPrimary,
+            iconTheme: IconThemeData(color: AppColors.textPrimary),
           ),
           elevatedButtonTheme: ElevatedButtonThemeData(
             style: ElevatedButton.styleFrom(
@@ -61,7 +64,7 @@ class SmartLinkApp extends StatelessWidget {
           ),
           inputDecorationTheme: InputDecorationTheme(
             filled: true,
-            fillColor: AppColors.lightGrey,
+            fillColor: AppColors.backgroundLight,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(AppBorderRadius.md),
               borderSide: BorderSide.none,
@@ -120,7 +123,12 @@ class SmartLinkApp extends StatelessWidget {
             ),
           ),
         ),
-        home: const SplashScreen(),
+        initialRoute: '/',
+        routes: {
+          '/': (context) => const SplashScreen(),
+          '/auth': (context) => const AuthWrapper(),
+          '/login': (context) => const LoginScreen(),
+        },
         ),
       ),
     );

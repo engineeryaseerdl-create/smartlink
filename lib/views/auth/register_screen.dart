@@ -5,7 +5,6 @@ import '../../models/user_model.dart';
 import '../../utils/constants.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/custom_text_field.dart';
-import '../shared/home_wrapper.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -51,9 +50,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
       if (!mounted) return;
 
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const HomeWrapper()),
-      );
+      Navigator.of(context).pushReplacementNamed('/auth');
     } catch (e) {
       if (!mounted) return;
 

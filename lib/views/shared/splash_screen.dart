@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import '../../utils/constants.dart';
 import '../../providers/auth_provider.dart';
 import 'onboarding_screen.dart';
-import 'home_wrapper.dart';
+import 'auth_wrapper.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -48,9 +48,7 @@ class _SplashScreenState extends State<SplashScreen>
     if (!mounted) return;
 
     if (authProvider.isLoggedIn) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const HomeWrapper()),
-      );
+      Navigator.of(context).pushReplacementNamed('/auth');
     } else {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => const OnboardingScreen()),

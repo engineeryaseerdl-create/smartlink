@@ -70,7 +70,7 @@ class RiderDashboardContent extends StatelessWidget {
                 Text(
                   'Check available deliveries and manage your rides',
                   style: AppTextStyles.bodyLarge.copyWith(
-                    color: AppColors.grey,
+                    color: AppColors.textSecondary,
                   ),
                 ),
               ],
@@ -108,7 +108,7 @@ class RiderDashboardContent extends StatelessWidget {
             Text(
               'Ready for deliveries',
               style: AppTextStyles.bodyMedium.copyWith(
-                color: AppColors.grey,
+                color: AppColors.textSecondary,
               ),
             ),
           ],
@@ -258,20 +258,20 @@ class RiderDashboardContent extends StatelessWidget {
                   Icon(
                     Icons.local_shipping_outlined,
                     size: ResponsiveUtils.isDesktop(context) ? 80 : 60,
-                    color: AppColors.grey,
+                    color: AppColors.primaryGreen.withOpacity(0.6),
                   ),
                   SizedBox(height: ResponsiveUtils.isDesktop(context) 
                     ? AppSpacing.lg : AppSpacing.md),
                   Text(
                     'No available orders',
                     style: ResponsiveUtils.isDesktop(context)
-                      ? AppTextStyles.heading3.copyWith(color: AppColors.grey)
-                      : AppTextStyles.bodyLarge.copyWith(color: AppColors.grey),
+                      ? AppTextStyles.heading3.copyWith(color: AppColors.textPrimary)
+                      : AppTextStyles.bodyLarge.copyWith(color: AppColors.textPrimary),
                   ),
                   const SizedBox(height: AppSpacing.sm),
                   Text(
                     'Check back later for delivery opportunities',
-                    style: AppTextStyles.bodyMedium.copyWith(color: AppColors.grey),
+                    style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textSecondary),
                     textAlign: TextAlign.center,
                   ),
                 ],

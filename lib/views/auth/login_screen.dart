@@ -5,7 +5,7 @@ import '../../utils/constants.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/custom_text_field.dart';
 import 'register_screen.dart';
-import '../shared/home_wrapper.dart';
+import '../shared/auth_wrapper.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -40,9 +40,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
       if (!mounted) return;
 
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const HomeWrapper()),
-      );
+      Navigator.of(context).pushReplacementNamed('/auth');
     } catch (e) {
       if (!mounted) return;
 
@@ -99,10 +97,13 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget _buildMobileLayout(AuthProvider authProvider) {
-    return SafeArea(
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.all(AppSpacing.lg),
-        child: _buildLoginForm(authProvider),
+    return Container(
+      color: AppColors.white,
+      child: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(AppSpacing.lg),
+          child: _buildLoginForm(authProvider),
+        ),
       ),
     );
   }
@@ -130,15 +131,17 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 const SizedBox(height: AppSpacing.lg),
-                const Text(
+                Text(
                   'Welcome Back!',
-                  style: AppTextStyles.heading1,
+                  style: AppTextStyles.heading1.copyWith(
+                    color: AppColors.textPrimary,
+                  ),
                 ),
                 const SizedBox(height: AppSpacing.sm),
                 Text(
                   'Login to continue to SmartLink',
                   style: AppTextStyles.bodyLarge.copyWith(
-                    color: AppColors.grey,
+                    color: AppColors.textSecondary,
                   ),
                 ),
                 const SizedBox(height: AppSpacing.xl),
@@ -194,9 +197,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text(
+                    Text(
                       "Don't have an account? ",
-                      style: AppTextStyles.bodyMedium,
+                      style: AppTextStyles.bodyMedium.copyWith(
+                        color: AppColors.textSecondary,
+                      ),
                     ),
                     TextButton(
                       onPressed: () {
@@ -229,20 +234,21 @@ class _LoginScreenState extends State<LoginScreen> {
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 14,
+                          color: AppColors.textPrimary,
                         ),
                       ),
                       SizedBox(height: AppSpacing.sm),
                       Text(
                         'Buyer: buyer@test.com',
-                        style: TextStyle(fontSize: 12),
+                        style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
                       ),
                       Text(
                         'Seller: seller@test.com',
-                        style: TextStyle(fontSize: 12),
+                        style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
                       ),
                       Text(
                         'Rider: rider@test.com',
-                        style: TextStyle(fontSize: 12),
+                        style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
                       ),
                       SizedBox(height: AppSpacing.xs),
                       Text(
@@ -250,6 +256,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         style: TextStyle(
                           fontSize: 12,
                           fontStyle: FontStyle.italic,
+                          color: AppColors.textSecondary,
                         ),
                       ),
                     ],

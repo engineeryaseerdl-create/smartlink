@@ -38,7 +38,7 @@ class _RiderHomeScreenState extends State<RiderHomeScreen> {
         currentIndex: _selectedIndex,
         onTap: (index) => setState(() => _selectedIndex = index),
         selectedItemColor: AppColors.primaryGreen,
-        unselectedItemColor: AppColors.grey,
+        unselectedItemColor: AppColors.textSecondary,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.delivery_dining), label: 'Deliveries'),
           BottomNavigationBarItem(icon: Icon(Icons.account_balance_wallet), label: 'Earnings'),

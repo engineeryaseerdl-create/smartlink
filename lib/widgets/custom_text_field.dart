@@ -40,7 +40,7 @@ class CustomTextField extends StatelessWidget {
           label,
           style: AppTextStyles.bodyMedium.copyWith(
             fontWeight: FontWeight.w600,
-            color: AppColors.darkGrey,
+            color: Theme.of(context).textTheme.bodyMedium?.color,
           ),
         ),
         const SizedBox(height: AppSpacing.sm),
@@ -54,19 +54,19 @@ class CustomTextField extends StatelessWidget {
           decoration: InputDecoration(
             hintText: hintText ?? hint,
             hintStyle: AppTextStyles.bodyMedium.copyWith(
-              color: AppColors.grey,
+              color: Theme.of(context).hintColor,
             ),
             prefixIcon: prefixIcon != null
-                ? Icon(prefixIcon, color: AppColors.grey)
+                ? Icon(prefixIcon, color: Theme.of(context).hintColor)
                 : null,
             suffixIcon: suffixIcon != null
                 ? IconButton(
-                    icon: Icon(suffixIcon, color: AppColors.grey),
+                    icon: Icon(suffixIcon, color: Theme.of(context).hintColor),
                     onPressed: onSuffixIconPressed,
                   )
                 : null,
             filled: true,
-            fillColor: AppColors.lightGrey,
+            fillColor: Theme.of(context).inputDecorationTheme.fillColor,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(AppBorderRadius.md),
               borderSide: BorderSide.none,
