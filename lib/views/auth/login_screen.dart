@@ -58,16 +58,61 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
+    final isDesktop = MediaQuery.of(context).size.width > 768;
 
     return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(AppSpacing.lg),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+      body: isDesktop ? _buildDesktopLayout(authProvider) : _buildMobileLayout(authProvider),
+    );
+  }
+
+  Widget _buildDesktopLayout(AuthProvider authProvider) {
+    return Row(
+      children: [
+        // Left side - Login form
+        Expanded(
+          child: Container(
+            color: AppColors.white,
+            child: Center(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(AppSpacing.xxl),
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 400),
+                  child: _buildLoginForm(authProvider),
+                ),
+              ),
+            ),
+          ),
+        ),
+        // Right side - Image
+        Expanded(
+          child: Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: NetworkImage('https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2340&q=80'),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMobileLayout(AuthProvider authProvider) {
+    return SafeArea(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(AppSpacing.lg),
+        child: _buildLoginForm(authProvider),
+      ),
+    );
+  }
+
+  Widget _buildLoginForm(AuthProvider authProvider) {
+    return Form(
+      key: _formKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
                 const SizedBox(height: AppSpacing.xl),
                 Center(
                   child: Container(
@@ -210,10 +255,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ],
                   ),
                 ),
-              ],
-            ),
-          ),
-        ),
+        ],
       ),
     );
   }

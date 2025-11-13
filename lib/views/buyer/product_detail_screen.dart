@@ -4,6 +4,7 @@ import '../../models/product_model.dart';
 import '../../models/order_model.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/order_provider.dart';
+import '../../providers/cart_provider.dart';
 import '../../utils/constants.dart';
 import '../../utils/helpers.dart';
 import '../../widgets/custom_button.dart';
@@ -168,11 +169,35 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             ),
           ],
         ),
-        child: CustomButton(
-          text: 'Buy Now',
-          onPressed: () => _showOrderConfirmation(context),
-          icon: Icons.shopping_cart,
-          width: double.infinity,
+        child: Row(
+          children: [
+            Expanded(
+              child: CustomButton(
+                text: 'Add to Cart',
+                onPressed: () {
+                  context.read<CartProvider>().addToCart(widget.product);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Added to cart!'),
+                      backgroundColor: AppColors.successGreen,
+                      duration: Duration(seconds: 1),
+                    ),
+                  );
+                },
+                isOutlined: true,
+                backgroundColor: AppColors.primaryGreen,
+                icon: Icons.add_shopping_cart,
+              ),
+            ),
+            const SizedBox(width: AppSpacing.md),
+            Expanded(
+              child: CustomButton(
+                text: 'Buy Now',
+                onPressed: () => _showOrderConfirmation(context),
+                icon: Icons.shopping_cart,
+              ),
+            ),
+          ],
         ),
       ),
     );

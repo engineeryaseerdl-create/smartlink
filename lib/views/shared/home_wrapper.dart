@@ -9,6 +9,7 @@ import '../buyer/buyer_home_screen.dart';
 import '../buyer/buyer_home_content.dart';
 import '../buyer/buyer_categories_content.dart';
 import '../buyer/buyer_orders_content.dart';
+import '../buyer/cart_screen.dart';
 import '../seller/seller_home_screen.dart';
 import '../seller/seller_dashboard_content.dart';
 import '../seller/seller_products_content.dart';
@@ -97,6 +98,7 @@ class _HomeWrapperState extends State<HomeWrapper> {
           const BuyerHomePage(),
           const BuyerCategoriesPage(),
           const BuyerOrdersPage(),
+          const CartPage(),
           const ProfilePage(),
         ];
       case UserRole.seller:
@@ -122,6 +124,7 @@ class _HomeWrapperState extends State<HomeWrapper> {
           SidebarItem(label: 'Home', icon: Icons.home),
           SidebarItem(label: 'Categories', icon: Icons.category),
           SidebarItem(label: 'Orders', icon: Icons.shopping_bag),
+          SidebarItem(label: 'Cart', icon: Icons.shopping_cart),
           SidebarItem(label: 'Profile', icon: Icons.person),
         ];
       case UserRole.seller:
@@ -220,5 +223,13 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const ProfileContent();
+  }
+}
+class CartPage extends StatelessWidget {
+  const CartPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const CartScreen();
   }
 }

@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/theme_provider.dart';
 import '../../utils/constants.dart';
-import '../auth/login_screen.dart';
+import 'onboarding_screen.dart';
 import 'settings_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -126,7 +126,7 @@ class ProfileScreen extends StatelessWidget {
                 await authProvider.logout();
                 if (!context.mounted) return;
                 Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (context) => const LoginScreen()),
+                  MaterialPageRoute(builder: (context) => const OnboardingScreen()),
                   (route) => false,
                 );
               },

@@ -4,6 +4,7 @@ import '../utils/constants.dart';
 class CustomTextField extends StatelessWidget {
   final String label;
   final String? hint;
+  final String? hintText;
   final TextEditingController? controller;
   final TextInputType keyboardType;
   final bool obscureText;
@@ -18,6 +19,7 @@ class CustomTextField extends StatelessWidget {
     super.key,
     required this.label,
     this.hint,
+    this.hintText,
     this.controller,
     this.keyboardType = TextInputType.text,
     this.obscureText = false,
@@ -50,7 +52,7 @@ class CustomTextField extends StatelessWidget {
           maxLines: maxLines,
           enabled: enabled,
           decoration: InputDecoration(
-            hintText: hint,
+            hintText: hintText ?? hint,
             hintStyle: AppTextStyles.bodyMedium.copyWith(
               color: AppColors.grey,
             ),

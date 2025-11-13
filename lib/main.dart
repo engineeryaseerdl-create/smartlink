@@ -5,6 +5,7 @@ import 'providers/auth_provider.dart';
 import 'providers/product_provider.dart';
 import 'providers/order_provider.dart';
 import 'providers/rider_provider.dart';
+import 'providers/cart_provider.dart';
 import 'providers/theme_provider.dart';
 import 'utils/constants.dart';
 import 'views/shared/splash_screen.dart';
@@ -25,6 +26,7 @@ class SmartLinkApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => ProductProvider()),
         ChangeNotifierProvider(create: (_) => OrderProvider()),
         ChangeNotifierProvider(create: (_) => RiderProvider()),
+        ChangeNotifierProvider(create: (_) => CartProvider()),
       ],
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, child) => MaterialApp(

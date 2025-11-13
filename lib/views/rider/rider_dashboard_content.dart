@@ -191,7 +191,7 @@ class RiderDashboardContent extends StatelessWidget {
 
   Widget _buildStatCard(String label, String value, IconData icon, Color color, [bool isDesktop = false]) {
     return Container(
-      padding: EdgeInsets.all(isDesktop ? AppSpacing.lg : AppSpacing.md),
+      padding: EdgeInsets.all(isDesktop ? AppSpacing.md : AppSpacing.xs),
       decoration: BoxDecoration(
         color: color.withOpacity(0.1),
         borderRadius: BorderRadius.circular(AppBorderRadius.lg),
@@ -200,20 +200,23 @@ class RiderDashboardContent extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, color: color, size: isDesktop ? 40 : 32),
-          SizedBox(height: isDesktop ? AppSpacing.md : AppSpacing.sm),
+          Icon(icon, color: color, size: isDesktop ? 28 : 20),
+          SizedBox(height: AppSpacing.xs),
           Text(
             value,
             style: isDesktop
-              ? AppTextStyles.heading1.copyWith(color: color)
-              : AppTextStyles.heading2.copyWith(color: color),
+              ? AppTextStyles.bodyLarge.copyWith(color: color, fontWeight: FontWeight.bold)
+              : AppTextStyles.bodyMedium.copyWith(color: color, fontWeight: FontWeight.bold),
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
           ),
           Text(
             label,
-            style: isDesktop
-              ? AppTextStyles.bodyLarge.copyWith(color: color)
-              : AppTextStyles.bodySmall.copyWith(color: color),
+            style: AppTextStyles.bodySmall.copyWith(color: color),
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
           ),
         ],
       ),

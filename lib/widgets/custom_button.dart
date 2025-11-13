@@ -8,6 +8,7 @@ class CustomButton extends StatelessWidget {
   final bool isOutlined;
   final Color? backgroundColor;
   final Color? textColor;
+  final Color? borderColor;
   final IconData? icon;
   final double? width;
   final double height;
@@ -20,6 +21,7 @@ class CustomButton extends StatelessWidget {
     this.isOutlined = false,
     this.backgroundColor,
     this.textColor,
+    this.borderColor,
     this.icon,
     this.width,
     this.height = 50,
@@ -35,7 +37,7 @@ class CustomButton extends StatelessWidget {
               onPressed: onPressed,
               style: OutlinedButton.styleFrom(
                 side: BorderSide(
-                  color: backgroundColor ?? AppColors.primaryGreen,
+                  color: borderColor ?? backgroundColor ?? AppColors.primaryGreen,
                   width: 2,
                 ),
                 shape: RoundedRectangleBorder(

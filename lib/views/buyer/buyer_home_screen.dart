@@ -3,11 +3,14 @@ import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/product_provider.dart';
 import '../../providers/order_provider.dart';
+import '../../providers/cart_provider.dart';
 import '../../models/product_model.dart';
 import '../../utils/constants.dart';
+import '../../utils/helpers.dart';
 import '../../widgets/product_card.dart';
 import 'product_detail_screen.dart';
 import 'buyer_orders_screen.dart';
+import 'cart_screen.dart';
 import '../shared/profile_screen.dart';
 
 class BuyerHomeScreen extends StatefulWidget {
@@ -42,6 +45,7 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
       _buildHomePage(),
       _buildCategoriesPage(),
       const BuyerOrdersScreen(),
+      const CartScreen(),
       const ProfileScreen(),
     ];
 
@@ -57,20 +61,32 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
         type: BottomNavigationBarType.fixed,
         selectedItemColor: AppColors.primaryGreen,
         unselectedItemColor: AppColors.grey,
-        items: const [
-          BottomNavigationBarItem(
+        items: [
+          const BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Icon(Icons.category),
             label: 'Categories',
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Icon(Icons.shopping_bag),
             label: 'Orders',
           ),
           BottomNavigationBarItem(
+            icon: Consumer<CartProvider>(
+              builder: (context, cart, child) {
+                return Badge(
+                  label: Text('${cart.totalItems}'),
+                  isLabelVisible: cart.totalItems > 0,
+                  child: const Icon(Icons.shopping_cart),
+                );
+              },
+            ),
+            label: 'Cart',
+          ),
+          const BottomNavigationBarItem(
             icon: Icon(Icons.person),
             label: 'Profile',
           ),
@@ -121,17 +137,38 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
                           ),
                         ],
                       ),
-                      Container(
-                        width: 50,
-                        height: 50,
-                        decoration: const BoxDecoration(
-                          color: AppColors.primaryGreen,
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(
-                          Icons.person,
-                          color: AppColors.white,
-                        ),
+                      Row(
+                        children: [
+                          Consumer<CartProvider>(
+                            builder: (context, cart, child) {
+                              return IconButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => const CartScreen()),
+                                  );
+                                },
+                                icon: Badge(
+                                  label: Text('${cart.totalItems}'),
+                                  isLabelVisible: cart.totalItems > 0,
+                                  child: const Icon(Icons.shopping_cart, color: AppColors.primaryGreen),
+                                ),
+                              );
+                            },
+                          ),
+                          Container(
+                            width: 50,
+                            height: 50,
+                            decoration: const BoxDecoration(
+                              color: AppColors.primaryGreen,
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(
+                              Icons.person,
+                              color: AppColors.white,
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
