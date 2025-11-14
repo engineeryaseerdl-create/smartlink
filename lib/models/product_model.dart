@@ -25,6 +25,14 @@ class ProductModel {
   final bool isAvailable;
   final DateTime createdAt;
 
+  // Additional getters for compatibility
+  String get name => title;
+  String get imageUrl => images.isNotEmpty ? images.first : '';
+  int get stock => stockQuantity;
+  double get discount => 0.0; // No discount field in model
+  double get originalPrice => price; // Same as price for now
+  bool get isFavorite => false; // This will be managed by provider
+
   ProductModel({
     required this.id,
     required this.title,

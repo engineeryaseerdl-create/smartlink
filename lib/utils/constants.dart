@@ -52,6 +52,18 @@ class AppTextStyles {
     height: 1.2,
   );
 
+  static const TextStyle heading4 = TextStyle(
+    fontSize: 18,
+    fontWeight: FontWeight.w600,
+    height: 1.2,
+  );
+
+  static const TextStyle heading5 = TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.w600,
+    height: 1.2,
+  );
+
   static const TextStyle bodyLarge = TextStyle(
     fontSize: 16,
     fontWeight: FontWeight.normal,
@@ -75,6 +87,12 @@ class AppTextStyles {
     fontWeight: FontWeight.w600,
     height: 1.2,
   );
+
+  static const TextStyle buttonText = TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.w600,
+    height: 1.2,
+  );
 }
 
 class AppSpacing {
@@ -87,6 +105,7 @@ class AppSpacing {
 }
 
 class AppBorderRadius {
+  static const double xs = 4.0;
   static const double sm = 8.0;
   static const double md = 12.0;
   static const double lg = 16.0;

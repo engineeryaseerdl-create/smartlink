@@ -38,51 +38,27 @@ class _AddProductScreenState extends State<AddProductScreen> {
   }
 
   Future<void> _pickImages() async {
-    try {
-      final List<File> images = await ImagePickerService.pickMultipleImages(
-        maxImages: 5,
-        imageQuality: 85,
-      );
-      
-      if (images.isNotEmpty) {
-        setState(() {
-          _selectedImages = images;
-        });
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(e.toString()),
-            backgroundColor: AppColors.errorRed,
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
-      }
+    final List<File> images = await ImagePickerService.pickMultipleImages(
+      maxImages: 5,
+      imageQuality: 85,
+    );
+    
+    if (images.isNotEmpty) {
+      setState(() {
+        _selectedImages = images;
+      });
     }
   }
 
   Future<void> _takePicture() async {
-    try {
-      final File? image = await ImagePickerService.pickImageFromCamera(
-        imageQuality: 85,
-      );
-      
-      if (image != null) {
-        setState(() {
-          _selectedImages.add(image);
-        });
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(e.toString()),
-            backgroundColor: AppColors.errorRed,
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
-      }
+    final File? image = await ImagePickerService.pickImageFromCamera(
+      imageQuality: 85,
+    );
+    
+    if (image != null) {
+      setState(() {
+        _selectedImages.add(image);
+      });
     }
   }
 
@@ -166,15 +142,21 @@ class _AddProductScreenState extends State<AddProductScreen> {
         elevation: 0,
       ),
       body: ResponsiveContainer(
-        child: SingleChildScrollView(
-          padding: ResponsiveUtils.getResponsivePagePadding(context),
-          child: FadeInWidget(
-            slideUp: true,
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+        child: SafeArea(
+          child: SingleChildScrollView(
+            padding: EdgeInsets.only(
+              left: ResponsiveUtils.getResponsivePagePadding(context).left,
+              right: ResponsiveUtils.getResponsivePagePadding(context).right,
+              top: ResponsiveUtils.getResponsivePagePadding(context).top,
+              bottom: MediaQuery.of(context).viewInsets.bottom + ResponsiveUtils.getResponsivePagePadding(context).bottom,
+            ),
+            child: FadeInWidget(
+              slideUp: true,
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
               // Image Upload Section
               Text('Product Images',
                   style: AppTextStyles.bodyMedium
@@ -387,7 +369,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 onPressed: _isLoading ? null : () => _handleAddProduct(),
                 width: double.infinity,
               ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),

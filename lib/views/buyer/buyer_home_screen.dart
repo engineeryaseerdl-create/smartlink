@@ -6,7 +6,6 @@ import '../../providers/order_provider.dart';
 import '../../providers/cart_provider.dart';
 import '../../models/product_model.dart';
 import '../../utils/constants.dart';
-import '../../utils/helpers.dart';
 import '../../widgets/product_card.dart';
 import 'product_detail_screen.dart';
 import 'buyer_orders_screen.dart';
@@ -23,6 +22,13 @@ class BuyerHomeScreen extends StatefulWidget {
 class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
   int _selectedIndex = 0;
   final TextEditingController _searchController = TextEditingController();
+
+  String _getGreeting() {
+    final hour = DateTime.now().hour;
+    if (hour < 12) return 'Morning';
+    if (hour < 17) return 'Afternoon';
+    return 'Evening';
+  }
 
   @override
   void initState() {
@@ -51,46 +57,48 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
 
     return Scaffold(
       body: pages[_selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        onTap: (index) {
-          setState(() {
-            _selectedIndex = index;
-          });
-        },
-        type: BottomNavigationBarType.fixed,
-        selectedItemColor: AppColors.primaryGreen,
-        unselectedItemColor: AppColors.textSecondary,
-        items: [
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.category),
-            label: 'Categories',
-          ),
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_bag),
-            label: 'Orders',
-          ),
-          BottomNavigationBarItem(
-            icon: Consumer<CartProvider>(
-              builder: (context, cart, child) {
-                return Badge(
-                  label: Text('${cart.totalItems}'),
-                  isLabelVisible: cart.totalItems > 0,
-                  child: const Icon(Icons.shopping_cart),
-                );
-              },
+      bottomNavigationBar: SafeArea(
+        child: BottomNavigationBar(
+          currentIndex: _selectedIndex,
+          onTap: (index) {
+            setState(() {
+              _selectedIndex = index;
+            });
+          },
+          type: BottomNavigationBarType.fixed,
+          selectedItemColor: AppColors.primaryGreen,
+          unselectedItemColor: AppColors.textSecondary,
+          items: [
+            const BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Home',
             ),
-            label: 'Cart',
-          ),
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-        ],
+            const BottomNavigationBarItem(
+              icon: Icon(Icons.category),
+              label: 'Categories',
+            ),
+            const BottomNavigationBarItem(
+              icon: Icon(Icons.shopping_bag),
+              label: 'Orders',
+            ),
+            BottomNavigationBarItem(
+              icon: Consumer<CartProvider>(
+                builder: (context, cart, child) {
+                  return Badge(
+                    label: Text('${cart.totalItems}'),
+                    isLabelVisible: cart.totalItems > 0,
+                    child: const Icon(Icons.shopping_cart),
+                  );
+                },
+              ),
+              label: 'Cart',
+            ),
+            const BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: 'Profile',
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -110,90 +118,269 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Hello, ${user?.name?.split(' ').first ?? 'User'}!',
-                            style: AppTextStyles.heading2,
-                          ),
-                          Row(
-                            children: [
-                              const Icon(
-                                Icons.location_on,
-                                size: 16,
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Good ${_getGreeting()}!',
+                              style: AppTextStyles.bodyMedium.copyWith(
                                 color: AppColors.textSecondary,
                               ),
-                              const SizedBox(width: 4),
-                              Text(
-                                user?.location ?? 'Location',
-                                style: AppTextStyles.bodyMedium.copyWith(
-                                  color: AppColors.textSecondary,
-                                ),
+                            ),
+                            Text(
+                              '${user?.name?.split(' ').first ?? 'User'}',
+                              style: AppTextStyles.heading2.copyWith(
+                                color: AppColors.textPrimary,
+                                fontWeight: FontWeight.bold,
                               ),
-                            ],
-                          ),
-                        ],
+                            ),
+                            const SizedBox(height: 4),
+                            GestureDetector(
+                              onTap: () {},
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.location_on,
+                                    size: 14,
+                                    color: AppColors.primaryGreen,
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    user?.location ?? 'Set Location',
+                                    style: AppTextStyles.bodySmall.copyWith(
+                                      color: AppColors.primaryGreen,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Icon(
+                                    Icons.keyboard_arrow_down,
+                                    size: 16,
+                                    color: AppColors.primaryGreen,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                       Row(
                         children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              color: AppColors.backgroundLight,
+                              shape: BoxShape.circle,
+                            ),
+                            child: IconButton(
+                              onPressed: () {},
+                              icon: Badge(
+                                label: const Text('3'),
+                                isLabelVisible: true,
+                                backgroundColor: AppColors.errorRed,
+                                child: Icon(
+                                  Icons.notifications_outlined,
+                                  color: AppColors.textPrimary,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
                           Consumer<CartProvider>(
                             builder: (context, cart, child) {
-                              return IconButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => const CartScreen()),
-                                  );
-                                },
-                                icon: Badge(
-                                  label: Text('${cart.totalItems}'),
-                                  isLabelVisible: cart.totalItems > 0,
-                                  child: const Icon(Icons.shopping_cart, color: AppColors.primaryGreen),
+                              return Container(
+                                decoration: BoxDecoration(
+                                  color: AppColors.backgroundLight,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: IconButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => const CartScreen()),
+                                    );
+                                  },
+                                  icon: Badge(
+                                    label: Text('${cart.totalItems}'),
+                                    isLabelVisible: cart.totalItems > 0,
+                                    backgroundColor: AppColors.primaryGreen,
+                                    child: Icon(
+                                      Icons.shopping_cart_outlined,
+                                      color: AppColors.textPrimary,
+                                    ),
+                                  ),
                                 ),
                               );
                             },
-                          ),
-                          Container(
-                            width: 50,
-                            height: 50,
-                            decoration: const BoxDecoration(
-                              color: AppColors.primaryGreen,
-                              shape: BoxShape.circle,
-                            ),
-                            child: const Icon(
-                              Icons.person,
-                              color: AppColors.white,
-                            ),
                           ),
                         ],
                       ),
                     ],
                   ),
                   const SizedBox(height: AppSpacing.lg),
-                  TextField(
-                    controller: _searchController,
-                    onChanged: (value) {
-                      productProvider.searchProducts(value);
-                    },
-                    decoration: InputDecoration(
-                      hintText: 'Search products...',
-                      prefixIcon: const Icon(Icons.search),
-                      filled: true,
-                      fillColor: AppColors.backgroundLight,
-                      border: OutlineInputBorder(
-                        borderRadius:
-                            BorderRadius.circular(AppBorderRadius.md),
-                        borderSide: BorderSide.none,
+                  Container(
+                    decoration: BoxDecoration(
+                      color: AppColors.backgroundLight,
+                      borderRadius: BorderRadius.circular(AppBorderRadius.lg),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.05),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: TextField(
+                      controller: _searchController,
+                      onChanged: (value) {
+                        productProvider.searchProducts(value);
+                      },
+                      decoration: InputDecoration(
+                        hintText: 'Search for products, brands, categories...',
+                        hintStyle: AppTextStyles.bodyMedium.copyWith(
+                          color: AppColors.textSecondary,
+                        ),
+                        prefixIcon: Icon(
+                          Icons.search,
+                          color: AppColors.textSecondary,
+                        ),
+                        suffixIcon: Container(
+                          margin: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: AppColors.primaryGreen,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: IconButton(
+                            onPressed: () {},
+                            icon: const Icon(
+                              Icons.tune,
+                              color: Colors.white,
+                              size: 18,
+                            ),
+                          ),
+                        ),
+                        filled: true,
+                        fillColor: Colors.transparent,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(AppBorderRadius.lg),
+                          borderSide: BorderSide.none,
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: AppSpacing.md,
+                          vertical: AppSpacing.md,
+                        ),
                       ),
                     ),
                   ),
                   const SizedBox(height: AppSpacing.lg),
-                  const Text(
-                    'Categories',
-                    style: AppTextStyles.heading3,
+                  Container(
+                    height: 120,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          AppColors.primaryGreen,
+                          AppColors.darkGreen,
+                        ],
+                      ),
+                      borderRadius: BorderRadius.circular(AppBorderRadius.lg),
+                    ),
+                    child: Stack(
+                      children: [
+                        Positioned(
+                          right: -20,
+                          top: -20,
+                          child: Container(
+                            width: 100,
+                            height: 100,
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.1),
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(AppSpacing.md),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'Free Delivery',
+                                      style: AppTextStyles.heading3.copyWith(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 2),
+                                    Text(
+                                      'On orders above ₦5,000',
+                                      style: AppTextStyles.bodyMedium.copyWith(
+                                        color: Colors.white.withOpacity(0.9),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 6),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 10,
+                                        vertical: 4,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(16),
+                                      ),
+                                      child: Text(
+                                        'Shop Now',
+                                        style: AppTextStyles.bodySmall.copyWith(
+                                          color: AppColors.primaryGreen,
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 11,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Icon(
+                                Icons.local_shipping,
+                                size: 50,
+                                color: Colors.white.withOpacity(0.3),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.lg),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Shop by Category',
+                        style: AppTextStyles.heading3.copyWith(
+                          color: AppColors.textPrimary,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          setState(() {
+                            _selectedIndex = 1;
+                          });
+                        },
+                        child: Text(
+                          'See All',
+                          style: AppTextStyles.bodyMedium.copyWith(
+                            color: AppColors.primaryGreen,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: AppSpacing.md),
                   SizedBox(

@@ -34,11 +34,17 @@ class OrderDetailScreen extends StatelessWidget {
         foregroundColor: AppColors.white,
         iconTheme: const IconThemeData(color: AppColors.white),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(AppSpacing.lg),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: EdgeInsets.only(
+            left: AppSpacing.lg,
+            right: AppSpacing.lg,
+            top: AppSpacing.lg,
+            bottom: MediaQuery.of(context).padding.bottom + AppSpacing.lg,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
             Container(
               padding: const EdgeInsets.all(AppSpacing.md),
               decoration: BoxDecoration(
@@ -114,7 +120,9 @@ class OrderDetailScreen extends StatelessWidget {
             const SizedBox(height: AppSpacing.md),
             _buildInfoRow('Seller', order.sellerName),
             _buildInfoRow('Location', order.sellerLocation),
-          ],
+            const SizedBox(height: AppSpacing.lg),
+            ],
+          ),
         ),
       ),
     );

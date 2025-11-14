@@ -157,47 +157,49 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           ),
         ],
       ),
-      bottomNavigationBar: Container(
-        padding: const EdgeInsets.all(AppSpacing.md),
-        decoration: BoxDecoration(
-          color: AppColors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 8,
-              offset: const Offset(0, -2),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              child: CustomButton(
-                text: 'Add to Cart',
-                onPressed: () {
-                  context.read<CartProvider>().addToCart(widget.product);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Added to cart!'),
-                      backgroundColor: AppColors.successGreen,
-                      duration: Duration(seconds: 1),
-                    ),
-                  );
-                },
-                isOutlined: true,
-                backgroundColor: AppColors.primaryGreen,
-                icon: Icons.add_shopping_cart,
+      bottomNavigationBar: SafeArea(
+        child: Container(
+          padding: const EdgeInsets.all(AppSpacing.md),
+          decoration: BoxDecoration(
+            color: AppColors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 8,
+                offset: const Offset(0, -2),
               ),
-            ),
-            const SizedBox(width: AppSpacing.md),
-            Expanded(
-              child: CustomButton(
-                text: 'Buy Now',
-                onPressed: () => _showOrderConfirmation(context),
-                icon: Icons.shopping_cart,
+            ],
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: CustomButton(
+                  text: 'Add to Cart',
+                  onPressed: () {
+                    context.read<CartProvider>().addToCart(widget.product);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Added to cart!'),
+                        backgroundColor: AppColors.successGreen,
+                        duration: Duration(seconds: 1),
+                      ),
+                    );
+                  },
+                  isOutlined: true,
+                  backgroundColor: AppColors.primaryGreen,
+                  icon: Icons.add_shopping_cart,
+                ),
               ),
-            ),
-          ],
+              const SizedBox(width: AppSpacing.md),
+              Expanded(
+                child: CustomButton(
+                  text: 'Buy Now',
+                  onPressed: () => _showOrderConfirmation(context),
+                  icon: Icons.shopping_cart,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

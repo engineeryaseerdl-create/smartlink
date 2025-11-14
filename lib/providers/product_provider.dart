@@ -8,6 +8,8 @@ class ProductProvider with ChangeNotifier {
   bool _isLoading = false;
   String _searchQuery = '';
   ProductCategory? _selectedCategory;
+  Set<String> _favoriteIds = {};
+  String _sortBy = 'name';
 
   List<ProductModel> get products => _filteredProducts;
   bool get isLoading => _isLoading;
@@ -25,6 +27,9 @@ class ProductProvider with ChangeNotifier {
     _isLoading = false;
     notifyListeners();
   }
+
+  // Alias for enhanced buyer screen
+  Future<void> fetchProducts() => loadProducts();
 
   void searchProducts(String query) {
     _searchQuery = query;
@@ -78,4 +83,41 @@ class ProductProvider with ChangeNotifier {
       return null;
     }
   }
+
+  // Missing methods needed by enhanced buyer screen
+  Future<void> toggleFavorite(String productId) async {
+    if (_favoriteIds.contains(productId)) {
+      _favoriteIds.remove(productId);
+    } else {
+      _favoriteIds.add(productId);
+    }
+    notifyListeners();
+  }
+
+  Future<void> addToCart(String productId, int quantity) async {
+    // Implementation would depend on cart provider
+    // For now, just simulate the action
+    await Future.delayed(const Duration(milliseconds: 200));
+  }
+
+  void sortProducts(String sortBy) {
+    _sortBy = sortBy;
+    switch (sortBy) {
+      case 'name':
+        _filteredProducts.sort((a, b) => a.title.compareTo(b.title));
+        break;
+      case 'price_low':
+        _filteredProducts.sort((a, b) => a.price.compareTo(b.price));
+        break;
+      case 'price_high':
+        _filteredProducts.sort((a, b) => b.price.compareTo(a.price));
+        break;
+      case 'rating':
+        _filteredProducts.sort((a, b) => b.rating.compareTo(a.rating));
+        break;
+    }
+    notifyListeners();
+  }
+
+  bool isFavorite(String productId) => _favoriteIds.contains(productId);
 }

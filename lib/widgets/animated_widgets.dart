@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import '../utils/constants.dart';
 
@@ -187,9 +188,11 @@ class _SlideInWidgetState extends State<SlideInWidget>
         beginOffset = const Offset(1.0, 0.0);
         break;
       case SlideDirection.up:
+      case SlideDirection.top:
         beginOffset = const Offset(0.0, -1.0);
         break;
       case SlideDirection.down:
+      case SlideDirection.bottom:
         beginOffset = const Offset(0.0, 1.0);
         break;
     }
@@ -224,7 +227,7 @@ class _SlideInWidgetState extends State<SlideInWidget>
   }
 }
 
-enum SlideDirection { left, right, up, down }
+enum SlideDirection { left, right, up, down, top, bottom }
 
 // Animated Counter Widget
 class AnimatedCounter extends StatefulWidget {
@@ -358,6 +361,12 @@ class _PulsingWidgetState extends State<PulsingWidget>
     );
   }
 }
+
+// Backward-compatible aliases for previously used names
+// These provide compatibility if other files use older class names
+typedef SlideInAnimation = SlideInWidget;
+typedef FadeInAnimation = FadeInWidget;
+typedef ShakeAnimation = ScaleInWidget;
 
 // Staggered Animation List
 class StaggeredList extends StatelessWidget {

@@ -36,7 +36,12 @@ class CartScreen extends StatelessWidget {
             children: [
               Expanded(
                 child: ListView.builder(
-                  padding: const EdgeInsets.all(AppSpacing.md),
+                  padding: EdgeInsets.only(
+                    left: AppSpacing.md,
+                    right: AppSpacing.md,
+                    top: AppSpacing.md,
+                    bottom: MediaQuery.of(context).padding.bottom + AppSpacing.md,
+                  ),
                   itemCount: cartProvider.items.length,
                   itemBuilder: (context, index) {
                     final item = cartProvider.items[index];
@@ -98,40 +103,42 @@ class CartScreen extends StatelessWidget {
                   },
                 ),
               ),
-              Container(
-                padding: const EdgeInsets.all(AppSpacing.lg),
-                decoration: const BoxDecoration(
-                  color: AppColors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black12,
-                      blurRadius: 8,
-                      offset: Offset(0, -2),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('Total (${cartProvider.totalItems} items)', style: AppTextStyles.bodyLarge),
-                        Text(Helpers.formatCurrency(cartProvider.totalAmount), 
-                             style: AppTextStyles.heading3.copyWith(color: AppColors.primaryGreen)),
-                      ],
-                    ),
-                    const SizedBox(height: AppSpacing.md),
-                    CustomButton(
-                      text: 'Proceed to Checkout',
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => const CheckoutScreen()),
-                        );
-                      },
-                      width: double.infinity,
-                    ),
-                  ],
+              SafeArea(
+                child: Container(
+                  padding: const EdgeInsets.all(AppSpacing.lg),
+                  decoration: const BoxDecoration(
+                    color: AppColors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black12,
+                        blurRadius: 8,
+                        offset: Offset(0, -2),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('Total (${cartProvider.totalItems} items)', style: AppTextStyles.bodyLarge),
+                          Text(Helpers.formatCurrency(cartProvider.totalAmount), 
+                               style: AppTextStyles.heading3.copyWith(color: AppColors.primaryGreen)),
+                        ],
+                      ),
+                      const SizedBox(height: AppSpacing.md),
+                      CustomButton(
+                        text: 'Proceed to Checkout',
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const CheckoutScreen()),
+                          );
+                        },
+                        width: double.infinity,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],

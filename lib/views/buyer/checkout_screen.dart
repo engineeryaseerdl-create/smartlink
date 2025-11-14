@@ -48,7 +48,12 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               children: [
                 Expanded(
                   child: SingleChildScrollView(
-                    padding: const EdgeInsets.all(AppSpacing.lg),
+                    padding: EdgeInsets.only(
+                      left: AppSpacing.lg,
+                      right: AppSpacing.lg,
+                      top: AppSpacing.lg,
+                      bottom: MediaQuery.of(context).viewInsets.bottom + AppSpacing.lg,
+                    ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -153,22 +158,24 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 ),
                 
                 // Place Order Button
-                Container(
-                  padding: const EdgeInsets.all(AppSpacing.lg),
-                  decoration: const BoxDecoration(
-                    color: AppColors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black12,
-                        blurRadius: 8,
-                        offset: Offset(0, -2),
-                      ),
-                    ],
-                  ),
-                  child: CustomButton(
-                    text: _isProcessing ? 'Processing...' : 'Place Order',
-                    onPressed: _isProcessing ? null : () => _placeOrder(cartProvider, user),
-                    width: double.infinity,
+                SafeArea(
+                  child: Container(
+                    padding: const EdgeInsets.all(AppSpacing.lg),
+                    decoration: const BoxDecoration(
+                      color: AppColors.white,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black12,
+                          blurRadius: 8,
+                          offset: Offset(0, -2),
+                        ),
+                      ],
+                    ),
+                    child: CustomButton(
+                      text: _isProcessing ? 'Processing...' : 'Place Order',
+                      onPressed: _isProcessing ? null : () => _placeOrder(cartProvider, user),
+                      width: double.infinity,
+                    ),
                   ),
                 ),
               ],

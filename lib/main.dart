@@ -9,9 +9,10 @@ import 'providers/cart_provider.dart';
 import 'providers/theme_provider.dart';
 import 'utils/constants.dart';
 import 'views/shared/splash_screen.dart';
-import 'views/shared/onboarding_screen.dart';
 import 'views/shared/auth_wrapper.dart';
 import 'views/auth/login_screen.dart';
+import 'views/shared/ux_showcase_screen.dart';
+import 'views/buyer/enhanced_buyer_home_screen.dart';
 
 void main() {
   runApp(const SmartLinkApp());
@@ -128,6 +129,8 @@ class SmartLinkApp extends StatelessWidget {
           '/': (context) => const SplashScreen(),
           '/auth': (context) => const AuthWrapper(),
           '/login': (context) => const LoginScreen(),
+          '/ux-showcase': (context) => const UXShowcaseScreen(),
+          '/enhanced-home': (context) => const EnhancedBuyerHomeScreen(),
         },
         ),
       ),

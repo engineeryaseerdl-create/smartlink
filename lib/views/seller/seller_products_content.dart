@@ -133,6 +133,7 @@ class SellerProductsContent extends StatelessWidget {
                         );
                       },
                       showActions: true, // Show edit/delete actions for seller
+                      showAddToCart: false, // Sellers can't buy their own products
                     );
                   },
                   childCount: myProducts.length,

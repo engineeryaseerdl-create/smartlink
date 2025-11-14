@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import '../models/user_model.dart';
 import '../models/product_model.dart';
 import '../models/order_model.dart';
 
