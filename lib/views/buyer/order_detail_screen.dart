@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../models/order_model.dart';
 import '../../utils/constants.dart';
 import '../../utils/helpers.dart';
+import '../../widgets/rider_tracking_widget.dart';
 
 class OrderDetailScreen extends StatelessWidget {
   final OrderModel order;
@@ -115,7 +116,10 @@ class OrderDetailScreen extends StatelessWidget {
                       ? 'Motorcycle (Okada)'
                       : 'Car'),
             ],
-            const SizedBox(height: AppSpacing.lg),
+            if (order.riderId != null) ...[
+              RiderTrackingWidget(order: order),
+              const SizedBox(height: AppSpacing.lg),
+            ],
             const Text('Seller Information', style: AppTextStyles.heading3),
             const SizedBox(height: AppSpacing.md),
             _buildInfoRow('Seller', order.sellerName),

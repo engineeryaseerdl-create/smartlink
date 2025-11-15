@@ -1,10 +1,12 @@
 import 'package:dio/dio.dart';
 import '../models/product_model.dart';
 import '../models/order_model.dart';
+import '../models/rider_model.dart';
 
 class ApiService {
   static final Dio _dio = Dio();
-  static const String baseUrl = 'https://your-api-url.com/api';
+  static const String baseUrl = String.fromEnvironment('API_URL', 
+    defaultValue: 'https://your-api-url.com/api');
 
   // Initialize API service
   static void initialize() {
@@ -12,10 +14,21 @@ class ApiService {
     _dio.options.connectTimeout = const Duration(seconds: 30);
     _dio.options.receiveTimeout = const Duration(seconds: 30);
     
-    // Add interceptors for logging, auth tokens, etc.
+    // Add interceptors
     _dio.interceptors.add(LogInterceptor(
       requestBody: true,
       responseBody: true,
+    ));
+    
+    // Auth token refresh interceptor
+    _dio.interceptors.add(InterceptorsWrapper(
+      onError: (error, handler) async {
+        if (error.response?.statusCode == 401) {
+          await _refreshToken();
+          return handler.resolve(await _dio.fetch(error.requestOptions));
+        }
+        handler.next(error);
+      },
     ));
   }
 
@@ -187,6 +200,26 @@ class ApiService {
     }
   }
 
+  // Rider endpoints
+  static Future<List<RiderModel>> getNearbyRiders(double lat, double lng) async {
+    try {
+      final response = await _dio.get('/riders/nearby', queryParameters: {
+        'lat': lat, 'lng': lng, 'radius': 10
+      });
+      return (response.data as List).map((json) => RiderModel.fromJson(json)).toList();
+    } catch (e) {
+      throw _handleError(e);
+    }
+  }
+
+  static Future<void> updateRiderLocation(String riderId, double lat, double lng) async {
+    try {
+      await _dio.put('/riders/$riderId/location', data: {'lat': lat, 'lng': lng});
+    } catch (e) {
+      throw _handleError(e);
+    }
+  }
+
   // File upload
   static Future<List<String>> uploadImages(List<String> imagePaths) async {
     try {
@@ -206,6 +239,16 @@ class ApiService {
     }
   }
 
+  // Token refresh
+  static Future<void> _refreshToken() async {
+    try {
+      final response = await _dio.post('/auth/refresh');
+      setAuthToken(response.data['token']);
+    } catch (e) {
+      clearAuthToken();
+    }
+  }
+
   // Error handling
   static String _handleError(dynamic error) {
     if (error is DioException) {
@@ -216,6 +259,10 @@ class ApiService {
           return 'Connection timeout. Please check your internet connection.';
         case DioExceptionType.badResponse:
           final statusCode = error.response?.statusCode;
+          if (statusCode == 422) {
+            final errors = error.response?.data['errors'] as Map?;
+            return errors?.values.first.first ?? 'Validation error';
+          }
           final message = error.response?.data['message'] ?? 'Unknown error occurred';
           return 'Error $statusCode: $message';
         case DioExceptionType.cancel:

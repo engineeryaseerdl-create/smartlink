@@ -7,6 +7,8 @@ import '../../providers/cart_provider.dart';
 import '../../models/product_model.dart';
 import '../../utils/constants.dart';
 import '../../widgets/product_card.dart';
+import '../../widgets/skeleton_loader.dart';
+import '../../widgets/quick_action_fab.dart';
 import 'product_detail_screen.dart';
 import 'buyer_orders_screen.dart';
 import 'cart_screen.dart';
@@ -57,6 +59,21 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
 
     return Scaffold(
       body: pages[_selectedIndex],
+      floatingActionButton: _selectedIndex == 0 ? QuickActionFAB(
+        icon: const Icon(Icons.add),
+        actions: [
+          QuickAction(
+            icon: const Icon(Icons.search),
+            onPressed: () => _showQuickSearch(context),
+            backgroundColor: Colors.blue,
+          ),
+          QuickAction(
+            icon: const Icon(Icons.favorite),
+            onPressed: () {},
+            backgroundColor: Colors.red,
+          ),
+        ],
+      ) : null,
       bottomNavigationBar: SafeArea(
         child: BottomNavigationBar(
           currentIndex: _selectedIndex,
@@ -109,8 +126,15 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
     final user = authProvider.currentUser;
 
     return SafeArea(
-      child: CustomScrollView(
-        slivers: [
+      child: RefreshIndicator(
+        onRefresh: () async {
+          await Future.delayed(const Duration(seconds: 1));
+          if (mounted) {
+            context.read<ProductProvider>().loadProducts();
+          }
+        },
+        child: CustomScrollView(
+          slivers: [
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.all(AppSpacing.md),
@@ -274,65 +298,84 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
                     ),
                   ),
                   const SizedBox(height: AppSpacing.lg),
-                  Container(
-                    height: 100,
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        colors: [
-                          AppColors.primaryGreen,
-                          AppColors.darkGreen,
-                        ],
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(AppBorderRadius.lg),
+                    child: Container(
+                      height: 110,
+                      decoration: const BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            AppColors.primaryGreen,
+                            AppColors.darkGreen,
+                          ],
+                        ),
                       ),
-                      borderRadius: BorderRadius.circular(AppBorderRadius.lg),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(AppSpacing.sm),
-                      child: Row(
+                      child: Stack(
                         children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
+                          Positioned(
+                            right: -20,
+                            top: -20,
+                            child: Container(
+                              width: 100,
+                              height: 100,
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.1),
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(AppSpacing.md),
+                            child: Row(
                               children: [
-                                Text(
-                                  'Free Delivery',
-                                  style: AppTextStyles.bodyLarge.copyWith(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        'Free Delivery',
+                                        style: AppTextStyles.heading3.copyWith(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 2),
+                                      Text(
+                                        'On orders above ₦5,000',
+                                        style: AppTextStyles.bodyMedium.copyWith(
+                                          color: Colors.white.withOpacity(0.9),
+                                        ),
+                                      ),
+                                      const SizedBox(height: 6),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 10,
+                                          vertical: 4,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.circular(16),
+                                        ),
+                                        child: Text(
+                                          'Shop Now',
+                                          style: AppTextStyles.bodySmall.copyWith(
+                                            color: AppColors.primaryGreen,
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 11,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                                Text(
-                                  'On orders above ₦5,000',
-                                  style: AppTextStyles.bodySmall.copyWith(
-                                    color: Colors.white.withOpacity(0.9),
-                                  ),
-                                ),
-                                const SizedBox(height: 4),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 8,
-                                    vertical: 2,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: Text(
-                                    'Shop Now',
-                                    style: AppTextStyles.bodySmall.copyWith(
-                                      color: AppColors.primaryGreen,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 10,
-                                    ),
-                                  ),
+                                Icon(
+                                  Icons.local_shipping,
+                                  size: 50,
+                                  color: Colors.white.withOpacity(0.3),
                                 ),
                               ],
                             ),
-                          ),
-                          Icon(
-                            Icons.local_shipping,
-                            size: 40,
-                            color: Colors.white.withOpacity(0.3),
                           ),
                         ],
                       ),
@@ -426,8 +469,20 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
             ),
           ),
           if (productProvider.isLoading)
-            const SliverFillRemaining(
-              child: Center(child: CircularProgressIndicator()),
+            SliverPadding(
+              padding: const EdgeInsets.all(AppSpacing.md),
+              sliver: SliverGrid(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  childAspectRatio: 0.7,
+                  crossAxisSpacing: AppSpacing.md,
+                  mainAxisSpacing: AppSpacing.md,
+                ),
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) => const ProductCardSkeleton(),
+                  childCount: 6,
+                ),
+              ),
             )
           else if (productProvider.products.isEmpty)
             SliverFillRemaining(
@@ -481,7 +536,8 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
                 ),
               ),
             ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -607,6 +663,35 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
               style: AppTextStyles.bodyLarge.copyWith(
                 fontWeight: FontWeight.w600,
               ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showQuickSearch(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => Container(
+        height: MediaQuery.of(context).size.height * 0.7,
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            TextField(
+              autofocus: true,
+              decoration: const InputDecoration(
+                hintText: 'Quick search...',
+                prefixIcon: Icon(Icons.search),
+              ),
+              onChanged: (value) {
+                context.read<ProductProvider>().searchProducts(value);
+              },
+            ),
+            const SizedBox(height: 16),
+            const Expanded(
+              child: Text('Search results will appear here'),
             ),
           ],
         ),

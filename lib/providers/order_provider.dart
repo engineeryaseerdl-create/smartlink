@@ -64,7 +64,7 @@ class OrderProvider with ChangeNotifier {
     }
   }
 
-  void assignRider(String orderId, String riderId, String riderName) {
+  Future<void> assignRider(String orderId, String riderId) async {
     final index = _orders.indexWhere((o) => o.id == orderId);
     if (index != -1) {
       final order = _orders[index];
@@ -81,7 +81,7 @@ class OrderProvider with ChangeNotifier {
         totalAmount: order.totalAmount,
         status: OrderStatus.pickupReady,
         riderId: riderId,
-        riderName: riderName,
+        riderName: 'Rider #${riderId.substring(0, 8)}',
         createdAt: order.createdAt,
         deliveredAt: order.deliveredAt,
         deliveryType: order.deliveryType,

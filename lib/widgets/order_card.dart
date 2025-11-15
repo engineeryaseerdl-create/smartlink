@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../models/order_model.dart';
+import '../models/rider_model.dart';
+import '../providers/rider_provider.dart';
+import '../providers/order_provider.dart';
+import '../widgets/status_indicator.dart';
 import '../utils/constants.dart';
 import '../utils/helpers.dart';
+import 'rider_selection_sheet.dart';
 
 class OrderCard extends StatelessWidget {
   final OrderModel order;
@@ -31,6 +38,22 @@ class OrderCard extends StatelessWidget {
         return AppColors.successGreen;
       case OrderStatus.cancelled:
         return AppColors.errorRed;
+    }
+  }
+
+  void _showRiderSelection(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => RiderSelectionBottomSheet(order: order),
+    );
+  }
+
+  void _callRider(String phone) async {
+    final uri = Uri.parse('tel:$phone');
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
     }
   }
 
@@ -116,7 +139,7 @@ class OrderCard extends StatelessWidget {
                   if (order.status == OrderStatus.pending) ...[
                     ElevatedButton(
                       onPressed: () {
-                        // Handle confirm order
+                        context.read<OrderProvider>().updateOrderStatus(order.id, OrderStatus.confirmed);
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primaryGreen,
@@ -130,7 +153,7 @@ class OrderCard extends StatelessWidget {
                     const SizedBox(width: AppSpacing.sm),
                     OutlinedButton(
                       onPressed: () {
-                        // Handle reject order
+                        context.read<OrderProvider>().updateOrderStatus(order.id, OrderStatus.cancelled);
                       },
                       style: OutlinedButton.styleFrom(
                         foregroundColor: AppColors.errorRed,
@@ -142,6 +165,15 @@ class OrderCard extends StatelessWidget {
                       ),
                       child: const Text('Reject'),
                     ),
+                    if (order.status == OrderStatus.confirmed && order.riderId == null) 
+                      ElevatedButton.icon(
+                        onPressed: () => _showRiderSelection(context),
+                        icon: const Icon(Icons.delivery_dining),
+                        label: const Text('Assign Rider'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.infoBlue,
+                        ),
+                      ),
                   ],
                 ],
               )
@@ -173,14 +205,27 @@ class OrderCard extends StatelessWidget {
                     color: AppColors.grey,
                   ),
                 ),
-                Text(
-                  Helpers.formatCurrency(order.totalAmount),
-                  style: isDesktop
-                    ? AppTextStyles.heading3.copyWith(color: AppColors.primaryGreen)
-                    : AppTextStyles.bodyLarge.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.primaryGreen,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      Helpers.formatCurrency(order.totalAmount),
+                      style: isDesktop
+                        ? AppTextStyles.heading3.copyWith(color: AppColors.primaryGreen)
+                        : AppTextStyles.bodyLarge.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.primaryGreen,
+                          ),
+                    ),
+                    const SizedBox(height: 4),
+                    SizedBox(
+                      width: 80,
+                      child: OrderProgressBar(
+                        progress: _getOrderProgress(order.status),
+                        status: order.status.toString().split('.').last,
                       ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -218,5 +263,22 @@ class OrderCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  double _getOrderProgress(OrderStatus status) {
+    switch (status) {
+      case OrderStatus.pending:
+        return 0.2;
+      case OrderStatus.confirmed:
+        return 0.4;
+      case OrderStatus.pickupReady:
+        return 0.6;
+      case OrderStatus.inTransit:
+        return 0.8;
+      case OrderStatus.delivered:
+        return 1.0;
+      case OrderStatus.cancelled:
+        return 0.0;
+    }
   }
 }

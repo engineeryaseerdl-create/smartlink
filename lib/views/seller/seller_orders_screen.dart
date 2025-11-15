@@ -131,7 +131,7 @@ class _SellerOrdersScreenState extends State<SellerOrdersScreen> {
                   onTap: () {
                     context
                         .read<OrderProvider>()
-                        .assignRider(order.id, rider.id, rider.name);
+                        .assignRider(order.id, rider.id);
                     Navigator.pop(context);
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(

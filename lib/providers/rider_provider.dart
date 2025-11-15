@@ -67,4 +67,10 @@ class RiderProvider with ChangeNotifier {
       notifyListeners();
     }
   }
+
+  Future<void> loadAvailableRiders() async {
+    if (_riders.isEmpty) {
+      await loadRiders();
+    }
+  }
 }

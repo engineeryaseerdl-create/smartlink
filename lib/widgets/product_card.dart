@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import '../models/product_model.dart';
+import '../providers/favorites_provider.dart';
+import '../providers/cart_provider.dart';
+import '../providers/auth_provider.dart';
+import '../widgets/swipe_action_card.dart';
 import '../utils/constants.dart';
 import '../utils/helpers.dart';
 
@@ -23,11 +29,19 @@ class ProductCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDesktop = ResponsiveUtils.isDesktop(context);
     final imageHeight = isDesktop ? 200.0 : 160.0;
+    final authProvider = Provider.of<AuthProvider>(context);
+    final currentUser = authProvider.currentUser;
+    final isOwnProduct = currentUser?.id == product.sellerId;
     
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        decoration: BoxDecoration(
+    return SwipeActionCard(
+      onFavorite: () {
+        HapticFeedback.lightImpact();
+        context.read<FavoritesProvider>().toggleFavorite(product);
+      },
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          decoration: BoxDecoration(
           color: AppColors.white,
           borderRadius: BorderRadius.circular(AppBorderRadius.lg),
           boxShadow: [
@@ -155,16 +169,23 @@ class ProductCard extends StatelessWidget {
                         ),
                       ],
                     ),
-                    child: IconButton(
-                      onPressed: () {}, // TODO: Add to favorites
-                      icon: const Icon(Icons.favorite_border),
-                      color: AppColors.textSecondary,
-                      iconSize: 18,
-                      padding: const EdgeInsets.all(8),
-                      constraints: const BoxConstraints(
-                        minWidth: 32,
-                        minHeight: 32,
-                      ),
+                    child: Consumer<FavoritesProvider>(
+                      builder: (context, favorites, child) {
+                        final isFavorite = favorites.isFavorite(product.id);
+                        return IconButton(
+                          onPressed: () {
+                            favorites.toggleFavorite(product);
+                          },
+                          icon: Icon(isFavorite ? Icons.favorite : Icons.favorite_border),
+                          color: isFavorite ? Colors.red : AppColors.textSecondary,
+                          iconSize: 18,
+                          padding: const EdgeInsets.all(8),
+                          constraints: const BoxConstraints(
+                            minWidth: 32,
+                            minHeight: 32,
+                          ),
+                        );
+                      },
                     ),
                   ),
                 ),
@@ -327,12 +348,22 @@ class ProductCard extends StatelessWidget {
                           color: Colors.transparent,
                           child: InkWell(
                             borderRadius: BorderRadius.circular(6),
-                            onTap: () {}, // TODO: Add to cart
+                            onTap: isOwnProduct ? null : () {
+                              HapticFeedback.lightImpact();
+                              context.read<CartProvider>().addToCart(product);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('${product.title} added to cart'),
+                                  backgroundColor: AppColors.successGreen,
+                                  duration: const Duration(seconds: 2),
+                                ),
+                              );
+                            },
                             child: Center(
                               child: Text(
-                                'Add to Cart',
+                                isOwnProduct ? 'Your Product' : 'Add to Cart',
                                 style: AppTextStyles.bodySmall.copyWith(
-                                  color: AppColors.primaryGreen,
+                                  color: isOwnProduct ? AppColors.textSecondary : AppColors.primaryGreen,
                                   fontWeight: FontWeight.w600,
                                   fontSize: 10,
                                 ),
@@ -347,6 +378,7 @@ class ProductCard extends StatelessWidget {
               ),
             ),
           ],
+          ),
         ),
       ),
     );
