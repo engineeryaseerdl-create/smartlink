@@ -69,6 +69,17 @@
       ]
     },
     {
+      "name": "lottie",
+      "version": "3.3.2",
+      "dependencies": [
+        "archive",
+        "flutter",
+        "http",
+        "path",
+        "vector_math"
+      ]
+    },
+    {
       "name": "connectivity_plus",
       "version": "5.0.2",
       "dependencies": [
@@ -78,6 +89,21 @@
         "js",
         "meta",
         "nm"
+      ]
+    },
+    {
+      "name": "speech_to_text",
+      "version": "6.6.0",
+      "dependencies": [
+        "clock",
+        "flutter",
+        "flutter_web_plugins",
+        "js",
+        "json_annotation",
+        "meta",
+        "pedantic",
+        "speech_to_text_macos",
+        "speech_to_text_platform_interface"
       ]
     },
     {
@@ -245,7 +271,7 @@
     },
     {
       "name": "meta",
-      "version": "1.16.0",
+      "version": "1.17.0",
       "dependencies": []
     },
     {
@@ -307,7 +333,7 @@
     },
     {
       "name": "test_api",
-      "version": "0.7.6",
+      "version": "0.7.7",
       "dependencies": [
         "async",
         "boolean_selector",
@@ -367,10 +393,45 @@
       ]
     },
     {
+      "name": "http",
+      "version": "1.6.0",
+      "dependencies": [
+        "async",
+        "http_parser",
+        "meta",
+        "web"
+      ]
+    },
+    {
+      "name": "archive",
+      "version": "4.0.7",
+      "dependencies": [
+        "crypto",
+        "path",
+        "posix"
+      ]
+    },
+    {
       "name": "nm",
       "version": "0.5.0",
       "dependencies": [
         "dbus"
+      ]
+    },
+    {
+      "name": "js",
+      "version": "0.6.7",
+      "dependencies": [
+        "meta"
+      ]
+    },
+    {
+      "name": "connectivity_plus_platform_interface",
+      "version": "1.2.4",
+      "dependencies": [
+        "flutter",
+        "meta",
+        "plugin_platform_interface"
       ]
     },
     {
@@ -381,8 +442,29 @@
       ]
     },
     {
-      "name": "connectivity_plus_platform_interface",
-      "version": "1.2.4",
+      "name": "pedantic",
+      "version": "1.11.1",
+      "dependencies": []
+    },
+    {
+      "name": "json_annotation",
+      "version": "4.9.0",
+      "dependencies": [
+        "meta"
+      ]
+    },
+    {
+      "name": "speech_to_text_macos",
+      "version": "1.1.0",
+      "dependencies": [
+        "flutter",
+        "plugin_platform_interface",
+        "speech_to_text_platform_interface"
+      ]
+    },
+    {
+      "name": "speech_to_text_platform_interface",
+      "version": "2.3.0",
       "dependencies": [
         "flutter",
         "meta",
@@ -426,16 +508,6 @@
         "rxdart",
         "storage_client",
         "yet_another_json_isolate"
-      ]
-    },
-    {
-      "name": "http",
-      "version": "1.6.0",
-      "dependencies": [
-        "async",
-        "http_parser",
-        "meta",
-        "web"
       ]
     },
     {
@@ -842,6 +914,25 @@
       ]
     },
     {
+      "name": "posix",
+      "version": "6.0.3",
+      "dependencies": [
+        "ffi",
+        "meta",
+        "path"
+      ]
+    },
+    {
+      "name": "dbus",
+      "version": "0.7.11",
+      "dependencies": [
+        "args",
+        "ffi",
+        "meta",
+        "xml"
+      ]
+    },
+    {
       "name": "url_launcher_windows",
       "version": "3.1.4",
       "dependencies": [
@@ -1110,6 +1201,20 @@
       "dependencies": []
     },
     {
+      "name": "xml",
+      "version": "6.6.1",
+      "dependencies": [
+        "collection",
+        "meta",
+        "petitparser"
+      ]
+    },
+    {
+      "name": "args",
+      "version": "2.7.0",
+      "dependencies": []
+    },
+    {
       "name": "retry",
       "version": "3.1.2",
       "dependencies": []
@@ -1194,6 +1299,14 @@
       ]
     },
     {
+      "name": "petitparser",
+      "version": "7.0.1",
+      "dependencies": [
+        "collection",
+        "meta"
+      ]
+    },
+    {
       "name": "web_socket",
       "version": "1.0.1",
       "dependencies": [
@@ -1210,119 +1323,6 @@
     {
       "name": "synchronized",
       "version": "3.4.0",
-      "dependencies": []
-    },
-    {
-      "name": "speech_to_text",
-      "version": "6.6.0",
-      "dependencies": [
-        "clock",
-        "flutter",
-        "flutter_web_plugins",
-        "js",
-        "json_annotation",
-        "meta",
-        "pedantic",
-        "speech_to_text_macos",
-        "speech_to_text_platform_interface"
-      ]
-    },
-    {
-      "name": "speech_to_text_macos",
-      "version": "1.1.0",
-      "dependencies": [
-        "flutter",
-        "plugin_platform_interface",
-        "speech_to_text_platform_interface"
-      ]
-    },
-    {
-      "name": "js",
-      "version": "0.6.7",
-      "dependencies": [
-        "meta"
-      ]
-    },
-    {
-      "name": "speech_to_text_platform_interface",
-      "version": "2.3.0",
-      "dependencies": [
-        "flutter",
-        "meta",
-        "plugin_platform_interface"
-      ]
-    },
-    {
-      "name": "pedantic",
-      "version": "1.11.1",
-      "dependencies": []
-    },
-    {
-      "name": "lottie",
-      "version": "3.3.2",
-      "dependencies": [
-        "archive",
-        "flutter",
-        "http",
-        "path",
-        "vector_math"
-      ]
-    },
-    {
-      "name": "archive",
-      "version": "4.0.7",
-      "dependencies": [
-        "crypto",
-        "path",
-        "posix"
-      ]
-    },
-    {
-      "name": "posix",
-      "version": "6.0.3",
-      "dependencies": [
-        "ffi",
-        "meta",
-        "path"
-      ]
-    },
-    {
-      "name": "dbus",
-      "version": "0.7.11",
-      "dependencies": [
-        "args",
-        "ffi",
-        "meta",
-        "xml"
-      ]
-    },
-    {
-      "name": "xml",
-      "version": "6.6.1",
-      "dependencies": [
-        "collection",
-        "meta",
-        "petitparser"
-      ]
-    },
-    {
-      "name": "petitparser",
-      "version": "7.0.1",
-      "dependencies": [
-        "collection",
-        "meta"
-      ]
-    },
-    {
-      "name": "json_annotation",
-      "version": "4.9.0",
-      "dependencies": [
-        "meta"
-      ]
-    },
-    {
-      "name": "args",
-      "version": "2.7.0",
       "dependencies": []
     }
   ],

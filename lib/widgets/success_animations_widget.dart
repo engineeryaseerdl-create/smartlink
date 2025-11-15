@@ -619,7 +619,7 @@ class _FloatingSuccessActionState extends State<FloatingSuccessAction>
               duration: const Duration(milliseconds: 200),
               child: _showSuccess
                   ? const Icon(Icons.check, key: ValueKey('success'))
-                  : Icon(widget.icon, key: ValueKey('normal')),
+                  : Icon(widget.icon, key: const ValueKey('normal')),
             ),
           ),
         );

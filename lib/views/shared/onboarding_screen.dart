@@ -143,11 +143,23 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   Widget _buildPage(OnboardingPage page) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            page.color.withOpacity(0.1),
+            page.color.withOpacity(0.05),
+            Colors.white,
+          ],
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
           Hero(
             tag: 'onboarding_${page.title}',
             child: Container(
@@ -206,7 +218,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               ),
             ),
           ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -219,7 +232,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       height: 12,
       decoration: BoxDecoration(
         gradient: _currentPage == index
-            ? LinearGradient(
+            ? const LinearGradient(
                 colors: [AppColors.primaryGreen, AppColors.darkGreen],
               )
             : null,

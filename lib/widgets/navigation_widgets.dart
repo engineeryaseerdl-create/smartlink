@@ -375,7 +375,7 @@ class _AnimatedTabBarState extends State<AnimatedTabBar>
               return Expanded(
                 child: GestureDetector(
                   onTap: () => widget.onTabSelected(index),
-                  child: Container(
+                  child: SizedBox(
                     height: 60,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,

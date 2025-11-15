@@ -120,13 +120,13 @@ class _UXShowcaseScreenState extends State<UXShowcaseScreen>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Loading States & Skeleton Screens', style: AppTextStyles.heading3),
+          const Text('Loading States & Skeleton Screens', style: AppTextStyles.heading3),
           const SizedBox(height: AppSpacing.lg),
 
           // Enhanced shimmer loading
-          Text('Enhanced Product Cards:', style: AppTextStyles.heading4),
+          const Text('Enhanced Product Cards:', style: AppTextStyles.heading4),
           const SizedBox(height: AppSpacing.md),
-          Container(
+          SizedBox(
             height: 280,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
@@ -145,7 +145,7 @@ class _UXShowcaseScreenState extends State<UXShowcaseScreen>
           const SizedBox(height: AppSpacing.xl),
 
           // Order skeletons
-          Text('Order Card Skeletons:', style: AppTextStyles.heading4),
+          const Text('Order Card Skeletons:', style: AppTextStyles.heading4),
           const SizedBox(height: AppSpacing.md),
           const OrderCardSkeleton(),
           const SizedBox(height: AppSpacing.md),
@@ -154,7 +154,7 @@ class _UXShowcaseScreenState extends State<UXShowcaseScreen>
           const SizedBox(height: AppSpacing.xl),
 
           // Wave loading animation
-          Text('Wave Loading Animation:', style: AppTextStyles.heading4),
+          const Text('Wave Loading Animation:', style: AppTextStyles.heading4),
           const SizedBox(height: AppSpacing.md),
           const Center(child: WaveLoadingIndicator()),
           const SizedBox(height: AppSpacing.xl),
@@ -169,13 +169,13 @@ class _UXShowcaseScreenState extends State<UXShowcaseScreen>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Enhanced States', style: AppTextStyles.heading3),
+          const Text('Enhanced States', style: AppTextStyles.heading3),
           const SizedBox(height: AppSpacing.lg),
 
           // Empty states
-          Text('Enhanced Empty States:', style: AppTextStyles.heading4),
+          const Text('Enhanced Empty States:', style: AppTextStyles.heading4),
           const SizedBox(height: AppSpacing.md),
-          Container(
+          SizedBox(
             height: 350,
             child: PageView(
               children: [
@@ -206,7 +206,7 @@ class _UXShowcaseScreenState extends State<UXShowcaseScreen>
           const SizedBox(height: AppSpacing.xl),
 
           // Error states
-          Text('Error States:', style: AppTextStyles.heading4),
+          const Text('Error States:', style: AppTextStyles.heading4),
           const SizedBox(height: AppSpacing.md),
           EnhancedInlineErrorWidget(
             message: 'Failed to load products. Please check your connection.',
@@ -233,7 +233,7 @@ class _UXShowcaseScreenState extends State<UXShowcaseScreen>
           const SizedBox(height: AppSpacing.xl),
 
           // Status indicators
-          Text('Status Indicators:', style: AppTextStyles.heading4),
+          const Text('Status Indicators:', style: AppTextStyles.heading4),
           const SizedBox(height: AppSpacing.md),
           Wrap(
             spacing: AppSpacing.sm,
@@ -255,11 +255,11 @@ class _UXShowcaseScreenState extends State<UXShowcaseScreen>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Interactive Actions', style: AppTextStyles.heading3),
+          const Text('Interactive Actions', style: AppTextStyles.heading3),
           const SizedBox(height: AppSpacing.lg),
 
           // Swipe actions
-          Text('Swipe to Delete:', style: AppTextStyles.heading4),
+          const Text('Swipe to Delete:', style: AppTextStyles.heading4),
           const SizedBox(height: AppSpacing.md),
           SwipeToDeleteWidget(
             onDelete: () {
@@ -296,15 +296,15 @@ class _UXShowcaseScreenState extends State<UXShowcaseScreen>
           const SizedBox(height: AppSpacing.xl),
 
           // Success animations
-          Text('Success Animations:', style: AppTextStyles.heading4),
+          const Text('Success Animations:', style: AppTextStyles.heading4),
           const SizedBox(height: AppSpacing.md),
-          Container(
+          SizedBox(
             width: double.infinity,
             child: Center(
               child: Column(
                 children: [
                   if (_showSuccess)
-                    Container(
+                    SizedBox(
                       height: 200,
                       child: const SuccessAnimationWidget(
                         title: 'Order Placed!',
@@ -329,7 +329,7 @@ class _UXShowcaseScreenState extends State<UXShowcaseScreen>
           const SizedBox(height: AppSpacing.xl),
 
           // Button animations
-          Text('Button Micro-interactions:', style: AppTextStyles.heading4),
+          const Text('Button Micro-interactions:', style: AppTextStyles.heading4),
           const SizedBox(height: AppSpacing.md),
           Wrap(
             spacing: AppSpacing.md,
@@ -388,13 +388,13 @@ class _UXShowcaseScreenState extends State<UXShowcaseScreen>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Navigation Elements', style: AppTextStyles.heading3),
+          const Text('Navigation Elements', style: AppTextStyles.heading3),
           const SizedBox(height: AppSpacing.lg),
 
           // Breadcrumbs
-          Text('Breadcrumb Navigation:', style: AppTextStyles.heading4),
+          const Text('Breadcrumb Navigation:', style: AppTextStyles.heading4),
           const SizedBox(height: AppSpacing.md),
-          Container(
+          SizedBox(
             width: double.infinity,
             child: BreadcrumbNavigation(
               items: [
@@ -422,26 +422,26 @@ class _UXShowcaseScreenState extends State<UXShowcaseScreen>
           const SizedBox(height: AppSpacing.xl),
 
           // Progress tracking
-          Text('Order Progress:', style: AppTextStyles.heading4),
+          const Text('Order Progress:', style: AppTextStyles.heading4),
           const SizedBox(height: AppSpacing.md),
           Container(
             width: double.infinity,
             padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
-            child: StatusProgressBar(
+            child: const StatusProgressBar(
               steps: [
-                const ProgressStep(
+                ProgressStep(
                   label: 'Order Placed',
                   icon: Icons.check_circle,
                 ),
-                const ProgressStep(
+                ProgressStep(
                   label: 'Processing',
                   icon: Icons.settings,
                 ),
-                const ProgressStep(
+                ProgressStep(
                   label: 'Shipped',
                   icon: Icons.local_shipping,
                 ),
-                const ProgressStep(
+                ProgressStep(
                   label: 'Delivered',
                   icon: Icons.home,
                 ),
@@ -453,7 +453,7 @@ class _UXShowcaseScreenState extends State<UXShowcaseScreen>
           const SizedBox(height: AppSpacing.xl),
 
           // Delivery tracking
-          Text('Delivery Tracking:', style: AppTextStyles.heading4),
+          const Text('Delivery Tracking:', style: AppTextStyles.heading4),
           const SizedBox(height: AppSpacing.md),
           Container(
             width: double.infinity,
@@ -493,9 +493,9 @@ class _UXShowcaseScreenState extends State<UXShowcaseScreen>
           const SizedBox(height: AppSpacing.xl),
 
           // Stepper navigation
-          Text('Multi-step Process:', style: AppTextStyles.heading4),
+          const Text('Multi-step Process:', style: AppTextStyles.heading4),
           const SizedBox(height: AppSpacing.md),
-          Container(
+          SizedBox(
             width: double.infinity,
             child: StepperNavigation(
               steps: const [
@@ -522,11 +522,11 @@ class _UXShowcaseScreenState extends State<UXShowcaseScreen>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Media & Input', style: AppTextStyles.heading3),
+          const Text('Media & Input', style: AppTextStyles.heading3),
           const SizedBox(height: AppSpacing.lg),
 
           // Voice search
-          Text('Voice Search:', style: AppTextStyles.heading4),
+          const Text('Voice Search:', style: AppTextStyles.heading4),
           const SizedBox(height: AppSpacing.md),
           VoiceSearchField(
             controller: _searchController,
@@ -552,12 +552,12 @@ class _UXShowcaseScreenState extends State<UXShowcaseScreen>
           const SizedBox(height: AppSpacing.xl),
 
           // Progressive image loading
-          Text('Progressive Image Loading:', style: AppTextStyles.heading4),
+          const Text('Progressive Image Loading:', style: AppTextStyles.heading4),
           const SizedBox(height: AppSpacing.md),
-          Container(
+          SizedBox(
             width: double.infinity,
             child: ProductImageGallery(
-              images: [
+              images: const [
                 'https://picsum.photos/400/300?random=1',
                 'https://picsum.photos/400/300?random=2',
                 'https://picsum.photos/400/300?random=3',
@@ -572,7 +572,7 @@ class _UXShowcaseScreenState extends State<UXShowcaseScreen>
           const SizedBox(height: AppSpacing.xl),
 
           // Avatar examples
-          Text('Optimized Avatars:', style: AppTextStyles.heading4),
+          const Text('Optimized Avatars:', style: AppTextStyles.heading4),
           const SizedBox(height: AppSpacing.md),
           Wrap(
             spacing: AppSpacing.lg,
@@ -599,12 +599,12 @@ class _UXShowcaseScreenState extends State<UXShowcaseScreen>
           const SizedBox(height: AppSpacing.xl),
 
           // Horizontal scroll picker
-          Text('Horizontal Picker:', style: AppTextStyles.heading4),
+          const Text('Horizontal Picker:', style: AppTextStyles.heading4),
           const SizedBox(height: AppSpacing.md),
-          Container(
+          SizedBox(
             width: double.infinity,
             child: HorizontalScrollPicker(
-              items: ['Small', 'Medium', 'Large', 'X-Large', 'XX-Large'],
+              items: const ['Small', 'Medium', 'Large', 'X-Large', 'XX-Large'],
               selectedItem: 'Medium',
               onItemSelected: (item) {
                 _showSuccessSnackbar('Selected: $item');

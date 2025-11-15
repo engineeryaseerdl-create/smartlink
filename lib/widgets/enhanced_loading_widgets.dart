@@ -89,9 +89,9 @@ class EnhancedProductCardSkeleton extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Image skeleton
-            SkeletonContainer(
+            const SkeletonContainer(
               height: 160,
-              borderRadius: const BorderRadius.only(
+              borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(AppBorderRadius.lg),
                 topRight: Radius.circular(AppBorderRadius.lg),
               ),

@@ -347,14 +347,14 @@ class DeliveryTrackingWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
+          const Row(
             children: [
-              const Icon(
+              Icon(
                 Icons.local_shipping,
                 color: AppColors.primaryGreen,
                 size: 24,
               ),
-              const SizedBox(width: AppSpacing.sm),
+              SizedBox(width: AppSpacing.sm),
               Text('Delivery Tracking', style: AppTextStyles.heading4),
             ],
           ),
@@ -464,7 +464,7 @@ class DeliveryTrackingWidget extends StatelessWidget {
                 ),
               ],
             );
-          }).toList(),
+          }),
         ],
       ),
     );

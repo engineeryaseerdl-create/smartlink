@@ -121,10 +121,10 @@ class _EnhancedBuyerHomeScreenState extends State<EnhancedBuyerHomeScreen> {
 
   PreferredSizeWidget _buildAppBar() {
     return AppBar(
-      title: Row(
+      title: const Row(
         children: [
-          const Text('SmartLink'),
-          const SizedBox(width: AppSpacing.sm),
+          Text('SmartLink'),
+          SizedBox(width: AppSpacing.sm),
           BatteryStatusIndicator(
             batteryLevel: 0.75,
             isCharging: false,

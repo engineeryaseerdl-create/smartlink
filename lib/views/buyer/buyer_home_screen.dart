@@ -130,7 +130,7 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
                               ),
                             ),
                             Text(
-                              '${user?.name?.split(' ').first ?? 'User'}',
+                              user?.name.split(' ').first ?? 'User',
                               style: AppTextStyles.heading2.copyWith(
                                 color: AppColors.textPrimary,
                                 fontWeight: FontWeight.bold,
@@ -141,7 +141,7 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
                               onTap: () {},
                               child: Row(
                                 children: [
-                                  Icon(
+                                  const Icon(
                                     Icons.location_on,
                                     size: 14,
                                     color: AppColors.primaryGreen,
@@ -155,7 +155,7 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
                                     ),
                                   ),
                                   const SizedBox(width: 4),
-                                  Icon(
+                                  const Icon(
                                     Icons.keyboard_arrow_down,
                                     size: 16,
                                     color: AppColors.primaryGreen,
@@ -169,14 +169,14 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
                       Row(
                         children: [
                           Container(
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                               color: AppColors.backgroundLight,
                               shape: BoxShape.circle,
                             ),
                             child: IconButton(
                               onPressed: () {},
-                              icon: Badge(
-                                label: const Text('3'),
+                              icon: const Badge(
+                                label: Text('3'),
                                 isLabelVisible: true,
                                 backgroundColor: AppColors.errorRed,
                                 child: Icon(
@@ -190,7 +190,7 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
                           Consumer<CartProvider>(
                             builder: (context, cart, child) {
                               return Container(
-                                decoration: BoxDecoration(
+                                decoration: const BoxDecoration(
                                   color: AppColors.backgroundLight,
                                   shape: BoxShape.circle,
                                 ),
@@ -205,7 +205,7 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
                                     label: Text('${cart.totalItems}'),
                                     isLabelVisible: cart.totalItems > 0,
                                     backgroundColor: AppColors.primaryGreen,
-                                    child: Icon(
+                                    child: const Icon(
                                       Icons.shopping_cart_outlined,
                                       color: AppColors.textPrimary,
                                     ),
@@ -241,7 +241,7 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
                         hintStyle: AppTextStyles.bodyMedium.copyWith(
                           color: AppColors.textSecondary,
                         ),
-                        prefixIcon: Icon(
+                        prefixIcon: const Icon(
                           Icons.search,
                           color: AppColors.textSecondary,
                         ),
@@ -275,9 +275,9 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
                   ),
                   const SizedBox(height: AppSpacing.lg),
                   Container(
-                    height: 120,
+                    height: 100,
                     decoration: BoxDecoration(
-                      gradient: LinearGradient(
+                      gradient: const LinearGradient(
                         colors: [
                           AppColors.primaryGreen,
                           AppColors.darkGreen,
@@ -285,74 +285,57 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
                       ),
                       borderRadius: BorderRadius.circular(AppBorderRadius.lg),
                     ),
-                    child: Stack(
-                      children: [
-                        Positioned(
-                          right: -20,
-                          top: -20,
-                          child: Container(
-                            width: 100,
-                            height: 100,
-                            decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.1),
-                              shape: BoxShape.circle,
+                    child: Padding(
+                      padding: const EdgeInsets.all(AppSpacing.sm),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'Free Delivery',
+                                  style: AppTextStyles.bodyLarge.copyWith(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  'On orders above ₦5,000',
+                                  style: AppTextStyles.bodySmall.copyWith(
+                                    color: Colors.white.withOpacity(0.9),
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 2,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Text(
+                                    'Shop Now',
+                                    style: AppTextStyles.bodySmall.copyWith(
+                                      color: AppColors.primaryGreen,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 10,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(AppSpacing.md),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      'Free Delivery',
-                                      style: AppTextStyles.heading3.copyWith(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 2),
-                                    Text(
-                                      'On orders above ₦5,000',
-                                      style: AppTextStyles.bodyMedium.copyWith(
-                                        color: Colors.white.withOpacity(0.9),
-                                      ),
-                                    ),
-                                    const SizedBox(height: 6),
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 10,
-                                        vertical: 4,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(16),
-                                      ),
-                                      child: Text(
-                                        'Shop Now',
-                                        style: AppTextStyles.bodySmall.copyWith(
-                                          color: AppColors.primaryGreen,
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 11,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Icon(
-                                Icons.local_shipping,
-                                size: 50,
-                                color: Colors.white.withOpacity(0.3),
-                              ),
-                            ],
+                          Icon(
+                            Icons.local_shipping,
+                            size: 40,
+                            color: Colors.white.withOpacity(0.3),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                   const SizedBox(height: AppSpacing.lg),

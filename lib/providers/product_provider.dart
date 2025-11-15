@@ -8,7 +8,7 @@ class ProductProvider with ChangeNotifier {
   bool _isLoading = false;
   String _searchQuery = '';
   ProductCategory? _selectedCategory;
-  Set<String> _favoriteIds = {};
+  final Set<String> _favoriteIds = {};
   String _sortBy = 'name';
 
   List<ProductModel> get products => _filteredProducts;

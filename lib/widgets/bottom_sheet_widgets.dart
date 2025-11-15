@@ -134,7 +134,7 @@ class _AddToCartBottomSheetState extends State<AddToCartBottomSheet> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Quantity selector
-                Text('Quantity', style: AppTextStyles.heading5),
+                const Text('Quantity', style: AppTextStyles.heading5),
                 const SizedBox(height: AppSpacing.sm),
                 Row(
                   children: [
@@ -180,7 +180,7 @@ class _AddToCartBottomSheetState extends State<AddToCartBottomSheet> {
                 const SizedBox(height: AppSpacing.lg),
 
                 // Size selection
-                Text('Size', style: AppTextStyles.heading5),
+                const Text('Size', style: AppTextStyles.heading5),
                 const SizedBox(height: AppSpacing.sm),
                 Wrap(
                   spacing: AppSpacing.sm,
@@ -279,7 +279,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Filters', style: AppTextStyles.heading3),
+              const Text('Filters', style: AppTextStyles.heading3),
               TextButton(
                 onPressed: () {
                   setState(() {
@@ -300,7 +300,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Price range
-                  Text('Price Range', style: AppTextStyles.heading4),
+                  const Text('Price Range', style: AppTextStyles.heading4),
                   const SizedBox(height: AppSpacing.sm),
                   RangeSlider(
                     values: priceRange,
@@ -327,7 +327,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                   const SizedBox(height: AppSpacing.lg),
 
                   // Category
-                  Text('Category', style: AppTextStyles.heading4),
+                  const Text('Category', style: AppTextStyles.heading4),
                   const SizedBox(height: AppSpacing.sm),
                   Wrap(
                     spacing: AppSpacing.sm,
@@ -356,7 +356,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                   const SizedBox(height: AppSpacing.lg),
 
                   // Rating
-                  Text('Minimum Rating', style: AppTextStyles.heading4),
+                  const Text('Minimum Rating', style: AppTextStyles.heading4),
                   const SizedBox(height: AppSpacing.sm),
                   Column(
                     children: [4, 3, 2, 1].map((rating) {
@@ -368,7 +368,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                               color: AppColors.gold,
                               size: 16,
                             )),
-                            Text(' & up'),
+                            const Text(' & up'),
                           ],
                         ),
                         value: filters['minRating'] == rating,
@@ -441,8 +441,8 @@ class SortBottomSheet extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Padding(
-          padding: const EdgeInsets.all(AppSpacing.md),
+        const Padding(
+          padding: EdgeInsets.all(AppSpacing.md),
           child: Text('Sort by', style: AppTextStyles.heading3),
         ),
         const Divider(),
@@ -471,7 +471,7 @@ class SortBottomSheet extends StatelessWidget {
             onSortSelected(option['value'] as String);
             Navigator.of(context).pop();
           },
-        )).toList(),
+        )),
         const SizedBox(height: AppSpacing.md),
       ],
     );
