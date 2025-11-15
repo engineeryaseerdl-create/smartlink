@@ -140,7 +140,7 @@ class FilterBottomSheet extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text('Filter Products', style: AppTextStyles.heading3),
+          const Text('Filter Products', style: AppTextStyles.heading3),
           const SizedBox(height: AppSpacing.lg),
           _buildFilterOption('Price Range', Icons.attach_money),
           _buildFilterOption('Rating', Icons.star),

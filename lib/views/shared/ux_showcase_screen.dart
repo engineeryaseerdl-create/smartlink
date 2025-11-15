@@ -304,9 +304,9 @@ class _UXShowcaseScreenState extends State<UXShowcaseScreen>
               child: Column(
                 children: [
                   if (_showSuccess)
-                    SizedBox(
+                    const SizedBox(
                       height: 200,
-                      child: const SuccessAnimationWidget(
+                      child: SuccessAnimationWidget(
                         title: 'Order Placed!',
                         subtitle: 'Your order has been confirmed',
                         showConfetti: true,

@@ -103,7 +103,7 @@ class _ShimmerBox extends StatelessWidget {
             animation.value,
             animation.value + 0.3,
           ],
-          colors: [
+          colors: const [
             AppColors.backgroundLight,
             Colors.white,
             AppColors.backgroundLight,
@@ -133,7 +133,7 @@ class _ShimmerLine extends StatelessWidget {
             animation.value,
             animation.value + 0.3,
           ],
-          colors: [
+          colors: const [
             AppColors.backgroundLight,
             Colors.white,
             AppColors.backgroundLight,

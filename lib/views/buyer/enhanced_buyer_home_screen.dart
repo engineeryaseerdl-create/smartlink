@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../providers/product_provider.dart';
-import '../../providers/auth_provider.dart';
 import '../../utils/constants.dart';
 import '../../widgets/widget_exports.dart';
 import '../../models/product_model.dart';

@@ -180,7 +180,7 @@ class LocationPickerWidget extends StatelessWidget {
       padding: const EdgeInsets.all(AppSpacing.lg),
       child: Column(
         children: [
-          Text('Select Delivery Location', style: AppTextStyles.heading3),
+          const Text('Select Delivery Location', style: AppTextStyles.heading3),
           const SizedBox(height: AppSpacing.lg),
           Expanded(
             child: Container(

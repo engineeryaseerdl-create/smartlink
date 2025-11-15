@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../models/order_model.dart';
-import '../models/rider_model.dart';
-import '../providers/rider_provider.dart';
 import '../providers/order_provider.dart';
 import '../widgets/status_indicator.dart';
 import '../utils/constants.dart';

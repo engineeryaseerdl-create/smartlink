@@ -4,11 +4,18 @@ import '../../providers/auth_provider.dart';
 import '../../providers/product_provider.dart';
 import '../../providers/order_provider.dart';
 import '../../providers/cart_provider.dart';
+import '../../providers/comparison_provider.dart';
+import '../../providers/language_provider.dart';
 import '../../models/product_model.dart';
 import '../../utils/constants.dart';
 import '../../widgets/product_card.dart';
 import '../../widgets/skeleton_loader.dart';
 import '../../widgets/quick_action_fab.dart';
+import '../../widgets/voice_search.dart';
+import '../../widgets/quick_filters.dart';
+import '../../widgets/language_toggle.dart';
+import '../../widgets/notification_stream.dart';
+import '../../widgets/product_comparison.dart';
 import 'product_detail_screen.dart';
 import 'buyer_orders_screen.dart';
 import 'cart_screen.dart';
@@ -197,15 +204,17 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
                               color: AppColors.backgroundLight,
                               shape: BoxShape.circle,
                             ),
-                            child: IconButton(
-                              onPressed: () {},
-                              icon: const Badge(
-                                label: Text('3'),
-                                isLabelVisible: true,
-                                backgroundColor: AppColors.errorRed,
-                                child: Icon(
-                                  Icons.notifications_outlined,
-                                  color: AppColors.textPrimary,
+                            child: NotificationStream(
+                              builder: (count) => IconButton(
+                                onPressed: () {},
+                                icon: Badge(
+                                  label: Text('$count'),
+                                  isLabelVisible: count > 0,
+                                  backgroundColor: AppColors.errorRed,
+                                  child: const Icon(
+                                    Icons.notifications_outlined,
+                                    color: AppColors.textPrimary,
+                                  ),
                                 ),
                               ),
                             ),
@@ -269,20 +278,32 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
                           Icons.search,
                           color: AppColors.textSecondary,
                         ),
-                        suffixIcon: Container(
-                          margin: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: AppColors.primaryGreen,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: IconButton(
-                            onPressed: () {},
-                            icon: const Icon(
-                              Icons.tune,
-                              color: Colors.white,
-                              size: 18,
+                        suffixIcon: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            VoiceSearchButton(
+                              onResult: (result) {
+                                _searchController.text = result;
+                                productProvider.searchProducts(result);
+                              },
                             ),
-                          ),
+                            const SizedBox(width: 8),
+                            Container(
+                              margin: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: AppColors.primaryGreen,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: IconButton(
+                                onPressed: () {},
+                                icon: const Icon(
+                                  Icons.tune,
+                                  color: Colors.white,
+                                  size: 18,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                         filled: true,
                         fillColor: Colors.transparent,
@@ -464,6 +485,7 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
                         ),
                     ],
                   ),
+
                 ],
               ),
             ),

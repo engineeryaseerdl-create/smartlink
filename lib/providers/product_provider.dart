@@ -10,11 +10,15 @@ class ProductProvider with ChangeNotifier {
   ProductCategory? _selectedCategory;
   final Set<String> _favoriteIds = {};
   String _sortBy = 'name';
+  String? _sortByFilter;
+  bool _freeDeliveryOnly = false;
 
   List<ProductModel> get products => _filteredProducts;
   bool get isLoading => _isLoading;
   String get searchQuery => _searchQuery;
   ProductCategory? get selectedCategory => _selectedCategory;
+  String? get sortBy => _sortByFilter;
+  bool get freeDeliveryOnly => _freeDeliveryOnly;
 
   Future<void> loadProducts() async {
     _isLoading = true;
@@ -120,4 +124,33 @@ class ProductProvider with ChangeNotifier {
   }
 
   bool isFavorite(String productId) => _favoriteIds.contains(productId);
+
+  void setSortBy(String? sortBy) {
+    _sortByFilter = sortBy;
+    if (sortBy != null) {
+      switch (sortBy) {
+        case 'price_asc':
+          _filteredProducts.sort((a, b) => a.price.compareTo(b.price));
+          break;
+        case 'price_desc':
+          _filteredProducts.sort((a, b) => b.price.compareTo(a.price));
+          break;
+        case 'rating':
+          _filteredProducts.sort((a, b) => b.rating.compareTo(a.rating));
+          break;
+        case 'newest':
+          _filteredProducts.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+          break;
+      }
+    } else {
+      _applyFilters();
+    }
+    notifyListeners();
+  }
+
+  void setFreeDeliveryFilter(bool freeOnly) {
+    _freeDeliveryOnly = freeOnly;
+    _applyFilters();
+    notifyListeners();
+  }
 }

@@ -81,10 +81,10 @@ class PersonalizedSection extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Recently Viewed', style: AppTextStyles.heading3),
+            const Text('Recently Viewed', style: AppTextStyles.heading3),
             TextButton(
               onPressed: () {},
-              child: Text('View All', style: TextStyle(color: AppColors.primaryGreen)),
+              child: const Text('View All', style: TextStyle(color: AppColors.primaryGreen)),
             ),
           ],
         ),
@@ -108,10 +108,10 @@ class PersonalizedSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
+        const Row(
           children: [
-            const Icon(Icons.auto_awesome, color: AppColors.gold, size: 20),
-            const SizedBox(width: AppSpacing.sm),
+            Icon(Icons.auto_awesome, color: AppColors.gold, size: 20),
+            SizedBox(width: AppSpacing.sm),
             Text('Recommended for You', style: AppTextStyles.heading3),
           ],
         ),
@@ -151,9 +151,9 @@ class PersonalizedSection extends StatelessWidget {
         children: [
           Expanded(
             child: Container(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: AppColors.backgroundLight,
-                borderRadius: const BorderRadius.vertical(
+                borderRadius: BorderRadius.vertical(
                   top: Radius.circular(AppBorderRadius.md),
                 ),
               ),
@@ -192,7 +192,7 @@ class PersonalizedSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Quick Actions', style: AppTextStyles.heading3),
+        const Text('Quick Actions', style: AppTextStyles.heading3),
         const SizedBox(height: AppSpacing.md),
         Row(
           children: [

@@ -6,6 +6,8 @@ import '../providers/favorites_provider.dart';
 import '../providers/cart_provider.dart';
 import '../providers/auth_provider.dart';
 import '../widgets/swipe_action_card.dart';
+import '../widgets/product_comparison.dart';
+import '../widgets/delivery_estimate.dart';
 import '../utils/constants.dart';
 import '../utils/helpers.dart';
 
@@ -153,7 +155,7 @@ class ProductCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                // Favorite button
+                // Favorite and comparison buttons
                 Positioned(
                   top: AppSpacing.sm,
                   right: AppSpacing.sm,
@@ -189,6 +191,7 @@ class ProductCard extends StatelessWidget {
                     ),
                   ),
                 ),
+
                 if (showActions)
                   Positioned(
                     top: AppSpacing.sm,
@@ -234,7 +237,7 @@ class ProductCard extends StatelessWidget {
                   ),
               ],
             ),
-            Expanded(
+            Flexible(
               child: Padding(
                 padding: EdgeInsets.all(isDesktop ? AppSpacing.sm : AppSpacing.xs),
                 child: Column(
@@ -257,7 +260,7 @@ class ProductCard extends StatelessWidget {
                             height: 1.3,
                           ),
                     ),
-                    const SizedBox(height: AppSpacing.xs),
+                    const SizedBox(height: 2),
                     // Price section
                     Text(
                       Helpers.formatCurrency(product.price),
@@ -272,7 +275,7 @@ class ProductCard extends StatelessWidget {
                           ),
                     ),
 
-                    const SizedBox(height: AppSpacing.xs),
+                    const SizedBox(height: 2),
                     // Rating and location in one row
                     Row(
                       children: [
@@ -330,12 +333,11 @@ class ProductCard extends StatelessWidget {
                         ),
                       ],
                     ),
-                    const SizedBox(height: AppSpacing.xs),
+                    const SizedBox(height: 2),
                     // Quick add to cart button
-                    Flexible(
-                      child: Container(
+                    Container(
                         width: double.infinity,
-                        height: 28,
+                        height: 24,
                         decoration: BoxDecoration(
                           color: AppColors.primaryGreen.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(6),
@@ -371,14 +373,13 @@ class ProductCard extends StatelessWidget {
                             ),
                           ),
                         ),
-                      ),
                     ),
                   ],
                 ),
               ),
             ),
           ],
-          ),
+        ),
         ),
       ),
     );

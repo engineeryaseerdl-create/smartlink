@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../utils/constants.dart';
 import 'custom_button.dart';
-import 'animated_widgets.dart';
 
 /// Enhanced bottom sheet with smooth animations
 class EnhancedBottomSheet {
