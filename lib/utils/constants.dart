@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  static const Color primaryGreen = Color(0xFF00A86B);
-  static const Color darkGreen = Color(0xFF008C5A);
-  static const Color lightGreen = Color(0xFFE8F5E9);
-  static const Color mutedGreen = Color(0xFF66C299);
+  static const Color primaryGreen = Color(0xFFF88F3A);
+  static const Color darkGreen = Color(0xFFE67E22);
+  static const Color lightGreen = Color(0xFFFDF2E9);
+  static const Color mutedGreen = Color(0xFFFFB366);
   static const Color gold = Color(0xFFFFD700);
   static const Color darkGold = Color(0xFFDAA520);
   static const Color white = Color(0xFFFFFFFF);
@@ -16,13 +16,13 @@ class AppColors {
   static const Color backgroundLight = Color(0xFFF8FAFC);
   static const Color textPrimary = Color(0xFF1F2937);
   static const Color errorRed = Color(0xFFD32F2F);
-  static const Color successGreen = Color(0xFF388E3C);
+  static const Color successGreen = Color(0xFFF88F3A);
   static const Color warningOrange = Color(0xFFFF9800);
   static const Color infoBlue = Color(0xFF1976D2);
   
   // Header Gradient Colors
-  static const Color headerGradientStart = Color(0xFF00A86B);
-  static const Color headerGradientEnd = Color(0xFF008C5A);
+  static const Color headerGradientStart = Color(0xFFF88F3A);
+  static const Color headerGradientEnd = Color(0xFFE67E22);
   static const Color headerOverlay = Color(0x1A000000);
   
   // Dark Mode Colors

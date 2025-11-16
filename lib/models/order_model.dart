@@ -65,6 +65,7 @@ class OrderModel {
   final String? riderName;
   final DateTime createdAt;
   final DateTime? deliveredAt;
+  final DateTime? updatedAt;
   final String deliveryType;
   final List<OrderTracking> trackingHistory;
   final String? trackingCode;
@@ -85,6 +86,7 @@ class OrderModel {
     this.riderName,
     required this.createdAt,
     this.deliveredAt,
+    this.updatedAt,
     this.deliveryType = 'okada',
     this.trackingHistory = const [],
     this.trackingCode,
@@ -116,6 +118,9 @@ class OrderModel {
       deliveredAt: json['deliveredAt'] != null
           ? DateTime.parse(json['deliveredAt'])
           : null,
+      updatedAt: json['updatedAt'] != null
+          ? DateTime.parse(json['updatedAt'])
+          : null,
       deliveryType: json['deliveryType'] ?? 'okada',
       trackingHistory: (json['trackingHistory'] as List? ?? [])
           .map((tracking) => OrderTracking.fromJson(tracking))
@@ -141,6 +146,7 @@ class OrderModel {
       'riderName': riderName,
       'createdAt': createdAt.toIso8601String(),
       'deliveredAt': deliveredAt?.toIso8601String(),
+      'updatedAt': updatedAt?.toIso8601String(),
       'deliveryType': deliveryType,
       'trackingHistory': trackingHistory.map((tracking) => tracking.toJson()).toList(),
       'trackingCode': trackingCode,

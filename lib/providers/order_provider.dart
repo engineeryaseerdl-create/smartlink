@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import '../models/order_model.dart';
+import '../models/product_model.dart';
 import '../services/mock_data_service.dart';
 
 class OrderProvider with ChangeNotifier {
@@ -96,5 +97,41 @@ class OrderProvider with ChangeNotifier {
     } catch (e) {
       return null;
     }
+  }
+
+  Future<OrderModel> createDirectOrder({
+    required ProductModel product,
+    required int quantity,
+    required String buyerId,
+    required String buyerName,
+    required String buyerPhone,
+    required String buyerLocation,
+    required String paymentMethod,
+  }) async {
+    final order = OrderModel(
+      id: 'order_${DateTime.now().millisecondsSinceEpoch}',
+      buyerId: buyerId,
+      buyerName: buyerName,
+      buyerPhone: buyerPhone,
+      buyerLocation: buyerLocation,
+      sellerId: product.sellerId,
+      sellerName: product.sellerName,
+      sellerLocation: product.sellerLocation,
+      items: [
+        OrderItem(
+          productId: product.id,
+          productTitle: product.title,
+          productImage: product.images.first,
+          quantity: quantity,
+          price: product.price,
+        ),
+      ],
+      totalAmount: product.price * quantity,
+      status: OrderStatus.pending,
+      createdAt: DateTime.now(),
+    );
+
+    addOrder(order);
+    return order;
   }
 }

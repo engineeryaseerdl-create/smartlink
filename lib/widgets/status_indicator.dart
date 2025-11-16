@@ -54,10 +54,11 @@ class OrderProgressBar extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(status, style: const TextStyle(fontSize: 12)),
-            Text('${(progress * 100).toInt()}%', style: const TextStyle(fontSize: 12)),
+            Expanded(
+              child: Text(status, style: const TextStyle(fontSize: 9), overflow: TextOverflow.ellipsis),
+            ),
+            Text('${(progress * 100).toInt()}%', style: const TextStyle(fontSize: 9)),
           ],
         ),
         const SizedBox(height: 4),

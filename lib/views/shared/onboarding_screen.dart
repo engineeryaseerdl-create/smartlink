@@ -1,6 +1,5 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
-import '../../utils/constants.dart';
-import '../../widgets/custom_button.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -9,259 +8,335 @@ class OnboardingScreen extends StatefulWidget {
   State<OnboardingScreen> createState() => _OnboardingScreenState();
 }
 
-class _OnboardingScreenState extends State<OnboardingScreen> {
-  final PageController _pageController = PageController();
-  int _currentPage = 0;
+class _OnboardingScreenState extends State<OnboardingScreen>
+    with TickerProviderStateMixin {
+  final PageController _controller = PageController();
+  int currentIndex = 0;
+  Timer? autoSlideTimer;
 
-  final List<OnboardingPage> _pages = [
-    OnboardingPage(
-      icon: Icons.shopping_cart,
-      title: 'Buy Anything, Anytime',
-      description:
-          'Browse thousands of products from trusted sellers across Nigeria. From groceries to electronics, find everything you need.',
-      color: AppColors.primaryGreen,
-    ),
-    OnboardingPage(
-      icon: Icons.store,
-      title: 'Sell from Your Area',
-      description:
-          'Turn your products into profits. List items easily and reach buyers in your area or across the country.',
-      color: AppColors.gold,
-    ),
-    OnboardingPage(
-      icon: Icons.delivery_dining,
-      title: 'Fast Delivery by Trusted Riders',
-      description:
-          'Get your orders delivered quickly by verified Okada and Car riders. Track deliveries in real-time.',
-      color: AppColors.infoBlue,
-    ),
-  ];
+  late AnimationController fadeController;
+  late Animation<double> fadeAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+
+    fadeController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 700),
+    );
+
+    fadeAnimation = CurvedAnimation(
+      parent: fadeController,
+      curve: Curves.easeIn,
+    );
+
+    fadeController.forward();
+
+    _startAutoSlide();
+  }
+
+  void _startAutoSlide() {
+    autoSlideTimer = Timer.periodic(const Duration(seconds: 5), (_) {
+      if (mounted && currentIndex < pages.length - 1) {
+        nextPage(auto: true);
+      }
+    });
+  }
 
   @override
   void dispose() {
-    _pageController.dispose();
+    autoSlideTimer?.cancel();
+    _controller.dispose();
+    fadeController.dispose();
     super.dispose();
+  }
+
+  final List<Map<String, String>> pages = [
+    {
+      "image": "images/connect.png",
+      "title": "Welcome to SmartLink",
+      "subtitle": "Nigeria's #1 marketplace connecting buyers, sellers, and riders across all states"
+    },
+    {
+      "image": "images/track.png",
+      "title": "Shop from Local Sellers",
+      "subtitle": "Discover amazing products from verified sellers in your area with competitive prices"
+    },
+    {
+      "image": "images/deliver.png",
+      "title": "Fast Okada Delivery",
+      "subtitle": "Get your orders delivered quickly by trusted riders in your neighborhood"
+    },
+  ];
+
+  void nextPage({bool auto = false}) {
+    if (!mounted) return;
+
+    fadeController.reset();
+    fadeController.forward();
+
+    if (currentIndex < pages.length - 1) {
+      _controller.nextPage(
+        duration: const Duration(milliseconds: 400),
+        curve: Curves.easeOut,
+      );
+    } else if (!auto) {
+      Navigator.pushReplacementNamed(context, '/login');
+    }
+  }
+
+  void skip() {
+    if (!mounted) return;
+    Navigator.pushReplacementNamed(context, '/login');
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.white,
-      body: SafeArea(
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(AppSpacing.lg),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      AppConstants.appName,
-                      style: AppTextStyles.heading3.copyWith(
-                        color: AppColors.primaryGreen,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    if (_currentPage < _pages.length - 1)
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pushReplacementNamed('/login');
-                        },
-                        child: Text(
-                          'Skip',
-                          style: AppTextStyles.bodyMedium.copyWith(
-                            color: AppColors.textSecondary,
+      backgroundColor: Colors.white,
+      body: Stack(
+        children: [
+          // TOP WAVE BACKGROUND LAYER (covers ~50% height)
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: ClipPath(
+              clipper: TopWaveClipper(),
+              child: Container(
+                height: MediaQuery.of(context).size.height * 0.50,
+                color: const Color(0xFFF88F3A),
+              ),
+            ),
+          ),
+
+          // MAIN CONTENT
+          SafeArea(
+            child: PageView.builder(
+              controller: _controller,
+              itemCount: pages.length,
+              onPageChanged: (index) {
+                if (!mounted) return;
+                setState(() => currentIndex = index);
+                fadeController.reset();
+                fadeController.forward();
+              },
+              itemBuilder: (_, index) {
+                final item = pages[index];
+
+                return FadeTransition(
+                  opacity: fadeAnimation,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 20),
+
+                        // SKIP BUTTON
+                        if (currentIndex < pages.length - 1)
+                          Align(
+                            alignment: Alignment.topRight,
+                            child: TextButton(
+                              onPressed: skip,
+                              child: const Text(
+                                "Skip",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Color(0xFFF88F3A),
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          )
+                        else
+                          const SizedBox(height: 48),
+
+                        const Spacer(),
+
+                        // IMAGE with floating effect
+                        AnimatedScale(
+                          scale: currentIndex == index ? 1.0 : 0.8,
+                          duration: const Duration(milliseconds: 300),
+                          child: Image.asset(
+                            item["image"]!,
+                            height: 500,
+                            width: 500,
+                            fit: BoxFit.contain,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Container(
+                                height: 500,
+                                width: 500,
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFF88F3A).withOpacity(0.2),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: const Icon(
+                                  Icons.image_not_supported,
+                                  size: 80,
+                                  color: Color(0xFFF88F3A),
+                                ),
+                              );
+                            },
                           ),
                         ),
-                      ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: PageView.builder(
-                  controller: _pageController,
-                  onPageChanged: (index) {
-                    setState(() {
-                      _currentPage = index;
-                    });
-                  },
-                  itemCount: _pages.length,
-                  itemBuilder: (context, index) {
-                    return _buildPage(_pages[index]);
-                  },
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.all(AppSpacing.xl),
-                decoration: BoxDecoration(
-                  color: AppColors.white,
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(AppBorderRadius.xl),
-                    topRight: Radius.circular(AppBorderRadius.xl),
+
+                        const SizedBox(height: 40),
+
+                        // TITLE
+                        Text(
+                          item["title"]!,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            fontSize: 32,
+                            fontWeight: FontWeight.w800,
+                            color: Color(0xFFF88F3A),
+                          ),
+                        ),
+
+                        const SizedBox(height: 12),
+
+                        // SUBTITLE
+                        Text(
+                          item["subtitle"]!,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey,
+                            height: 1.4,
+                          ),
+                        ),
+
+                        const Spacer(),
+
+                        // PROGRESS BAR
+                        Container(
+                          height: 4,
+                          width: 60,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(2),
+                            color: Colors.grey.withOpacity(0.3),
+                          ),
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 300),
+                            width: 60 * ((currentIndex + 1) / pages.length),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(2),
+                              color: const Color(0xFFF88F3A),
+                            ),
+                          ),
+                        ),
+
+                        const SizedBox(height: 30),
+
+                        // ACTION BUTTON
+                        ElevatedButton(
+                          onPressed: nextPage,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFFF88F3A),
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            elevation: 8,
+                            shadowColor: const Color(0xFFF88F3A).withOpacity(0.3),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                currentIndex == pages.length - 1 ? 'Get Started' : 'Next',
+                                style: const TextStyle(fontWeight: FontWeight.w600),
+                              ),
+                              const SizedBox(width: 8),
+                              const Icon(Icons.arrow_forward),
+                            ],
+                          ),
+                        ),
+
+                        const SizedBox(height: 40),
+                      ],
+                    ),
                   ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
-                      blurRadius: 20,
-                      offset: const Offset(0, -5),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: List.generate(
-                        _pages.length,
-                        (index) => _buildDot(index),
-                      ),
-                    ),
-                    const SizedBox(height: AppSpacing.xl),
-                    CustomButton(
-                      text: _currentPage == _pages.length - 1
-                          ? 'Get Started'
-                          : 'Continue',
-                      onPressed: () {
-                        if (_currentPage == _pages.length - 1) {
-                          Navigator.of(context).pushReplacementNamed('/login');
-                        } else {
-                          _pageController.nextPage(
-                            duration: const Duration(milliseconds: 400),
-                            curve: Curves.easeInOutCubic,
-                          );
-                        }
-                      },
-                      width: double.infinity,
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-    );
-  }
-
-  Widget _buildPage(OnboardingPage page) {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            page.color.withOpacity(0.1),
-            page.color.withOpacity(0.05),
-            Colors.white,
-          ],
-        ),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-          Hero(
-            tag: 'onboarding_${page.title}',
-            child: Container(
-              width: 280,
-              height: 280,
-              decoration: BoxDecoration(
-                gradient: RadialGradient(
-                  colors: [
-                    page.color.withOpacity(0.15),
-                    page.color.withOpacity(0.05),
-                    Colors.transparent,
-                  ],
-                ),
-                shape: BoxShape.circle,
-              ),
-              child: Container(
-                margin: const EdgeInsets.all(40),
-                decoration: BoxDecoration(
-                  color: AppColors.white,
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: page.color.withOpacity(0.2),
-                      blurRadius: 30,
-                      offset: const Offset(0, 10),
-                    ),
-                  ],
-                ),
-                child: Icon(
-                  page.icon,
-                  size: 80,
-                  color: page.color,
-                ),
-              ),
+                );
+              },
             ),
           ),
-          const SizedBox(height: AppSpacing.xxl),
-          Text(
-            page.title,
-            textAlign: TextAlign.center,
-            style: AppTextStyles.heading1.copyWith(
-              color: AppColors.textPrimary,
-              fontWeight: FontWeight.w700,
-              height: 1.2,
-            ),
-          ),
-          const SizedBox(height: AppSpacing.lg),
-          Container(
-            constraints: const BoxConstraints(maxWidth: 320),
-            child: Text(
-              page.description,
-              textAlign: TextAlign.center,
-              style: AppTextStyles.bodyLarge.copyWith(
-                color: AppColors.textSecondary,
-                height: 1.6,
-              ),
-            ),
-          ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildDot(int index) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
-      margin: const EdgeInsets.symmetric(horizontal: 6),
-      width: _currentPage == index ? 32 : 12,
-      height: 12,
-      decoration: BoxDecoration(
-        gradient: _currentPage == index
-            ? const LinearGradient(
-                colors: [AppColors.primaryGreen, AppColors.darkGreen],
-              )
-            : null,
-        color: _currentPage == index ? null : AppColors.backgroundLight,
-        borderRadius: BorderRadius.circular(6),
-        boxShadow: _currentPage == index
-            ? [
-                BoxShadow(
-                  color: AppColors.primaryGreen.withOpacity(0.3),
-                  blurRadius: 8,
-                  offset: const Offset(0, 2),
-                ),
-              ]
-            : null,
+        ],
       ),
     );
   }
 }
 
-class OnboardingPage {
-  final IconData icon;
-  final String title;
-  final String description;
-  final Color color;
+//////////////////////////////////
+// WAVE CLIPPER (BOTTOM WAVE)
+//////////////////////////////////
 
-  OnboardingPage({
-    required this.icon,
-    required this.title,
-    required this.description,
-    required this.color,
-  });
+class TopWaveClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    final Path path = Path();
+    final double w = size.width;
+    final double h = size.height;
+
+    // Start at top-left
+    path.lineTo(0, h * 0.75);
+
+    // Gentle wave going down then up towards the right
+    path.quadraticBezierTo(
+      w * 0.25, h * 0.65, // control point
+      w * 0.50, h * 0.72, // end point
+    );
+
+    path.quadraticBezierTo(
+      w * 0.75, h * 0.80,
+      w, h * 0.70,
+    );
+
+    // Right edge up to the top-right corner
+    path.lineTo(w, 0);
+
+    // Close back to origin
+    path.close();
+    return path;
+  }
+
+  @override
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) => false;
+}
+
+class WaveClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    Path path = Path();
+    double h = size.height;
+    double w = size.width;
+
+    path.lineTo(0, h - 60);
+
+    // First wave
+    path.quadraticBezierTo(
+      w * 0.25,
+      h,
+      w * 0.5,
+      h - 40,
+    );
+
+    // Second wave
+    path.quadraticBezierTo(
+      w * 0.75,
+      h - 80,
+      w,
+      h - 30,
+    );
+
+    path.lineTo(w, 0);
+    path.close();
+
+    return path;
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }

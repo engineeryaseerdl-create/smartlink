@@ -5,6 +5,7 @@ import '../../providers/order_provider.dart';
 import '../../providers/rider_provider.dart';
 import '../../utils/constants.dart';
 import '../../widgets/order_card.dart';
+import '../../widgets/cluster_selector.dart';
 import '../../models/order_model.dart';
 import '../buyer/order_detail_screen.dart';
 
@@ -89,60 +90,16 @@ class _SellerOrdersScreenState extends State<SellerOrdersScreen> {
   }
 
   void _showAssignRiderDialog(BuildContext context, OrderModel order) {
-    final riderProvider = Provider.of<RiderProvider>(context, listen: false);
-    final availableRiders = riderProvider.getAvailableRiders();
-
-    showDialog(
+    showModalBottomSheet(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Assign Rider'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text('Select a rider to deliver this order:'),
-            const SizedBox(height: AppSpacing.md),
-            if (availableRiders.isEmpty)
-              Container(
-                padding: const EdgeInsets.all(AppSpacing.md),
-                decoration: BoxDecoration(
-                  color: AppColors.lightGrey,
-                  borderRadius: BorderRadius.circular(AppBorderRadius.md),
-                ),
-                child: const Text(
-                  'No available riders at the moment. Please try again later.',
-                  textAlign: TextAlign.center,
-                ),
-              )
-            else
-              ...availableRiders.map((rider) => ListTile(
-                  leading: CircleAvatar(
-                    child: Text(rider.name.isNotEmpty ? rider.name[0] : '?'),
-                  ),
-                  title: Text(rider.name),
-                  subtitle:
-                      Text('${rider.vehicleType.toString().split('.').last.toUpperCase()} - ${rider.vehiclePlate}'),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(Icons.star, color: AppColors.gold, size: 16),
-                      Text(' ${rider.rating}'),
-                    ],
-                  ),
-                  onTap: () {
-                    context
-                        .read<OrderProvider>()
-                        .assignRider(order.id, rider.id);
-                    Navigator.pop(context);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Rider ${rider.name} assigned'),
-                        backgroundColor: AppColors.successGreen,
-                      ),
-                    );
-                  },
-                )),
-          ],
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => Container(
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
         ),
+        child: ClusterSelector(order: order),
       ),
     );
   }

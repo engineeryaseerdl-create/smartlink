@@ -28,11 +28,12 @@ class OrderTrackingWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          /// ORDER ID + STATUS BADGE
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Order #${order.id.substring(0, 8)}',
+                'Order #${_safeId(order.id)}',
                 style: AppTextStyles.heading3.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -56,14 +57,25 @@ class OrderTrackingWidget extends StatelessWidget {
               ),
             ],
           ),
+
           const SizedBox(height: AppSpacing.lg),
+
+          /// TIMELINE
           _buildTrackingTimeline(),
+
           const SizedBox(height: AppSpacing.lg),
-          if (order.riderId != null) _buildRiderInfo(),
+
+          /// RIDER INFO (IF AVAILABLE)
+          if (order.riderId != null && order.riderId!.isNotEmpty) 
+            _buildRiderInfo(),
         ],
       ),
     );
   }
+
+  // -----------------------------------------------------------------------------------------
+  // TIMELINE
+  // -----------------------------------------------------------------------------------------
 
   Widget _buildTrackingTimeline() {
     final steps = [
@@ -77,20 +89,27 @@ class OrderTrackingWidget extends StatelessWidget {
         title: 'Processing',
         subtitle: 'Seller is preparing your order',
         isCompleted: order.status != OrderStatus.pending,
-        timestamp: order.status != OrderStatus.pending ? order.createdAt.add(const Duration(minutes: 30)) : null,
+        timestamp: order.status != OrderStatus.pending 
+            ? order.createdAt.add(const Duration(minutes: 30)) 
+            : null,
       ),
       TrackingStep(
         title: 'Out for Delivery',
         subtitle: 'Rider is on the way',
-        isCompleted: order.status == OrderStatus.delivered || order.status == OrderStatus.inTransit,
-        timestamp: order.status == OrderStatus.delivered || order.status == OrderStatus.inTransit 
-            ? order.createdAt.add(const Duration(hours: 2)) : null,
+        isCompleted: order.status == OrderStatus.delivered ||
+            order.status == OrderStatus.inTransit,
+        timestamp: order.status == OrderStatus.delivered ||
+                order.status == OrderStatus.inTransit
+            ? order.createdAt.add(const Duration(hours: 2))
+            : null,
       ),
       TrackingStep(
         title: 'Delivered',
         subtitle: 'Order delivered successfully',
         isCompleted: order.status == OrderStatus.delivered,
-        timestamp: order.status == OrderStatus.delivered ? order.updatedAt : null,
+        timestamp: order.status == OrderStatus.delivered 
+            ? order.updatedAt 
+            : null,
       ),
     ];
 
@@ -100,72 +119,90 @@ class OrderTrackingWidget extends StatelessWidget {
         final step = entry.value;
         final isLast = index == steps.length - 1;
 
-        return Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Column(
-              children: [
-                Container(
-                  width: 24,
-                  height: 24,
-                  decoration: BoxDecoration(
-                    color: step.isCompleted ? AppColors.primaryGreen : AppColors.backgroundLight,
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: step.isCompleted ? AppColors.primaryGreen : AppColors.textSecondary,
-                      width: 2,
-                    ),
-                  ),
-                  child: step.isCompleted
-                      ? const Icon(
-                          Icons.check,
-                          color: Colors.white,
-                          size: 16,
-                        )
-                      : null,
-                ),
-                if (!isLast)
-                  Container(
-                    width: 2,
-                    height: 40,
-                    color: step.isCompleted ? AppColors.primaryGreen : AppColors.backgroundLight,
-                  ),
-              ],
-            ),
-            const SizedBox(width: AppSpacing.md),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+        return Padding(
+          padding: EdgeInsets.only(bottom: isLast ? 0 : AppSpacing.sm),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              /// Timeline circles + vertical line
+              Column(
                 children: [
-                  Text(
-                    step.title,
-                    style: AppTextStyles.bodyMedium.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: step.isCompleted ? AppColors.textPrimary : AppColors.textSecondary,
-                    ),
-                  ),
-                  Text(
-                    step.subtitle,
-                    style: AppTextStyles.bodySmall.copyWith(
-                      color: AppColors.textSecondary,
-                    ),
-                  ),
-                  if (step.timestamp != null)
-                    Text(
-                      _formatTimestamp(step.timestamp!),
-                      style: AppTextStyles.bodySmall.copyWith(
-                        color: AppColors.textSecondary,
-                        fontSize: 10,
+                  Container(
+                    width: 24,
+                    height: 24,
+                    decoration: BoxDecoration(
+                      color: step.isCompleted
+                          ? AppColors.primaryGreen
+                          : AppColors.backgroundLight,
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: step.isCompleted
+                            ? AppColors.primaryGreen
+                            : AppColors.textSecondary,
+                        width: 2,
                       ),
+                    ),
+                    child: step.isCompleted
+                        ? const Icon(Icons.check, color: Colors.white, size: 16)
+                        : null,
+                  ),
+                  if (!isLast)
+                    Container(
+                      width: 2,
+                      height: 40,
+                      color: step.isCompleted
+                          ? AppColors.primaryGreen
+                          : AppColors.backgroundLight,
                     ),
                 ],
               ),
-            ),
-          ],
+
+              const SizedBox(width: AppSpacing.md),
+
+              /// Timeline text
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      step.title,
+                      style: AppTextStyles.bodyMedium.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: step.isCompleted
+                            ? AppColors.textPrimary
+                            : AppColors.textSecondary,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      step.subtitle,
+                      style: AppTextStyles.bodySmall.copyWith(
+                        color: AppColors.textSecondary,
+                      ),
+                    ),
+                    if (step.timestamp != null) ...[
+                      const SizedBox(height: 2),
+                      Text(
+                        _formatTimestamp(step.timestamp!),
+                        style: AppTextStyles.bodySmall.copyWith(
+                          color: AppColors.textSecondary,
+                          fontSize: 10,
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+            ],
+          ),
         );
       }).toList(),
     );
   }
+
+  // -----------------------------------------------------------------------------------------
+  // RIDER INFO BOX
+  // -----------------------------------------------------------------------------------------
 
   Widget _buildRiderInfo() {
     return Container(
@@ -176,6 +213,7 @@ class OrderTrackingWidget extends StatelessWidget {
       ),
       child: Row(
         children: [
+          /// Icon circle
           Container(
             width: 50,
             height: 50,
@@ -189,7 +227,10 @@ class OrderTrackingWidget extends StatelessWidget {
               size: 24,
             ),
           ),
+
           const SizedBox(width: AppSpacing.md),
+
+          /// Texts
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -200,8 +241,9 @@ class OrderTrackingWidget extends StatelessWidget {
                     color: AppColors.textSecondary,
                   ),
                 ),
+                const SizedBox(height: 2),
                 Text(
-                  'Rider #${order.riderId?.substring(0, 8)}',
+                  'Rider #${_safeId(order.riderId)}',
                   style: AppTextStyles.bodyMedium.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
@@ -209,19 +251,38 @@ class OrderTrackingWidget extends StatelessWidget {
               ],
             ),
           ),
-          IconButton(
-            onPressed: () {
+
+          /// Phone button
+          InkWell(
+            onTap: () {
               // TODO: Call rider
+              debugPrint('Call rider: ${order.riderId}');
             },
-            icon: const Icon(Icons.phone),
-            style: IconButton.styleFrom(
-              backgroundColor: AppColors.primaryGreen,
-              foregroundColor: Colors.white,
+            child: Container(
+              padding: const EdgeInsets.all(10),
+              decoration: const BoxDecoration(
+                color: AppColors.primaryGreen,
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.phone,
+                color: Colors.white,
+                size: 20,
+              ),
             ),
           ),
         ],
       ),
     );
+  }
+
+  // -----------------------------------------------------------------------------------------
+  // HELPERS
+  // -----------------------------------------------------------------------------------------
+
+  String _safeId(String? id) {
+    if (id == null || id.isEmpty) return "N/A";
+    return id.length >= 8 ? id.substring(0, 8) : id;
   }
 
   Color _getStatusColor(OrderStatus status) {
@@ -264,11 +325,18 @@ class OrderTrackingWidget extends StatelessWidget {
       return '${difference.inHours}h ago';
     } else if (difference.inMinutes > 0) {
       return '${difference.inMinutes}m ago';
+    } else if (difference.inSeconds > 0) {
+      return 'Just now';
     } else {
+      // Handle future dates
       return 'Just now';
     }
   }
 }
+
+// -----------------------------------------------------------------------------------------
+// TRACKING STEP MODEL
+// -----------------------------------------------------------------------------------------
 
 class TrackingStep {
   final String title;

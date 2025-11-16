@@ -8,6 +8,7 @@ import '../../providers/cart_provider.dart';
 import '../../utils/constants.dart';
 import '../../utils/helpers.dart';
 import '../../widgets/custom_button.dart';
+import 'payment_screen.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   final ProductModel product;
@@ -194,7 +195,17 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               Expanded(
                 child: CustomButton(
                   text: 'Buy Now',
-                  onPressed: () => _showOrderConfirmation(context),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PaymentScreen(
+                          product: widget.product,
+                          quantity: 1,
+                        ),
+                      ),
+                    );
+                  },
                   icon: Icons.shopping_cart,
                 ),
               ),
