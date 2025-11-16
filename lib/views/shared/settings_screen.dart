@@ -132,7 +132,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
         createdAt: currentUser.createdAt,
       );
 
-      await authProvider.updateUserProfile(updatedUser);
+      await authProvider.updateUserProfile({
+        'name': updatedUser.name,
+        'phone': updatedUser.phone,
+        'location': {'address': updatedUser.location},
+        'bio': updatedUser.bio,
+        if (_profileImage != null) 'avatar': _profileImage!.path,
+      });
       
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

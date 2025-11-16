@@ -1,8 +1,10 @@
 import 'package:flutter/foundation.dart';
 import '../models/product_model.dart';
-import '../services/mock_data_service.dart';
+import '../services/api_service.dart';
 
 class ProductProvider with ChangeNotifier {
+  final ApiService _apiService = ApiService();
+  
   List<ProductModel> _products = [];
   List<ProductModel> _filteredProducts = [];
   bool _isLoading = false;
@@ -12,6 +14,7 @@ class ProductProvider with ChangeNotifier {
   String _sortBy = 'name';
   String? _sortByFilter;
   bool _freeDeliveryOnly = false;
+  String? _error;
 
   List<ProductModel> get products => _filteredProducts;
   bool get isLoading => _isLoading;
@@ -20,16 +23,31 @@ class ProductProvider with ChangeNotifier {
   String? get sortBy => _sortByFilter;
   bool get freeDeliveryOnly => _freeDeliveryOnly;
 
-  Future<void> loadProducts() async {
+  Future<void> loadProducts({String? category, String? search}) async {
     _isLoading = true;
+    _error = null;
     notifyListeners();
 
-    await Future.delayed(const Duration(milliseconds: 500));
-    _products = await MockDataService.loadProducts();
-    _filteredProducts = _products;
-
-    _isLoading = false;
-    notifyListeners();
+    try {
+      final queryParams = <String, dynamic>{};
+      if (category != null) queryParams['category'] = category;
+      if (search != null) queryParams['q'] = search;
+      
+      final response = await _apiService.get('/products', queryParams: queryParams);
+      
+      if (response['success']) {
+        _products = (response['products'] as List)
+            .map((json) => ProductModel.fromJson(json))
+            .toList();
+        _filteredProducts = _products;
+      }
+    } catch (e) {
+      _error = e.toString();
+      debugPrint('Error loading products: $e');
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
   }
 
   // Alias for enhanced buyer screen
@@ -62,22 +80,48 @@ class ProductProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void addProduct(ProductModel product) {
-    _products.add(product);
-    _applyFilters();
-  }
-
-  void updateProduct(ProductModel product) {
-    final index = _products.indexWhere((p) => p.id == product.id);
-    if (index != -1) {
-      _products[index] = product;
-      _applyFilters();
+  Future<void> addProduct(ProductModel product) async {
+    try {
+      final response = await _apiService.post('/products', data: product.toJson());
+      
+      if (response['success']) {
+        final newProduct = ProductModel.fromJson(response['product']);
+        _products.add(newProduct);
+        _applyFilters();
+      }
+    } catch (e) {
+      debugPrint('Error adding product: $e');
+      rethrow;
     }
   }
 
-  void deleteProduct(String productId) {
-    _products.removeWhere((p) => p.id == productId);
-    _applyFilters();
+  Future<void> updateProduct(ProductModel product) async {
+    try {
+      final response = await _apiService.put('/products/${product.id}', data: product.toJson());
+      
+      if (response['success']) {
+        final updatedProduct = ProductModel.fromJson(response['product']);
+        final index = _products.indexWhere((p) => p.id == product.id);
+        if (index != -1) {
+          _products[index] = updatedProduct;
+          _applyFilters();
+        }
+      }
+    } catch (e) {
+      debugPrint('Error updating product: $e');
+      rethrow;
+    }
+  }
+
+  Future<void> deleteProduct(String productId) async {
+    try {
+      await _apiService.delete('/products/$productId');
+      _products.removeWhere((p) => p.id == productId);
+      _applyFilters();
+    } catch (e) {
+      debugPrint('Error deleting product: $e');
+      rethrow;
+    }
   }
 
   ProductModel? getProductById(String id) {

@@ -35,6 +35,7 @@ const userSchema = new mongoose.Schema({
     }
   },
   avatar: String,
+  bio: String,
   isVerified: {
     type: Boolean,
     default: false

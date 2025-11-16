@@ -247,7 +247,7 @@ class _RiderHomeScreenState extends State<RiderHomeScreen> {
               text: 'Start Delivery',
               onPressed: () {
                 context.read<OrderProvider>().updateOrderStatus(
-                    delivery.id, OrderStatus.inTransit);
+                    delivery.id, 'in_transit');
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text('Delivery started!'),
@@ -263,7 +263,7 @@ class _RiderHomeScreenState extends State<RiderHomeScreen> {
               text: 'Mark as Delivered',
               onPressed: () {
                 context.read<OrderProvider>().updateOrderStatus(
-                    delivery.id, OrderStatus.delivered);
+                    delivery.id, 'delivered');
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text('Order delivered!'),

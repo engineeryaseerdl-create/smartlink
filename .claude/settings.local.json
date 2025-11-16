@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir C:UsersHPDesktopTestingsmartlink-frontendsmartlinklibviews)",
+      "Bash(npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\")",
+      "Bash(npm install)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

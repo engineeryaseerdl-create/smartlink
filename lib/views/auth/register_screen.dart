@@ -20,8 +20,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
   final _locationController = TextEditingController();
+  final _businessNameController = TextEditingController();
   bool _obscurePassword = true;
   UserRole _selectedRole = UserRole.buyer;
+  String _selectedVehicleType = 'motorcycle';
 
   @override
   void dispose() {
@@ -30,6 +32,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     _phoneController.dispose();
     _passwordController.dispose();
     _locationController.dispose();
+    _businessNameController.dispose();
     super.dispose();
   }
 
@@ -46,6 +49,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
         role: _selectedRole,
         location: _locationController.text.trim(),
         phone: _phoneController.text.trim(),
+        businessName: _selectedRole == UserRole.seller ? _businessNameController.text.trim() : null,
+        vehicleType: _selectedRole == UserRole.rider ? _selectedVehicleType : null,
       );
 
       if (!mounted) return;
@@ -193,6 +198,92 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   },
                 ),
                 const SizedBox(height: AppSpacing.md),
+                // Seller-specific field
+                if (_selectedRole == UserRole.seller) ..[
+                  CustomTextField(
+                    label: 'Business Name',
+                    hint: 'Enter your business name',
+                    controller: _businessNameController,
+                    prefixIcon: Icons.business,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your business name';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: AppSpacing.md),
+                ],
+                // Rider-specific field
+                if (_selectedRole == UserRole.rider) ..[
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Vehicle Type',
+                        style: AppTextStyles.bodyMedium.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(height: AppSpacing.sm),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: AppSpacing.md,
+                          vertical: AppSpacing.xs,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.lightGrey,
+                          borderRadius: BorderRadius.circular(AppBorderRadius.md),
+                        ),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton<String>(
+                            value: _selectedVehicleType,
+                            isExpanded: true,
+                            icon: const Icon(Icons.arrow_drop_down),
+                            items: const [
+                              DropdownMenuItem(
+                                value: 'motorcycle',
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.two_wheeler, size: 20),
+                                    SizedBox(width: AppSpacing.sm),
+                                    Text('Motorcycle (Okada)'),
+                                  ],
+                                ),
+                              ),
+                              DropdownMenuItem(
+                                value: 'bicycle',
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.pedal_bike, size: 20),
+                                    SizedBox(width: AppSpacing.sm),
+                                    Text('Bicycle'),
+                                  ],
+                                ),
+                              ),
+                              DropdownMenuItem(
+                                value: 'car',
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.directions_car, size: 20),
+                                    SizedBox(width: AppSpacing.sm),
+                                    Text('Car'),
+                                  ],
+                                ),
+                              ),
+                            ],
+                            onChanged: (value) {
+                              setState(() {
+                                _selectedVehicleType = value!;
+                              });
+                            },
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: AppSpacing.md),
+                ],
                 CustomTextField(
                   label: 'Password',
                   hint: 'Enter your password',

@@ -34,18 +34,23 @@ class RiderCluster {
   });
 
   factory RiderCluster.fromJson(Map<String, dynamic> json) {
+    final leader = json['leader'] is Map ? json['leader'] : null;
+    final backup = json['backupContact'] is Map ? json['backupContact'] : null;
+    final location = json['location'] is Map ? json['location'] : null;
+    final rating = json['rating'] is Map ? json['rating'] : null;
+    
     return RiderCluster(
-      id: json['id'] ?? '',
+      id: json['_id'] ?? json['id'] ?? '',
       name: json['name'] ?? '',
-      location: json['location'] ?? '',
-      leaderName: json['leaderName'] ?? '',
-      leaderPhone: json['leaderPhone'] ?? '',
-      backupPhone: json['backupPhone'],
+      location: location?['address'] ?? json['location'] ?? '',
+      leaderName: leader?['name'] ?? json['leaderName'] ?? '',
+      leaderPhone: leader?['phone'] ?? json['leaderPhone'] ?? '',
+      backupPhone: backup?['phone'] ?? json['backupPhone'],
       members: (json['members'] as List?)
           ?.map((m) => ClusterMember.fromJson(m))
           .toList() ?? [],
       isOnline: json['isOnline'] ?? true,
-      rating: (json['rating'] ?? 5.0).toDouble(),
+      rating: rating != null ? (rating['average'] ?? 5.0).toDouble() : (json['rating'] ?? 5.0).toDouble(),
       totalDeliveries: json['totalDeliveries'] ?? 0,
       operatingHours: json['operatingHours'] ?? '6AM - 10PM',
       serviceAreas: List<String>.from(json['serviceAreas'] ?? []),
@@ -104,12 +109,14 @@ class ClusterMember {
   });
 
   factory ClusterMember.fromJson(Map<String, dynamic> json) {
+    final rider = json['rider'] is Map ? json['rider'] : null;
+    
     return ClusterMember(
-      id: json['id'] ?? '',
-      name: json['name'] ?? '',
-      phone: json['phone'] ?? '',
+      id: json['_id'] ?? json['id'] ?? '',
+      name: rider?['name'] ?? json['name'] ?? '',
+      phone: rider?['phone'] ?? json['phone'] ?? '',
       vehicleType: VehicleType.values.firstWhere(
-        (e) => e.toString() == 'VehicleType.${json['vehicleType']}',
+        (e) => e.toString() == 'VehicleType.${rider?['vehicleType'] ?? json['vehicleType']}',
         orElse: () => VehicleType.okada,
       ),
       vehiclePlate: json['vehiclePlate'] ?? '',

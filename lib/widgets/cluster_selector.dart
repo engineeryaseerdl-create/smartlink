@@ -274,20 +274,32 @@ class _ClusterSelectorState extends State<ClusterSelector> {
             onPressed: () async {
               Navigator.pop(context);
               try {
-                // Assign to cluster leader for now
-                final leader = cluster.members.firstWhere((m) => m.isLeader);
-                await context.read<OrderProvider>().assignRider(widget.order!.id, leader.id);
-                Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('Order assigned to ${cluster.name}. Buyer will receive rider details.'),
-                    backgroundColor: AppColors.successGreen,
-                  ),
+                final clusterProvider = context.read<ClusterProvider>();
+                final success = await clusterProvider.assignOrderToCluster(
+                  cluster.id,
+                  widget.order!.id,
                 );
+                
+                if (success) {
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Order assigned to ${cluster.name}. Buyer will receive rider details.'),
+                      backgroundColor: AppColors.successGreen,
+                    ),
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Failed to assign order. Please try again.'),
+                      backgroundColor: AppColors.errorRed,
+                    ),
+                  );
+                }
               } catch (e) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text('Failed to assign order: $e'),
+                    content: Text('Error: $e'),
                     backgroundColor: AppColors.errorRed,
                   ),
                 );

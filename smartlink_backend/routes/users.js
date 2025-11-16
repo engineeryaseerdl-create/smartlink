@@ -7,7 +7,7 @@ const router = express.Router();
 // Update user profile
 router.put('/profile', auth, async (req, res) => {
   try {
-    const allowedUpdates = ['name', 'phone', 'location', 'avatar', 'businessName', 'businessDescription', 'vehicleType'];
+    const allowedUpdates = ['name', 'phone', 'location', 'avatar', 'bio', 'businessName', 'businessDescription', 'vehicleType'];
     const updates = {};
     
     Object.keys(req.body).forEach(key => {
@@ -32,7 +32,7 @@ router.put('/profile', auth, async (req, res) => {
 router.get('/:id', async (req, res) => {
   try {
     const user = await User.findById(req.params.id)
-      .select('name businessName location avatar role');
+      .select('name businessName location avatar bio role');
     
     if (!user) {
       return res.status(404).json({ message: 'User not found' });

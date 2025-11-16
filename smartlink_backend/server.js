@@ -17,6 +17,7 @@ const analyticsRoutes = require('./routes/analytics');
 const uploadRoutes = require('./routes/upload');
 const searchRoutes = require('./routes/search');
 const adminRoutes = require('./routes/admin');
+const clusterRoutes = require('./routes/clusters');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -60,6 +61,7 @@ app.use('/api/analytics', analyticsRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/search', searchRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/clusters', clusterRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

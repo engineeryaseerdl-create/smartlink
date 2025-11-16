@@ -30,8 +30,17 @@ class UserModel {
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
+    String? locationStr;
+    if (json['location'] != null) {
+      if (json['location'] is String) {
+        locationStr = json['location'];
+      } else if (json['location'] is Map) {
+        locationStr = json['location']['address'];
+      }
+    }
+
     return UserModel(
-      id: json['id'] ?? '',
+      id: json['_id'] ?? json['id'] ?? '',
       name: json['name'] ?? '',
       email: json['email'] ?? '',
       phone: json['phone'],
@@ -39,8 +48,8 @@ class UserModel {
         (e) => e.toString() == 'UserRole.${json['role']}',
         orElse: () => UserRole.buyer,
       ),
-      location: json['location'],
-      profileImage: json['profileImage'],
+      location: locationStr,
+      profileImage: json['avatar'] ?? json['profileImage'],
       profileImageUrl: json['profileImageUrl'],
       bio: json['bio'],
       rating: json['rating']?.toDouble(),

@@ -137,7 +137,7 @@ class OrderCard extends StatelessWidget {
                   if (order.status == OrderStatus.pending) ...[
                     ElevatedButton(
                       onPressed: () {
-                        context.read<OrderProvider>().updateOrderStatus(order.id, OrderStatus.confirmed);
+                        context.read<OrderProvider>().updateOrderStatus(order.id, 'confirmed');
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primaryGreen,
@@ -151,7 +151,7 @@ class OrderCard extends StatelessWidget {
                     const SizedBox(width: AppSpacing.sm),
                     OutlinedButton(
                       onPressed: () {
-                        context.read<OrderProvider>().updateOrderStatus(order.id, OrderStatus.cancelled);
+                        context.read<OrderProvider>().updateOrderStatus(order.id, 'cancelled');
                       },
                       style: OutlinedButton.styleFrom(
                         foregroundColor: AppColors.errorRed,

@@ -1,22 +1,43 @@
 import 'package:flutter/foundation.dart';
 import '../models/rider_cluster_model.dart';
 import '../models/rider_model.dart';
+import '../services/api_service.dart';
 
 class ClusterProvider with ChangeNotifier {
+  final ApiService _apiService = ApiService();
+  
   List<RiderCluster> _clusters = [];
   bool _isLoading = false;
+  String? _error;
 
   List<RiderCluster> get clusters => _clusters;
   bool get isLoading => _isLoading;
+  String? get error => _error;
 
-  Future<void> loadClusters() async {
+  Future<void> loadClusters({String? location, String? serviceArea, bool? isOnline}) async {
     _isLoading = true;
+    _error = null;
     notifyListeners();
 
-    await Future.delayed(const Duration(milliseconds: 500));
-    
-    // Mock data - replace with API call
-    _clusters = [
+    try {
+      final queryParams = <String, dynamic>{};
+      if (location != null) queryParams['location'] = location;
+      if (serviceArea != null) queryParams['serviceArea'] = serviceArea;
+      if (isOnline != null) queryParams['isOnline'] = isOnline.toString();
+
+      final response = await _apiService.get('/clusters', queryParams: queryParams);
+
+      if (response['success']) {
+        _clusters = (response['clusters'] as List)
+            .map((json) => RiderCluster.fromJson(json))
+            .toList();
+      }
+    } catch (e) {
+      _error = e.toString();
+      debugPrint('Error loading clusters: $e');
+      
+      // Fallback to mock data for demo
+      _clusters = [
       RiderCluster(
         id: 'cluster_1',
         name: 'Kano Central Riders',
@@ -74,8 +95,90 @@ class ClusterProvider with ChangeNotifier {
       ),
     ];
 
-    _isLoading = false;
-    notifyListeners();
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<RiderCluster?> createCluster({
+    required String name,
+    required Map<String, dynamic> location,
+    required List<String> serviceAreas,
+    List<String>? vehicleTypes,
+    String? operatingHours,
+    String? backupContactId,
+  }) async {
+    try {
+      final response = await _apiService.post('/clusters', data: {
+        'name': name,
+        'location': location,
+        'serviceAreas': serviceAreas,
+        if (vehicleTypes != null) 'vehicleTypes': vehicleTypes,
+        if (operatingHours != null) 'operatingHours': operatingHours,
+        if (backupContactId != null) 'backupContactId': backupContactId,
+      });
+
+      if (response['success']) {
+        final cluster = RiderCluster.fromJson(response['cluster']);
+        _clusters.insert(0, cluster);
+        notifyListeners();
+        return cluster;
+      }
+    } catch (e) {
+      debugPrint('Error creating cluster: $e');
+    }
+    return null;
+  }
+
+  Future<bool> updateCluster(String clusterId, Map<String, dynamic> updates) async {
+    try {
+      final response = await _apiService.put('/clusters/$clusterId', data: updates);
+
+      if (response['success']) {
+        final updatedCluster = RiderCluster.fromJson(response['cluster']);
+        final index = _clusters.indexWhere((c) => c.id == clusterId);
+        if (index != -1) {
+          _clusters[index] = updatedCluster;
+          notifyListeners();
+        }
+        return true;
+      }
+    } catch (e) {
+      debugPrint('Error updating cluster: $e');
+    }
+    return false;
+  }
+
+  Future<bool> assignOrderToCluster(String clusterId, String orderId, {String? specificRiderId}) async {
+    try {
+      final response = await _apiService.post('/clusters/$clusterId/assign-order', data: {
+        'orderId': orderId,
+        if (specificRiderId != null) 'specificRiderId': specificRiderId,
+      });
+
+      if (response['success']) {
+        // Update cluster stats
+        await loadClusters();
+        return true;
+      }
+    } catch (e) {
+      debugPrint('Error assigning order to cluster: $e');
+    }
+    return false;
+  }
+
+  Future<Map<String, dynamic>?> getClusterStats(String clusterId) async {
+    try {
+      final response = await _apiService.get('/clusters/$clusterId/stats');
+
+      if (response['success']) {
+        return response['stats'];
+      }
+    } catch (e) {
+      debugPrint('Error getting cluster stats: $e');
+    }
+    return null;
   }
 
   List<RiderCluster> getClustersForLocation(String location) {

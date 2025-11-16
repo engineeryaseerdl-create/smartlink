@@ -616,7 +616,17 @@ class _OrderConfirmationSheetState extends State<_OrderConfirmationSheet> {
                 createdAt: DateTime.now(),
               );
 
-              context.read<OrderProvider>().addOrder(order);
+              context.read<OrderProvider>().createOrder(
+                items: [{
+                  'product': widget.product.id,
+                  'quantity': _quantity,
+                }],
+                deliveryAddress: {
+                  'street': user.location ?? 'Lagos',
+                  'city': 'Lagos',
+                  'state': 'Lagos',
+                },
+              );
               Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(

@@ -220,7 +220,18 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
       // Add order to provider
       if (mounted) {
-        context.read<OrderProvider>().addOrder(order);
+        await context.read<OrderProvider>().createOrder(
+          items: cartProvider.items.map((item) => {
+            'product': item.productId,
+            'quantity': item.quantity,
+          }).toList(),
+          deliveryAddress: {
+            'street': _addressController.text,
+            'city': 'Lagos',
+            'state': 'Lagos',
+          },
+          paymentMethod: _paymentMethod,
+        );
         cartProvider.clearCart();
 
         // Show success and navigate back

@@ -51,23 +51,44 @@ class ProductModel {
   });
 
   factory ProductModel.fromJson(Map<String, dynamic> json) {
+    // Handle seller data (can be ID string or populated object)
+    String sellerId = '';
+    String sellerName = '';
+    String sellerLocation = '';
+    
+    if (json['seller'] != null) {
+      if (json['seller'] is String) {
+        sellerId = json['seller'];
+      } else if (json['seller'] is Map) {
+        sellerId = json['seller']['_id'] ?? json['seller']['id'] ?? '';
+        sellerName = json['seller']['businessName'] ?? json['seller']['name'] ?? '';
+        if (json['seller']['location'] != null) {
+          if (json['seller']['location'] is String) {
+            sellerLocation = json['seller']['location'];
+          } else if (json['seller']['location'] is Map) {
+            sellerLocation = json['seller']['location']['address'] ?? '';
+          }
+        }
+      }
+    }
+
     return ProductModel(
-      id: json['id'] ?? '',
-      title: json['title'] ?? '',
+      id: json['_id'] ?? json['id'] ?? '',
+      title: json['name'] ?? json['title'] ?? '',
       description: json['description'] ?? '',
       price: (json['price'] ?? 0).toDouble(),
       category: ProductCategory.values.firstWhere(
         (e) => e.toString() == 'ProductCategory.${json['category']}',
         orElse: () => ProductCategory.other,
       ),
-      sellerId: json['sellerId'] ?? '',
-      sellerName: json['sellerName'] ?? '',
-      sellerLocation: json['sellerLocation'] ?? '',
+      sellerId: sellerId.isNotEmpty ? sellerId : (json['sellerId'] ?? ''),
+      sellerName: sellerName.isNotEmpty ? sellerName : (json['sellerName'] ?? ''),
+      sellerLocation: sellerLocation.isNotEmpty ? sellerLocation : (json['sellerLocation'] ?? ''),
       images: List<String>.from(json['images'] ?? []),
-      rating: (json['rating'] ?? 0).toDouble(),
-      reviewCount: json['reviewCount'] ?? 0,
-      stockQuantity: json['stockQuantity'] ?? 0,
-      isAvailable: json['isAvailable'] ?? true,
+      rating: json['rating'] is Map ? (json['rating']['average'] ?? 0).toDouble() : (json['rating'] ?? 0).toDouble(),
+      reviewCount: json['rating'] is Map ? (json['rating']['count'] ?? 0) : (json['reviewCount'] ?? 0),
+      stockQuantity: json['stock'] ?? json['stockQuantity'] ?? 0,
+      isAvailable: json['isActive'] ?? json['isAvailable'] ?? true,
       createdAt: json['createdAt'] != null
           ? DateTime.parse(json['createdAt'])
           : DateTime.now(),
