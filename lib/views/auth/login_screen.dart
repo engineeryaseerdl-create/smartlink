@@ -4,6 +4,7 @@ import '../../providers/auth_provider.dart';
 import '../../utils/constants.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/custom_text_field.dart';
+import '../../widgets/app_logo.dart';
 import 'register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -119,19 +120,11 @@ class _LoginScreenState extends State<LoginScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
                 const SizedBox(height: AppSpacing.xl),
-                Center(
-                  child: Container(
-                    width: 80,
-                    height: 80,
-                    decoration: BoxDecoration(
-                      color: AppColors.primaryGreen,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: const Icon(
-                      Icons.link,
-                      size: 40,
-                      color: AppColors.white,
-                    ),
+                const Center(
+                  child: AppLogo(
+                    size: 80,
+                    backgroundColor: AppColors.primaryGreen,
+                    borderRadius: 20,
                   ),
                 ),
                 const SizedBox(height: AppSpacing.lg),

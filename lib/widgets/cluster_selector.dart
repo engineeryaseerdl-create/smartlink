@@ -8,9 +8,16 @@ import '../providers/order_provider.dart';
 import '../utils/constants.dart';
 
 class ClusterSelector extends StatefulWidget {
-  final OrderModel order;
+  final OrderModel? order;
+  final ScrollController? scrollController;
+  final Function(RiderCluster)? onClusterSelected;
 
-  const ClusterSelector({super.key, required this.order});
+  const ClusterSelector({
+    super.key, 
+    this.order,
+    this.scrollController,
+    this.onClusterSelected,
+  });
 
   @override
   State<ClusterSelector> createState() => _ClusterSelectorState();
@@ -51,7 +58,9 @@ class _ClusterSelectorState extends State<ClusterSelector> {
                 );
               }
 
-              final clusters = provider.getClustersForLocation(widget.order.sellerLocation);
+              final clusters = widget.order != null 
+                  ? provider.getClustersForLocation(widget.order!.sellerLocation)
+                  : provider.clusters;
               
               if (clusters.isEmpty) {
                 return const Expanded(
@@ -72,6 +81,7 @@ class _ClusterSelectorState extends State<ClusterSelector> {
 
               return Expanded(
                 child: ListView.builder(
+                  controller: widget.scrollController,
                   itemCount: clusters.length,
                   itemBuilder: (context, index) {
                     final cluster = clusters[index];
@@ -184,9 +194,15 @@ class _ClusterSelectorState extends State<ClusterSelector> {
                 const SizedBox(width: 12),
                 Expanded(
                   child: ElevatedButton.icon(
-                    onPressed: () => _assignToCluster(cluster),
+                    onPressed: () {
+                      if (widget.onClusterSelected != null) {
+                        widget.onClusterSelected!(cluster);
+                      } else if (widget.order != null) {
+                        _assignToCluster(cluster);
+                      }
+                    },
                     icon: const Icon(Icons.assignment, size: 18),
-                    label: const Text('Assign Order'),
+                    label: Text(widget.order != null ? 'Assign Order' : 'Select'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.gold,
                       foregroundColor: Colors.black,
@@ -260,7 +276,7 @@ class _ClusterSelectorState extends State<ClusterSelector> {
               try {
                 // Assign to cluster leader for now
                 final leader = cluster.members.firstWhere((m) => m.isLeader);
-                await context.read<OrderProvider>().assignRider(widget.order.id, leader.id);
+                await context.read<OrderProvider>().assignRider(widget.order!.id, leader.id);
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(

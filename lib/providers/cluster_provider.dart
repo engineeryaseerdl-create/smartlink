@@ -94,6 +94,15 @@ class ClusterProvider with ChangeNotifier {
     }
   }
 
+  RiderCluster? getClusterByRiderId(String riderId) {
+    for (final cluster in _clusters) {
+      if (cluster.members.any((member) => member.id == riderId)) {
+        return cluster;
+      }
+    }
+    return null;
+  }
+
   void updateClusterStatus(String clusterId, bool isOnline) {
     final index = _clusters.indexWhere((c) => c.id == clusterId);
     if (index != -1) {

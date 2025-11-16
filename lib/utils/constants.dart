@@ -18,6 +18,7 @@ class AppColors {
   static const Color errorRed = Color(0xFFD32F2F);
   static const Color successGreen = Color(0xFFF88F3A);
   static const Color warningOrange = Color(0xFFFF9800);
+  static const Color primaryOrange = Color(0xFFF88F3A);
   static const Color infoBlue = Color(0xFF1976D2);
   
   // Header Gradient Colors

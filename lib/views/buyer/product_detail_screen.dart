@@ -5,9 +5,11 @@ import '../../models/order_model.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/order_provider.dart';
 import '../../providers/cart_provider.dart';
+import '../../providers/product_provider.dart';
 import '../../utils/constants.dart';
 import '../../utils/helpers.dart';
 import '../../widgets/custom_button.dart';
+import '../../widgets/product_card.dart';
 import 'payment_screen.dart';
 
 class ProductDetailScreen extends StatefulWidget {
@@ -151,6 +153,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       ),
                     ],
                   ),
+                  const SizedBox(height: AppSpacing.xxl),
+                  _buildSimilarItems(),
                   const SizedBox(height: AppSpacing.xxl),
                 ],
               ),
@@ -302,6 +306,58 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           productTitle: widget.product.title,
         ),
       ),
+    );
+  }
+
+  Widget _buildSimilarItems() {
+    return Consumer<ProductProvider>(
+      builder: (context, productProvider, child) {
+        final similarProducts = productProvider.getSimilarProducts(widget.product);
+        
+        if (similarProducts.isEmpty) {
+          return const SizedBox.shrink();
+        }
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Divider(),
+            const SizedBox(height: AppSpacing.md),
+            const Text(
+              'Similar Items',
+              style: AppTextStyles.heading3,
+            ),
+            const SizedBox(height: AppSpacing.md),
+            SizedBox(
+              height: 280,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: similarProducts.length,
+                itemBuilder: (context, index) {
+                  final product = similarProducts[index];
+                  return Container(
+                    width: 160,
+                    margin: EdgeInsets.only(
+                      right: index < similarProducts.length - 1 ? AppSpacing.md : 0,
+                    ),
+                    child: ProductCard(
+                      product: product,
+                      onTap: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ProductDetailScreen(product: product),
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

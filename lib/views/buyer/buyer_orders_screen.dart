@@ -4,6 +4,7 @@ import '../../providers/auth_provider.dart';
 import '../../providers/order_provider.dart';
 import '../../utils/constants.dart';
 import '../../widgets/order_card.dart';
+import '../../widgets/order_status_banner.dart';
 import 'order_detail_screen.dart';
 
 class BuyerOrdersScreen extends StatelessWidget {
@@ -32,6 +33,7 @@ class BuyerOrdersScreen extends StatelessWidget {
               style: AppTextStyles.heading2,
             ),
             const SizedBox(height: AppSpacing.lg),
+            OrderStatusBanner(orders: orders),
             if (orderProvider.isLoading)
               const Expanded(
                 child: Center(child: CircularProgressIndicator()),

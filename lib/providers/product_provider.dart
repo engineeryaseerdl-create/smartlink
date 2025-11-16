@@ -153,4 +153,13 @@ class ProductProvider with ChangeNotifier {
     _applyFilters();
     notifyListeners();
   }
+
+  List<ProductModel> getSimilarProducts(ProductModel product, {int limit = 4}) {
+    return _products
+        .where((p) => 
+            p.id != product.id && 
+            p.category == product.category)
+        .take(limit)
+        .toList();
+  }
 }

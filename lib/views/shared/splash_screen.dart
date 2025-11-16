@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../utils/constants.dart';
 import '../../providers/auth_provider.dart';
+import '../../widgets/app_logo.dart';
 import 'onboarding_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -87,21 +88,9 @@ class _SplashScreenState extends State<SplashScreen>
                       ),
                     ],
                   ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(30),
-                    child: Image.asset(
-                      'assets/images/android-chrome-192x192.png',
-                      width: 120,
-                      height: 120,
-                      fit: BoxFit.contain,
-                      errorBuilder: (context, error, stackTrace) {
-                        return const Icon(
-                          Icons.link,
-                          size: 60,
-                          color: AppColors.primaryGreen,
-                        );
-                      },
-                    ),
+                  child: const AppLogo(
+                    size: 120,
+                    borderRadius: 30,
                   ),
                 ),
                 const SizedBox(height: AppSpacing.lg),

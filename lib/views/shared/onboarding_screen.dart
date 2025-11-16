@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import '../../widgets/app_logo.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -133,24 +134,27 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                       children: [
                         const SizedBox(height: 20),
 
-                        // SKIP BUTTON
-                        if (currentIndex < pages.length - 1)
-                          Align(
-                            alignment: Alignment.topRight,
-                            child: TextButton(
-                              onPressed: skip,
-                              child: const Text(
-                                "Skip",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Color(0xFFF88F3A),
-                                  fontWeight: FontWeight.w600,
+                        // LOGO AND SKIP BUTTON ROW
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const AppLogo(size: 40),
+                            if (currentIndex < pages.length - 1)
+                              TextButton(
+                                onPressed: skip,
+                                child: const Text(
+                                  "Skip",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Color(0xFFF88F3A),
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
-                              ),
-                            ),
-                          )
-                        else
-                          const SizedBox(height: 48),
+                              )
+                            else
+                              const SizedBox(width: 60),
+                          ],
+                        ),
 
                         const Spacer(),
 

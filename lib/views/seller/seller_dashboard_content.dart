@@ -3,10 +3,12 @@ import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/product_provider.dart';
 import '../../providers/order_provider.dart';
+import '../../providers/cluster_provider.dart';
 import '../../models/order_model.dart';
 import '../../utils/constants.dart';
 import '../../utils/helpers.dart';
 import '../../widgets/animated_widgets.dart';
+import '../demo/cluster_demo_screen.dart';
 
 class SellerDashboardContent extends StatelessWidget {
   const SellerDashboardContent({super.key});
@@ -209,93 +211,104 @@ class SellerDashboardContent extends StatelessWidget {
   }
 
   Widget _buildDesktopStats(myProducts, myOrders, pendingOrders, user) {
-    return GridView.count(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      crossAxisCount: 4,
-      childAspectRatio: 1.5,
-      crossAxisSpacing: AppSpacing.lg,
-      mainAxisSpacing: AppSpacing.lg,
-      children: [
-        _buildStatCard(
-          'Products',
-          myProducts.length.toString(),
-          Icons.inventory,
-          AppColors.infoBlue,
-          isDesktop: true,
-        ),
-        _buildStatCard(
-          'Total Orders',
-          myOrders.length.toString(),
-          Icons.shopping_bag,
-          AppColors.primaryGreen,
-          isDesktop: true,
-        ),
-        _buildStatCard(
-          'Pending Orders',
-          pendingOrders.length.toString(),
-          Icons.pending,
-          AppColors.warningOrange,
-          isDesktop: true,
-        ),
-        _buildStatCard(
-          'Rating',
-          user?.rating?.toStringAsFixed(1) ?? '0.0',
-          Icons.star,
-          AppColors.gold,
-          isDesktop: true,
-        ),
-      ],
+    return Consumer<ClusterProvider>(
+      builder: (context, clusterProvider, child) => GridView.count(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        crossAxisCount: 5,
+        childAspectRatio: 1.5,
+        crossAxisSpacing: AppSpacing.lg,
+        mainAxisSpacing: AppSpacing.lg,
+        children: [
+          _buildStatCard(
+            'Products',
+            myProducts.length.toString(),
+            Icons.inventory,
+            AppColors.infoBlue,
+            isDesktop: true,
+          ),
+          _buildStatCard(
+            'Total Orders',
+            myOrders.length.toString(),
+            Icons.shopping_bag,
+            AppColors.primaryOrange,
+            isDesktop: true,
+          ),
+          _buildStatCard(
+            'Pending Orders',
+            pendingOrders.length.toString(),
+            Icons.pending,
+            AppColors.warningOrange,
+            isDesktop: true,
+          ),
+          _buildStatCard(
+            'Rating',
+            user?.rating?.toStringAsFixed(1) ?? '0.0',
+            Icons.star,
+            AppColors.gold,
+            isDesktop: true,
+          ),
+          _buildStatCard(
+            'Rider Clusters',
+            clusterProvider.clusters.length.toString(),
+            Icons.group,
+            AppColors.primaryOrange,
+            isDesktop: true,
+          ),
+        ],
+      ),
     );
   }
 
   Widget _buildMobileStats(myProducts, myOrders, pendingOrders, user) {
-    return Column(
-      children: [
-        Row(
-          children: [
-            Expanded(
-              child: _buildStatCard(
-                'Products',
-                myProducts.length.toString(),
-                Icons.inventory,
-                AppColors.infoBlue,
+    return Consumer<ClusterProvider>(
+      builder: (context, clusterProvider, child) => Column(
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: _buildStatCard(
+                  'Products',
+                  myProducts.length.toString(),
+                  Icons.inventory,
+                  AppColors.infoBlue,
+                ),
               ),
-            ),
-            const SizedBox(width: AppSpacing.md),
-            Expanded(
-              child: _buildStatCard(
-                'Orders',
-                myOrders.length.toString(),
-                Icons.shopping_bag,
-                AppColors.primaryGreen,
+              const SizedBox(width: AppSpacing.md),
+              Expanded(
+                child: _buildStatCard(
+                  'Orders',
+                  myOrders.length.toString(),
+                  Icons.shopping_bag,
+                  AppColors.primaryOrange,
+                ),
               ),
-            ),
-          ],
-        ),
-        const SizedBox(height: AppSpacing.md),
-        Row(
-          children: [
-            Expanded(
-              child: _buildStatCard(
-                'Pending',
-                pendingOrders.length.toString(),
-                Icons.pending,
-                AppColors.warningOrange,
+            ],
+          ),
+          const SizedBox(height: AppSpacing.md),
+          Row(
+            children: [
+              Expanded(
+                child: _buildStatCard(
+                  'Pending',
+                  pendingOrders.length.toString(),
+                  Icons.pending,
+                  AppColors.warningOrange,
+                ),
               ),
-            ),
-            const SizedBox(width: AppSpacing.md),
-            Expanded(
-              child: _buildStatCard(
-                'Rating',
-                user?.rating?.toStringAsFixed(1) ?? '0.0',
-                Icons.star,
-                AppColors.gold,
+              const SizedBox(width: AppSpacing.md),
+              Expanded(
+                child: _buildStatCard(
+                  'Clusters',
+                  clusterProvider.clusters.length.toString(),
+                  Icons.group,
+                  AppColors.primaryOrange,
+                ),
               ),
-            ),
-          ],
-        ),
-      ],
+            ],
+          ),
+        ],
+      ),
     );
   }
 
@@ -357,11 +370,30 @@ class SellerDashboardContent extends StatelessWidget {
                   ? AppTextStyles.heading2
                   : AppTextStyles.heading3,
               ),
-              TextButton(
-                onPressed: () {
-                  // Navigate to orders page
-                },
-                child: const Text('View All'),
+              Row(
+                children: [
+                  TextButton.icon(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ClusterDemoScreen(),
+                        ),
+                      );
+                    },
+                    icon: const Icon(Icons.group, size: 16),
+                    label: const Text('Clusters'),
+                    style: TextButton.styleFrom(
+                      foregroundColor: AppColors.primaryOrange,
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      // Navigate to orders page
+                    },
+                    child: const Text('View All'),
+                  ),
+                ],
               ),
             ],
           ),

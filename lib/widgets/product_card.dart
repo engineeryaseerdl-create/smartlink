@@ -6,8 +6,6 @@ import '../providers/favorites_provider.dart';
 import '../providers/cart_provider.dart';
 import '../providers/auth_provider.dart';
 import '../widgets/swipe_action_card.dart';
-import '../widgets/product_comparison.dart';
-import '../widgets/delivery_estimate.dart';
 import '../utils/constants.dart';
 import '../utils/helpers.dart';
 
@@ -237,9 +235,9 @@ class ProductCard extends StatelessWidget {
                   ),
               ],
             ),
-            Flexible(
+            Expanded(
               child: Padding(
-                padding: EdgeInsets.all(isDesktop ? AppSpacing.sm : AppSpacing.xs),
+                padding: const EdgeInsets.all(4),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
@@ -333,11 +331,11 @@ class ProductCard extends StatelessWidget {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 2),
+                    const SizedBox(height: 1),
                     // Quick add to cart button
                     Container(
                         width: double.infinity,
-                        height: 24,
+                        height: 20,
                         decoration: BoxDecoration(
                           color: AppColors.primaryGreen.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(6),
