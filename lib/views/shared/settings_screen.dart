@@ -1,8 +1,10 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../providers/auth_provider.dart';
+import '../../services/upload_service.dart';
 import '../../providers/theme_provider.dart';
 import '../../models/user_model.dart';
 import '../../utils/constants.dart';
@@ -115,29 +117,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
     try {
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
-      final currentUser = authProvider.currentUser!;
       
-      // Create updated user model
-      final updatedUser = UserModel(
-        id: currentUser.id,
-        name: _nameController.text.trim(),
-        email: currentUser.email,
-        phone: _phoneController.text.trim().isEmpty ? null : _phoneController.text.trim(),
-        location: _locationController.text.trim().isEmpty ? null : _locationController.text.trim(),
-        bio: _bioController.text.trim().isEmpty ? null : _bioController.text.trim(),
-        role: currentUser.role,
-        profileImageUrl: _profileImage?.path ?? currentUser.profileImageUrl,
-        isVerified: currentUser.isVerified,
-        rating: currentUser.rating,
-        createdAt: currentUser.createdAt,
-      );
+      String? avatarUrl;
+      if (_profileImage != null) {
+        final uploadService = UploadService();
+        final urls = await uploadService.uploadImages([_profileImage!]);
+        avatarUrl = urls.first;
+      }
 
       await authProvider.updateUserProfile({
-        'name': updatedUser.name,
-        'phone': updatedUser.phone,
-        'location': {'address': updatedUser.location},
-        'bio': updatedUser.bio,
-        if (_profileImage != null) 'avatar': _profileImage!.path,
+        'name': _nameController.text.trim(),
+        'phone': _phoneController.text.trim(),
+        'location': {'address': _locationController.text.trim()},
+        'bio': _bioController.text.trim(),
+        if (avatarUrl != null) 'avatar': avatarUrl,
       });
       
       if (mounted) {
@@ -195,7 +188,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       CircleAvatar(
                         radius: 60,
                         backgroundColor: AppColors.primaryGreen,
-                        backgroundImage: _profileImage != null 
+                        backgroundImage: _profileImage != null && !kIsWeb
                             ? FileImage(_profileImage!) as ImageProvider
                             : user?.profileImageUrl != null
                                 ? NetworkImage(user!.profileImageUrl!) as ImageProvider

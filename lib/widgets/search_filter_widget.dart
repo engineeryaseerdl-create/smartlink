@@ -201,7 +201,7 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
               
               // Sort Options
               Text('Sort By', style: AppTextStyles.bodyLarge),
-              ...._sortOptions.map((option) => RadioListTile<String>(
+              ..._sortOptions.map((option) => RadioListTile<String>(
                 title: Text(option['label']!),
                 value: option['value']!,
                 groupValue: _sortBy,

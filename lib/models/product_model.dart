@@ -97,20 +97,12 @@ class ProductModel {
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
-      'title': title,
+      'name': title,
       'description': description,
       'price': price,
       'category': category.toString().split('.').last,
-      'sellerId': sellerId,
-      'sellerName': sellerName,
-      'sellerLocation': sellerLocation,
       'images': images,
-      'rating': rating,
-      'reviewCount': reviewCount,
-      'stockQuantity': stockQuantity,
-      'isAvailable': isAvailable,
-      'createdAt': createdAt.toIso8601String(),
+      'stock': stockQuantity,
     };
   }
 }

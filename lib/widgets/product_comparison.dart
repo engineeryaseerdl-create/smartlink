@@ -58,7 +58,7 @@ class ComparisonSheet extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Compare Products', style: AppTextStyles.heading2),
+                  const Text('Compare Products', style: AppTextStyles.heading2),
                   IconButton(
                     onPressed: () => Navigator.pop(context),
                     icon: const Icon(Icons.close),

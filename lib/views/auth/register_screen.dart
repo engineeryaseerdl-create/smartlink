@@ -199,7 +199,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 const SizedBox(height: AppSpacing.md),
                 // Seller-specific field
-                if (_selectedRole == UserRole.seller) ..[
+                if (_selectedRole == UserRole.seller)
                   CustomTextField(
                     label: 'Business Name',
                     hint: 'Enter your business name',
@@ -212,10 +212,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       return null;
                     },
                   ),
+                if (_selectedRole == UserRole.seller)
                   const SizedBox(height: AppSpacing.md),
-                ],
                 // Rider-specific field
-                if (_selectedRole == UserRole.rider) ..[
+                if (_selectedRole == UserRole.rider)
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -282,8 +282,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                     ],
                   ),
+                if (_selectedRole == UserRole.rider)
                   const SizedBox(height: AppSpacing.md),
-                ],
                 CustomTextField(
                   label: 'Password',
                   hint: 'Enter your password',

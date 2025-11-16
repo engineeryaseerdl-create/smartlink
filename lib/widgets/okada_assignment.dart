@@ -19,11 +19,11 @@ class OkadaAssignmentSheet extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       child: Column(
         children: [
-          Row(
+          const Row(
             children: [
-              const Icon(Icons.motorcycle, color: AppColors.primaryGreen),
-              const SizedBox(width: 8),
-              const Text('Available Okada Riders', style: AppTextStyles.heading3),
+              Icon(Icons.motorcycle, color: AppColors.primaryGreen),
+              SizedBox(width: 8),
+              Text('Available Okada Riders', style: AppTextStyles.heading3),
             ],
           ),
           const SizedBox(height: 16),

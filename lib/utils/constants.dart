@@ -32,6 +32,7 @@ class AppColors {
   static const Color darkCard = Color(0xFF2C2C2C);
   static const Color darkText = Color(0xFFE0E0E0);
   static const Color darkTextSecondary = Color(0xFFB0B0B0);
+  static const Color borderLight = Color(0xFFE5E7EB);
 }
 
 class AppTextStyles {
@@ -81,6 +82,12 @@ class AppTextStyles {
     fontSize: 12,
     fontWeight: FontWeight.normal,
     height: 1.5,
+  );
+
+  static const TextStyle caption = TextStyle(
+    fontSize: 10,
+    fontWeight: FontWeight.normal,
+    height: 1.4,
   );
 
   static const TextStyle button = TextStyle(

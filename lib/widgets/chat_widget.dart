@@ -63,10 +63,10 @@ class ChatTile extends StatelessWidget {
 
     return ListTile(
       leading: CircleAvatar(
-        backgroundImage: otherParticipant.avatar != null
-            ? NetworkImage(otherParticipant.avatar!)
+        backgroundImage: otherParticipant.profileImage != null
+            ? NetworkImage(otherParticipant.profileImage!)
             : null,
-        child: otherParticipant.avatar == null
+        child: otherParticipant.profileImage == null
             ? Text(otherParticipant.name[0].toUpperCase())
             : null,
       ),
@@ -254,10 +254,10 @@ class _ChatInputWidgetState extends State<ChatInputWidget> {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(AppSpacing.md),
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: Colors.white,
         border: Border(
-          top: BorderSide(color: AppColors.borderLight),
+          top: BorderSide(color: AppColors.lightGrey),
         ),
       ),
       child: Row(

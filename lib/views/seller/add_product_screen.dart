@@ -10,6 +10,7 @@ import '../../widgets/custom_text_field.dart';
 import '../../widgets/animated_widgets.dart';
 import '../../widgets/responsive_wrapper.dart';
 import '../../services/image_picker_service.dart';
+import '../../services/upload_service.dart';
 
 class AddProductScreen extends StatefulWidget {
   const AddProductScreen({super.key});
@@ -85,40 +86,55 @@ class _AddProductScreenState extends State<AddProductScreen> {
       _isLoading = true;
     });
 
-    final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    final user = authProvider.currentUser!;
+    try {
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      final user = authProvider.currentUser!;
 
-    // For now, we'll use the file paths as image URLs
-    // In a real app, you'd upload these to a server/cloud storage
-    final imageUrls = _selectedImages.map((file) => file.path).toList();
+      // Upload images to server
+      final uploadService = UploadService();
+      final imageUrls = await uploadService.uploadImages(_selectedImages);
 
-    final product = ProductModel(
-      id: 'prod_${DateTime.now().millisecondsSinceEpoch}',
-      title: _titleController.text.trim(),
-      description: _descriptionController.text.trim(),
-      price: double.parse(_priceController.text),
-      category: _selectedCategory,
-      sellerId: user.id,
-      sellerName: user.name,
-      sellerLocation: user.location ?? '',
-      images: imageUrls,
-      stockQuantity: int.parse(_stockController.text),
-      createdAt: DateTime.now(),
-    );
+      final product = ProductModel(
+        id: 'prod_${DateTime.now().millisecondsSinceEpoch}',
+        title: _titleController.text.trim(),
+        description: _descriptionController.text.trim(),
+        price: double.parse(_priceController.text),
+        category: _selectedCategory,
+        sellerId: user.id,
+        sellerName: user.name,
+        sellerLocation: user.location ?? '',
+        images: imageUrls,
+        stockQuantity: int.parse(_stockController.text),
+        createdAt: DateTime.now(),
+      );
 
-    context.read<ProductProvider>().addProduct(product);
-    
-    setState(() {
-      _isLoading = false;
-    });
-    
-    Navigator.pop(context);
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Product added successfully!'),
-        backgroundColor: AppColors.successGreen,
-      ),
-    );
+      await context.read<ProductProvider>().addProduct(product);
+      
+      if (!mounted) return;
+      
+      Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Product added successfully!'),
+          backgroundColor: AppColors.successGreen,
+        ),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error adding product: $e'),
+          backgroundColor: AppColors.errorRed,
+        ),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
   }
 
   @override

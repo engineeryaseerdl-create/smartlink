@@ -29,7 +29,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   Widget build(BuildContext context) {
     final user = context.read<AuthProvider>().currentUser;
     final totalAmount = widget.product.price * widget.quantity;
-    final deliveryFee = 500.0;
+    const deliveryFee = 500.0;
     final finalAmount = totalAmount + deliveryFee;
 
     return Scaffold(

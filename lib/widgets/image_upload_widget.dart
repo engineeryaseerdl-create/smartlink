@@ -102,7 +102,7 @@ class _ImageUploadWidgetState extends State<ImageUploadWidget> {
               width: double.infinity,
               decoration: BoxDecoration(
                 border: Border.all(
-                  color: AppColors.borderLight,
+                  color: AppColors.lightGrey,
                   style: BorderStyle.solid,
                 ),
                 borderRadius: BorderRadius.circular(8),
@@ -170,7 +170,7 @@ class _ImageUploadWidgetState extends State<ImageUploadWidget> {
       });
 
       if (widget.allowMultiple && source == ImageSource.gallery) {
-        final List<XFile> images = await _picker.pickMultipleImages();
+        final List<XFile> images = await _picker.pickMultiImage();
         if (images.isNotEmpty) {
           final remainingSlots = widget.maxImages - _images.length;
           final imagesToAdd = images.take(remainingSlots).toList();
@@ -250,7 +250,7 @@ class _SingleImageUploadWidgetState extends State<SingleImageUploadWidget> {
         width: widget.size,
         height: widget.size,
         decoration: BoxDecoration(
-          border: Border.all(color: AppColors.borderLight),
+          border: Border.all(color: AppColors.lightGrey),
           borderRadius: BorderRadius.circular(8),
           color: AppColors.backgroundLight,
         ),

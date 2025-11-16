@@ -235,9 +235,9 @@ class ProductCard extends StatelessWidget {
                   ),
               ],
             ),
-            Expanded(
+            Flexible(
               child: Padding(
-                padding: const EdgeInsets.all(4),
+                padding: EdgeInsets.all(isDesktop ? AppSpacing.sm : AppSpacing.xs),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
@@ -331,11 +331,11 @@ class ProductCard extends StatelessWidget {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 1),
+                    const SizedBox(height: 2),
                     // Quick add to cart button
                     Container(
                         width: double.infinity,
-                        height: 20,
+                        height: 24,
                         decoration: BoxDecoration(
                           color: AppColors.primaryGreen.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(6),

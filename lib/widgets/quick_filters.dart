@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/product_provider.dart';
-import '../utils/constants.dart';
 
 class QuickFilters extends StatelessWidget {
   const QuickFilters({super.key});

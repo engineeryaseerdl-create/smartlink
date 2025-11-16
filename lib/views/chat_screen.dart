@@ -83,10 +83,10 @@ class _ChatConversationScreenState extends State<ChatConversationScreen> {
               children: [
                 CircleAvatar(
                   radius: 16,
-                  backgroundImage: otherParticipant.avatar != null
-                      ? NetworkImage(otherParticipant.avatar!)
+                  backgroundImage: otherParticipant.profileImage != null
+                      ? NetworkImage(otherParticipant.profileImage!)
                       : null,
-                  child: otherParticipant.avatar == null
+                  child: otherParticipant.profileImage == null
                       ? Text(otherParticipant.name[0].toUpperCase())
                       : null,
                 ),
@@ -100,7 +100,7 @@ class _ChatConversationScreenState extends State<ChatConversationScreen> {
                         style: const TextStyle(fontSize: 16),
                       ),
                       Text(
-                        otherParticipant.role.toUpperCase(),
+                        otherParticipant.role.toString().split('.').last.toUpperCase(),
                         style: const TextStyle(fontSize: 12),
                       ),
                     ],

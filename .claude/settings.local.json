@@ -3,7 +3,10 @@
     "allow": [
       "Bash(dir C:UsersHPDesktopTestingsmartlink-frontendsmartlinklibviews)",
       "Bash(npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\")",
-      "Bash(npm install)"
+      "Bash(npm install)",
+      "Bash(npm install @headlessui/react @phosphor-icons/react framer-motion recharts next-themes clsx tailwind-merge)",
+      "Bash(npm install --legacy-peer-deps)",
+      "Bash(npm run dev)"
     ],
     "deny": [],
     "ask": []

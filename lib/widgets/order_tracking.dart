@@ -291,6 +291,8 @@ class OrderTrackingWidget extends StatelessWidget {
         return AppColors.warningOrange;
       case OrderStatus.confirmed:
         return AppColors.infoBlue;
+      case OrderStatus.pickupReady:
+        return AppColors.infoBlue;
       case OrderStatus.inTransit:
         return AppColors.primaryGreen;
       case OrderStatus.delivered:
@@ -306,6 +308,8 @@ class OrderTrackingWidget extends StatelessWidget {
         return 'Pending';
       case OrderStatus.confirmed:
         return 'Confirmed';
+      case OrderStatus.pickupReady:
+        return 'Ready for Pickup';
       case OrderStatus.inTransit:
         return 'In Transit';
       case OrderStatus.delivered:
