@@ -5,6 +5,8 @@ import '../../models/user_model.dart';
 import '../../utils/constants.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/custom_text_field.dart';
+import '../../services/otp_service.dart';
+import 'otp_verification_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -310,7 +312,55 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 const SizedBox(height: AppSpacing.xl),
                 CustomButton(
                   text: 'Create Account',
-                  onPressed: _handleRegister,
+                  onPressed: () async {
+                    if (!_formKey.currentState!.validate()) return;
+                    
+                    // Show loading
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Row(
+                          children: [
+                            SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: Colors.white,
+                              ),
+                            ),
+                            SizedBox(width: 16),
+                            Text('Sending OTP to your email...'),
+                          ],
+                        ),
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
+                    
+                    final email = _emailController.text.trim();
+                    final success = await OTPService.sendOTPToEmail(email);
+                    
+                    if (success && mounted) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => OTPVerificationScreen(
+                            email: email,
+                            onVerified: () {
+                              Navigator.pop(context);
+                              _handleRegister();
+                            },
+                          ),
+                        ),
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Failed to send OTP. Please try again.'),
+                          backgroundColor: AppColors.errorRed,
+                        ),
+                      );
+                    }
+                  },
                   isLoading: authProvider.isLoading,
                   width: double.infinity,
                 ),
