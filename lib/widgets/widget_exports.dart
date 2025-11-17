@@ -29,8 +29,7 @@ export 'navigation_widgets.dart';
 // Status Indicators with Progress Bars
 export 'status_widgets.dart';
 
-// Voice Input for Search and Messages
-export 'voice_input_widget.dart';
+
 
 // Image Optimization (Lazy loading, Progressive images)
 export 'image_optimization_widget.dart';

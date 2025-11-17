@@ -158,18 +158,14 @@ class _EnhancedBuyerHomeScreenState extends State<EnhancedBuyerHomeScreen> {
       padding: const EdgeInsets.all(AppSpacing.md),
       child: Column(
         children: [
-          VoiceSearchField(
+          TextField(
             controller: _searchController,
-            hintText: 'Search products, brands, categories...',
-            onSearch: (query) {
+            decoration: const InputDecoration(
+              hintText: 'Search products, brands, categories...',
+              prefixIcon: Icon(Icons.search),
+            ),
+            onSubmitted: (query) {
               _performSearch(query);
-            },
-            onVoiceResult: (result) {
-              FloatingNotification.showSuccess(
-                context,
-                'Voice search: $result',
-              );
-              _performSearch(result);
             },
           ),
           const SizedBox(height: AppSpacing.sm),
@@ -486,12 +482,7 @@ class _EnhancedBuyerHomeScreenState extends State<EnhancedBuyerHomeScreen> {
             FloatingNotification.showSuccess(context, 'QR Scanner opened!');
           },
         ),
-        QuickAction(
-          label: 'Voice Search',
-          icon: Icons.mic,
-          backgroundColor: AppColors.warningOrange,
-          onPressed: _showVoiceSearch,
-        ),
+
       ],
     );
   }
@@ -557,23 +548,7 @@ class _EnhancedBuyerHomeScreenState extends State<EnhancedBuyerHomeScreen> {
     );
   }
 
-  void _showVoiceSearch() {
-    EnhancedBottomSheet.show(
-      context: context,
-      height: 400,
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.lg),
-        child: VoiceInputWidget(
-          onTextReceived: (text) {
-            Navigator.pop(context);
-            _searchController.text = text;
-            _performSearch(text);
-          },
-          hint: 'Say your search query',
-        ),
-      ),
-    );
-  }
+
 
   void _showSortOptions() {
     EnhancedBottomSheet.show(

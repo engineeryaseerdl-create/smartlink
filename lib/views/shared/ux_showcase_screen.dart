@@ -98,7 +98,7 @@ class _UXShowcaseScreenState extends State<UXShowcaseScreen>
             icon: Icons.search,
             backgroundColor: AppColors.infoBlue,
             onPressed: () {
-              _showVoiceSearch();
+              _showSuccessSnackbar('Search opened!');
             },
           ),
           QuickAction(
@@ -525,20 +525,20 @@ class _UXShowcaseScreenState extends State<UXShowcaseScreen>
           const Text('Media & Input', style: AppTextStyles.heading3),
           const SizedBox(height: AppSpacing.lg),
 
-          // Voice search
-          const Text('Voice Search:', style: AppTextStyles.heading4),
+          // Search field
+          const Text('Search Field:', style: AppTextStyles.heading4),
           const SizedBox(height: AppSpacing.md),
-          VoiceSearchField(
+          TextField(
             controller: _searchController,
-            hintText: 'Search products...',
-            onSearch: (query) {
+            decoration: const InputDecoration(
+              hintText: 'Search products...',
+              prefixIcon: Icon(Icons.search),
+            ),
+            onSubmitted: (query) {
               setState(() {
                 _searchQuery = query;
               });
               _showSuccessSnackbar('Searching for: $query');
-            },
-            onVoiceResult: (result) {
-              _showSuccessSnackbar('Voice result: $result');
             },
           ),
 
@@ -635,37 +635,7 @@ class _UXShowcaseScreenState extends State<UXShowcaseScreen>
     FloatingNotification.showSuccess(context, message);
   }
 
-  void _showVoiceSearch() {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => Container(
-        height: 400,
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(AppBorderRadius.xl),
-            topRight: Radius.circular(AppBorderRadius.xl),
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.lg),
-          child: VoiceInputWidget(
-            onTextReceived: (text) {
-              Navigator.pop(context);
-              setState(() {
-                _searchController.text = text;
-                _searchQuery = text;
-              });
-              _showSuccessSnackbar('Voice search: $text');
-            },
-            hint: 'Say something to search',
-          ),
-        ),
-      ),
-    );
-  }
+
 
   void _showFilterBottomSheet() {
     EnhancedBottomSheet.show(

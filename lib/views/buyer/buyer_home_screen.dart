@@ -9,7 +9,7 @@ import '../../utils/constants.dart';
 import '../../widgets/product_card.dart';
 import '../../widgets/skeleton_loader.dart';
 import '../../widgets/quick_action_fab.dart';
-import '../../widgets/voice_search.dart';
+
 import '../../widgets/notification_stream.dart';
 import 'product_detail_screen.dart';
 import 'buyer_orders_screen.dart';
@@ -292,13 +292,7 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
                         suffixIcon: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            VoiceSearchButton(
-                              onResult: (result) {
-                                _searchController.text = result;
-                                productProvider.searchProducts(result);
-                              },
-                            ),
-                            const SizedBox(width: 8),
+
                             Container(
                               margin: const EdgeInsets.all(8),
                               decoration: BoxDecoration(

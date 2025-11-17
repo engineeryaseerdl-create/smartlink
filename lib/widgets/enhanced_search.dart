@@ -4,13 +4,13 @@ import '../utils/constants.dart';
 class EnhancedSearchBar extends StatefulWidget {
   final TextEditingController controller;
   final Function(String) onChanged;
-  final VoidCallback? onVoiceSearch;
+
 
   const EnhancedSearchBar({
     super.key,
     required this.controller,
     required this.onChanged,
-    this.onVoiceSearch,
+
   });
 
   @override
@@ -54,11 +54,7 @@ class _EnhancedSearchBarState extends State<EnhancedSearchBar> {
               suffixIcon: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  if (widget.onVoiceSearch != null)
-                    IconButton(
-                      onPressed: widget.onVoiceSearch,
-                      icon: const Icon(Icons.mic, color: AppColors.primaryGreen),
-                    ),
+
                   Container(
                     margin: const EdgeInsets.all(8),
                     decoration: BoxDecoration(

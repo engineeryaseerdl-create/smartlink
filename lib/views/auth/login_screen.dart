@@ -215,49 +215,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ],
                 ),
-                const SizedBox(height: AppSpacing.lg),
-                Container(
-                  padding: const EdgeInsets.all(AppSpacing.md),
-                  decoration: BoxDecoration(
-                    color: AppColors.lightGreen,
-                    borderRadius: BorderRadius.circular(AppBorderRadius.md),
-                  ),
-                  child: const Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Demo Accounts:',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
-                          color: AppColors.textPrimary,
-                        ),
-                      ),
-                      SizedBox(height: AppSpacing.sm),
-                      Text(
-                        'Buyer: buyer@test.com',
-                        style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
-                      ),
-                      Text(
-                        'Seller: seller@test.com',
-                        style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
-                      ),
-                      Text(
-                        'Rider: rider@test.com',
-                        style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
-                      ),
-                      SizedBox(height: AppSpacing.xs),
-                      Text(
-                        'Password: any password',
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontStyle: FontStyle.italic,
-                          color: AppColors.textSecondary,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+
         ],
       ),
     );
