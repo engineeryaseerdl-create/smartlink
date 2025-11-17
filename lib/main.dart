@@ -9,6 +9,7 @@ import 'providers/cart_provider.dart';
 import 'providers/favorites_provider.dart';
 import 'providers/theme_provider.dart';
 import 'providers/cluster_provider.dart';
+import 'providers/notification_provider.dart';
 import 'utils/constants.dart';
 import 'views/shared/splash_screen.dart';
 import 'views/shared/auth_wrapper.dart';
@@ -35,6 +36,7 @@ class SmartLinkApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => CartProvider()),
         ChangeNotifierProvider(create: (_) => FavoritesProvider()),
         ChangeNotifierProvider(create: (_) => ClusterProvider()),
+        ChangeNotifierProvider(create: (_) => NotificationProvider()),
       ],
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, child) => MaterialApp(
