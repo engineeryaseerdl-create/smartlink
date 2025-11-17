@@ -7,6 +7,9 @@ import '../../utils/helpers.dart';
 import '../../models/order_model.dart';
 import '../../widgets/custom_button.dart';
 import '../shared/profile_screen.dart';
+import '../notifications_screen.dart';
+import '../chat_screen.dart';
+import '../../widgets/notification_stream.dart';
 
 class RiderHomeScreen extends StatefulWidget {
   const RiderHomeScreen({super.key});
@@ -85,14 +88,53 @@ class _RiderHomeScreenState extends State<RiderHomeScreen> {
                             .copyWith(color: AppColors.grey)),
                   ],
                 ),
-                Container(
-                  width: 50,
-                  height: 50,
-                  decoration: const BoxDecoration(
-                    color: AppColors.primaryGreen,
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(Icons.delivery_dining, color: AppColors.white),
+                Row(
+                  children: [
+                    NotificationStream(
+                      builder: (count) => IconButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const NotificationsScreen(),
+                            ),
+                          );
+                        },
+                        icon: Badge(
+                          label: Text('$count'),
+                          isLabelVisible: count > 0,
+                          backgroundColor: AppColors.errorRed,
+                          child: const Icon(
+                            Icons.notifications_outlined,
+                            color: AppColors.textPrimary,
+                          ),
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const ChatListScreen(),
+                          ),
+                        );
+                      },
+                      icon: const Icon(
+                        Icons.chat_outlined,
+                        color: AppColors.textPrimary,
+                      ),
+                    ),
+                    Container(
+                      width: 50,
+                      height: 50,
+                      decoration: const BoxDecoration(
+                        color: AppColors.primaryGreen,
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(Icons.delivery_dining, color: AppColors.white),
+                    ),
+                  ],
                 ),
               ],
             ),

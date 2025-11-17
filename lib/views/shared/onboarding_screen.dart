@@ -134,65 +134,60 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                       children: [
                         const SizedBox(height: 20),
 
-                        // LOGO AND SKIP BUTTON ROW
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const AppLogo(size: 40),
-                            if (currentIndex < pages.length - 1)
-                              TextButton(
-                                onPressed: skip,
-                                child: const Text(
-                                  "Skip",
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Color(0xFFF88F3A),
-                                    fontWeight: FontWeight.w600,
+                        // SKIP BUTTON
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: currentIndex < pages.length - 1
+                              ? TextButton(
+                                  onPressed: skip,
+                                  child: const Text(
+                                    "Skip",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Color(0xFFF88F3A),
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
-                                ),
-                              )
-                            else
-                              const SizedBox(width: 60),
-                          ],
+                                )
+                              : const SizedBox(height: 40),
                         ),
 
-                        const Spacer(),
+                        const SizedBox(height: 20),
 
                         // IMAGE with floating effect
-                        AnimatedScale(
-                          scale: currentIndex == index ? 1.0 : 0.8,
-                          duration: const Duration(milliseconds: 300),
-                          child: Image.asset(
-                            item["image"]!,
-                            height: 500,
-                            width: 500,
-                            fit: BoxFit.contain,
-                            errorBuilder: (context, error, stackTrace) {
-                              return Container(
-                                height: 500,
-                                width: 500,
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFFF88F3A).withOpacity(0.2),
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: const Icon(
-                                  Icons.image_not_supported,
-                                  size: 80,
-                                  color: Color(0xFFF88F3A),
-                                ),
-                              );
-                            },
+                        Flexible(
+                          child: AnimatedScale(
+                            scale: currentIndex == index ? 1.0 : 0.8,
+                            duration: const Duration(milliseconds: 300),
+                            child: Image.asset(
+                              item["image"]!,
+                              fit: BoxFit.contain,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Container(
+                                  height: 200,
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFF88F3A).withOpacity(0.2),
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: const Icon(
+                                    Icons.image_not_supported,
+                                    size: 80,
+                                    color: Color(0xFFF88F3A),
+                                  ),
+                                );
+                              },
+                            ),
                           ),
                         ),
 
-                        const SizedBox(height: 40),
+                        const SizedBox(height: 30),
 
                         // TITLE
                         Text(
                           item["title"]!,
                           textAlign: TextAlign.center,
                           style: const TextStyle(
-                            fontSize: 32,
+                            fontSize: 24,
                             fontWeight: FontWeight.w800,
                             color: Color(0xFFF88F3A),
                           ),
@@ -205,13 +200,13 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                           item["subtitle"]!,
                           textAlign: TextAlign.center,
                           style: const TextStyle(
-                            fontSize: 16,
+                            fontSize: 14,
                             color: Colors.grey,
                             height: 1.4,
                           ),
                         ),
 
-                        const Spacer(),
+                        const SizedBox(height: 30),
 
                         // PROGRESS BAR
                         Container(

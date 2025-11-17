@@ -15,6 +15,8 @@ import 'product_detail_screen.dart';
 import 'buyer_orders_screen.dart';
 import 'cart_screen.dart';
 import '../shared/profile_screen.dart';
+import '../notifications_screen.dart';
+import '../chat_screen.dart';
 
 class BuyerHomeScreen extends StatefulWidget {
   const BuyerHomeScreen({super.key});
@@ -70,9 +72,16 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
             backgroundColor: Colors.blue,
           ),
           QuickAction(
-            icon: const Icon(Icons.favorite),
-            onPressed: () {},
-            backgroundColor: Colors.red,
+            icon: const Icon(Icons.chat),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ChatListScreen(),
+                ),
+              );
+            },
+            backgroundColor: Colors.blue,
           ),
         ],
       ) : null,
@@ -201,7 +210,14 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
                             ),
                             child: NotificationStream(
                               builder: (count) => IconButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const NotificationsScreen(),
+                                    ),
+                                  );
+                                },
                                 icon: Badge(
                                   label: Text('$count'),
                                   isLabelVisible: count > 0,

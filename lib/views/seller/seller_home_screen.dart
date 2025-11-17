@@ -10,6 +10,9 @@ import 'seller_products_screen.dart';
 import 'seller_orders_screen.dart';
 import 'add_product_screen.dart';
 import '../shared/profile_screen.dart';
+import '../notifications_screen.dart';
+import '../chat_screen.dart';
+import '../../widgets/notification_stream.dart';
 
 class SellerHomeScreen extends StatefulWidget {
   const SellerHomeScreen({super.key});
@@ -131,17 +134,56 @@ class _SellerHomeScreenState extends State<SellerHomeScreen> {
                     ),
                   ],
                 ),
-                Container(
-                  width: 50,
-                  height: 50,
-                  decoration: const BoxDecoration(
-                    color: AppColors.primaryGreen,
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    Icons.store,
-                    color: AppColors.white,
-                  ),
+                Row(
+                  children: [
+                    NotificationStream(
+                      builder: (count) => IconButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const NotificationsScreen(),
+                            ),
+                          );
+                        },
+                        icon: Badge(
+                          label: Text('$count'),
+                          isLabelVisible: count > 0,
+                          backgroundColor: AppColors.errorRed,
+                          child: const Icon(
+                            Icons.notifications_outlined,
+                            color: AppColors.textPrimary,
+                          ),
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const ChatListScreen(),
+                          ),
+                        );
+                      },
+                      icon: const Icon(
+                        Icons.chat_outlined,
+                        color: AppColors.textPrimary,
+                      ),
+                    ),
+                    Container(
+                      width: 50,
+                      height: 50,
+                      decoration: const BoxDecoration(
+                        color: AppColors.primaryGreen,
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.store,
+                        color: AppColors.white,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),

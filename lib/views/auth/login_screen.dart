@@ -5,9 +5,7 @@ import '../../utils/constants.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/custom_text_field.dart';
 import '../../widgets/app_logo.dart';
-import '../../services/otp_service.dart';
 import 'register_screen.dart';
-import 'otp_verification_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -184,39 +182,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     return null;
                   },
                 ),
-                const SizedBox(height: AppSpacing.sm),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: TextButton(
-                    onPressed: () async {
-                      if (_emailController.text.trim().isEmpty) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Enter email to verify')),
-                        );
-                        return;
-                      }
-                      final success = await OTPService.sendOTPToEmail(_emailController.text.trim());
-                      if (success && mounted) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => OTPVerificationScreen(
-                              email: _emailController.text.trim(),
-                              onVerified: () {
-                                Navigator.pop(context);
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text('Email verified!')),
-                                );
-                              },
-                            ),
-                          ),
-                        );
-                      }
-                    },
-                    child: const Text('Verify Email with OTP'),
-                  ),
-                ),
-                const SizedBox(height: AppSpacing.md),
+                const SizedBox(height: AppSpacing.xl),
                 CustomButton(
                   text: 'Login',
                   onPressed: _handleLogin,

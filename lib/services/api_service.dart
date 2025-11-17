@@ -7,7 +7,7 @@ import '../models/rider_model.dart';
 class ApiService {
   final Dio _dio = Dio();
   static const String baseUrl = String.fromEnvironment('API_URL', 
-    defaultValue: 'http://localhost:5000/api');
+    defaultValue: 'https://smartlink-backend-2-v3mb.onrender.com/api');
   
   String? _token;
 
