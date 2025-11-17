@@ -43,7 +43,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
       maxImages: 5,
       imageQuality: 85,
     );
-    
+
     if (images.isNotEmpty) {
       setState(() {
         _selectedImages = images;
@@ -55,7 +55,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
     final File? image = await ImagePickerService.pickImageFromCamera(
       imageQuality: 85,
     );
-    
+
     if (image != null) {
       setState(() {
         _selectedImages.add(image);
@@ -71,7 +71,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
   Future<void> _handleAddProduct() async {
     if (!_formKey.currentState!.validate()) return;
-    
+
     if (_selectedImages.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -109,9 +109,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
       );
 
       await context.read<ProductProvider>().addProduct(product);
-      
+
       if (!mounted) return;
-      
+
       Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -121,7 +121,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
       );
     } catch (e) {
       if (!mounted) return;
-      
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Error adding product: $e'),
@@ -164,7 +164,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
               left: ResponsiveUtils.getResponsivePagePadding(context).left,
               right: ResponsiveUtils.getResponsivePagePadding(context).right,
               top: ResponsiveUtils.getResponsivePagePadding(context).top,
-              bottom: MediaQuery.of(context).viewInsets.bottom + ResponsiveUtils.getResponsivePagePadding(context).bottom,
+              bottom: MediaQuery.of(context).viewInsets.bottom +
+                  ResponsiveUtils.getResponsivePagePadding(context).bottom,
             ),
             child: FadeInWidget(
               slideUp: true,
@@ -173,218 +174,221 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-              // Image Upload Section
-              Text('Product Images',
-                  style: AppTextStyles.bodyMedium
-                      .copyWith(fontWeight: FontWeight.w600)),
-              const SizedBox(height: AppSpacing.sm),
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(AppSpacing.md),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).brightness == Brightness.dark 
-                      ? AppColors.darkCard 
-                      : AppColors.lightGrey,
-                  borderRadius: BorderRadius.circular(AppBorderRadius.md),
-                  border: Border.all(
-                    color: _selectedImages.isEmpty 
-                        ? Colors.grey.withOpacity(0.3)
-                        : AppColors.primaryGreen.withOpacity(0.3),
-                    width: 1,
-                  ),
-                ),
-                child: Column(
-                  children: [
-                    if (_selectedImages.isEmpty) ...[
-                      Icon(
-                        Icons.add_a_photo,
-                        size: 48,
-                        color: Colors.grey.shade600,
-                      ),
-                      const SizedBox(height: AppSpacing.sm),
-                      Text(
-                        'Add product images',
-                        style: AppTextStyles.bodyMedium.copyWith(
-                          color: Colors.grey.shade600,
+                    // Image Upload Section
+                    Text('Product Images',
+                        style: AppTextStyles.bodyMedium
+                            .copyWith(fontWeight: FontWeight.w600)),
+                    const SizedBox(height: AppSpacing.sm),
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(AppSpacing.md),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? AppColors.darkCard
+                            : AppColors.lightGrey,
+                        borderRadius: BorderRadius.circular(AppBorderRadius.md),
+                        border: Border.all(
+                          color: _selectedImages.isEmpty
+                              ? Colors.grey.withOpacity(0.3)
+                              : AppColors.primaryGreen.withOpacity(0.3),
+                          width: 1,
                         ),
                       ),
-                      const SizedBox(height: AppSpacing.sm),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      child: Column(
                         children: [
-                          ElevatedButton.icon(
-                            onPressed: _pickImages,
-                            icon: const Icon(Icons.photo_library),
-                            label: const Text('Gallery'),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.primaryGreen,
-                              foregroundColor: AppColors.white,
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: AppSpacing.md,
-                                vertical: AppSpacing.sm,
+                          if (_selectedImages.isEmpty) ...[
+                            Icon(
+                              Icons.add_a_photo,
+                              size: 48,
+                              color: Colors.grey.shade600,
+                            ),
+                            const SizedBox(height: AppSpacing.sm),
+                            Text(
+                              'Add product images',
+                              style: AppTextStyles.bodyMedium.copyWith(
+                                color: Colors.grey.shade600,
                               ),
                             ),
-                          ),
-                          ElevatedButton.icon(
-                            onPressed: _takePicture,
-                            icon: const Icon(Icons.camera_alt),
-                            label: const Text('Camera'),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.infoBlue,
-                              foregroundColor: AppColors.white,
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: AppSpacing.md,
-                                vertical: AppSpacing.sm,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ] else ...[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            '${_selectedImages.length} image(s) selected',
-                            style: AppTextStyles.bodyMedium.copyWith(
-                              fontWeight: FontWeight.w600,
-                              color: AppColors.primaryGreen,
-                            ),
-                          ),
-                          Row(
-                            children: [
-                              TextButton.icon(
-                                onPressed: _pickImages,
-                                icon: const Icon(Icons.photo_library),
-                                label: const Text('Gallery'),
-                              ),
-                              const SizedBox(width: AppSpacing.xs),
-                              TextButton.icon(
-                                onPressed: _takePicture,
-                                icon: const Icon(Icons.camera_alt),
-                                label: const Text('Camera'),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: AppSpacing.sm),
-                      SizedBox(
-                        height: 120,
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: _selectedImages.length,
-                          itemBuilder: (context, index) {
-                            return Container(
-                              margin: const EdgeInsets.only(right: AppSpacing.sm),
-                              child: Stack(
-                                children: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(AppBorderRadius.md),
-                                    child: Image.file(
-                                      _selectedImages[index],
-                                      width: 120,
-                                      height: 120,
-                                      fit: BoxFit.cover,
+                            const SizedBox(height: AppSpacing.sm),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                ElevatedButton.icon(
+                                  onPressed: _pickImages,
+                                  icon: const Icon(Icons.photo_library),
+                                  label: const Text('Gallery'),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: AppColors.primaryGreen,
+                                    foregroundColor: AppColors.white,
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: AppSpacing.md,
+                                      vertical: AppSpacing.sm,
                                     ),
                                   ),
-                                  Positioned(
-                                    top: 4,
-                                    right: 4,
-                                    child: GestureDetector(
-                                      onTap: () => _removeImage(index),
-                                      child: Container(
-                                        padding: const EdgeInsets.all(4),
-                                        decoration: const BoxDecoration(
-                                          color: AppColors.errorRed,
-                                          shape: BoxShape.circle,
-                                        ),
-                                        child: const Icon(
-                                          Icons.close,
-                                          color: AppColors.white,
-                                          size: 16,
-                                        ),
-                                      ),
+                                ),
+                                ElevatedButton.icon(
+                                  onPressed: _takePicture,
+                                  icon: const Icon(Icons.camera_alt),
+                                  label: const Text('Camera'),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: AppColors.infoBlue,
+                                    foregroundColor: AppColors.white,
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: AppSpacing.md,
+                                      vertical: AppSpacing.sm,
                                     ),
                                   ),
-                                ],
+                                ),
+                              ],
+                            ),
+                          ] else ...[
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  '${_selectedImages.length} image(s) selected',
+                                  style: AppTextStyles.bodyMedium.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.primaryGreen,
+                                  ),
+                                ),
+                                Row(
+                                  children: [
+                                    TextButton.icon(
+                                      onPressed: _pickImages,
+                                      icon: const Icon(Icons.photo_library),
+                                      label: const Text('Gallery'),
+                                    ),
+                                    const SizedBox(width: AppSpacing.xs),
+                                    TextButton.icon(
+                                      onPressed: _takePicture,
+                                      icon: const Icon(Icons.camera_alt),
+                                      label: const Text('Camera'),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: AppSpacing.sm),
+                            SizedBox(
+                              height: 120,
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: _selectedImages.length,
+                                itemBuilder: (context, index) {
+                                  return Container(
+                                    margin: const EdgeInsets.only(
+                                        right: AppSpacing.sm),
+                                    child: Stack(
+                                      children: [
+                                        ClipRRect(
+                                          borderRadius: BorderRadius.circular(
+                                              AppBorderRadius.md),
+                                          child: Image.file(
+                                            _selectedImages[index],
+                                            width: 120,
+                                            height: 120,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                        Positioned(
+                                          top: 4,
+                                          right: 4,
+                                          child: GestureDetector(
+                                            onTap: () => _removeImage(index),
+                                            child: Container(
+                                              padding: const EdgeInsets.all(4),
+                                              decoration: const BoxDecoration(
+                                                color: AppColors.errorRed,
+                                                shape: BoxShape.circle,
+                                              ),
+                                              child: const Icon(
+                                                Icons.close,
+                                                color: AppColors.white,
+                                                size: 16,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
                               ),
-                            );
-                          },
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: AppSpacing.md),
+                    CustomTextField(
+                      label: 'Product Title',
+                      hint: 'Enter product title',
+                      controller: _titleController,
+                      validator: (value) =>
+                          value?.isEmpty ?? true ? 'Required' : null,
+                    ),
+                    const SizedBox(height: AppSpacing.md),
+                    CustomTextField(
+                      label: 'Description',
+                      hint: 'Enter product description',
+                      controller: _descriptionController,
+                      maxLines: 4,
+                      validator: (value) =>
+                          value?.isEmpty ?? true ? 'Required' : null,
+                    ),
+                    const SizedBox(height: AppSpacing.md),
+                    CustomTextField(
+                      label: 'Price (₦)',
+                      hint: 'Enter price',
+                      controller: _priceController,
+                      keyboardType: TextInputType.number,
+                      validator: (value) =>
+                          value?.isEmpty ?? true ? 'Required' : null,
+                    ),
+                    const SizedBox(height: AppSpacing.md),
+                    CustomTextField(
+                      label: 'Stock Quantity',
+                      hint: 'Enter quantity',
+                      controller: _stockController,
+                      keyboardType: TextInputType.number,
+                      validator: (value) =>
+                          value?.isEmpty ?? true ? 'Required' : null,
+                    ),
+                    const SizedBox(height: AppSpacing.md),
+                    Text('Category',
+                        style: AppTextStyles.bodyMedium
+                            .copyWith(fontWeight: FontWeight.w600)),
+                    const SizedBox(height: AppSpacing.sm),
+                    DropdownButtonFormField<ProductCategory>(
+                      value: _selectedCategory,
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: AppColors.lightGrey,
+                        border: OutlineInputBorder(
+                          borderRadius:
+                              BorderRadius.circular(AppBorderRadius.md),
+                          borderSide: BorderSide.none,
                         ),
                       ),
-                    ],
-                  ],
-                ),
-              ),
-              const SizedBox(height: AppSpacing.md),
-              CustomTextField(
-                label: 'Product Title',
-                hint: 'Enter product title',
-                controller: _titleController,
-                validator: (value) =>
-                    value?.isEmpty ?? true ? 'Required' : null,
-              ),
-              const SizedBox(height: AppSpacing.md),
-              CustomTextField(
-                label: 'Description',
-                hint: 'Enter product description',
-                controller: _descriptionController,
-                maxLines: 4,
-                validator: (value) =>
-                    value?.isEmpty ?? true ? 'Required' : null,
-              ),
-              const SizedBox(height: AppSpacing.md),
-              CustomTextField(
-                label: 'Price (₦)',
-                hint: 'Enter price',
-                controller: _priceController,
-                keyboardType: TextInputType.number,
-                validator: (value) =>
-                    value?.isEmpty ?? true ? 'Required' : null,
-              ),
-              const SizedBox(height: AppSpacing.md),
-              CustomTextField(
-                label: 'Stock Quantity',
-                hint: 'Enter quantity',
-                controller: _stockController,
-                keyboardType: TextInputType.number,
-                validator: (value) =>
-                    value?.isEmpty ?? true ? 'Required' : null,
-              ),
-              const SizedBox(height: AppSpacing.md),
-              Text('Category',
-                  style: AppTextStyles.bodyMedium
-                      .copyWith(fontWeight: FontWeight.w600)),
-              const SizedBox(height: AppSpacing.sm),
-              DropdownButtonFormField<ProductCategory>(
-                initialValue: _selectedCategory,
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: AppColors.lightGrey,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(AppBorderRadius.md),
-                    borderSide: BorderSide.none,
-                  ),
-                ),
-                items: ProductCategory.values.map((category) {
-                  return DropdownMenuItem(
-                    value: category,
-                    child: Text(category.toString().split('.').last),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  if (value != null) {
-                    setState(() => _selectedCategory = value);
-                  }
-                },
-              ),
-              const SizedBox(height: AppSpacing.xl),
-              CustomButton(
-                text: _isLoading ? 'Adding Product...' : 'Add Product',
-                onPressed: _isLoading ? null : () => _handleAddProduct(),
-                width: double.infinity,
-              ),
+                      items: ProductCategory.values.map((category) {
+                        return DropdownMenuItem(
+                          value: category,
+                          child: Text(category.toString().split('.').last),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        if (value != null) {
+                          setState(() => _selectedCategory = value);
+                        }
+                      },
+                    ),
+                    const SizedBox(height: AppSpacing.xl),
+                    CustomButton(
+                      text: _isLoading ? 'Adding Product...' : 'Add Product',
+                      onPressed: _isLoading ? null : () => _handleAddProduct(),
+                      width: double.infinity,
+                    ),
                   ],
                 ),
               ),

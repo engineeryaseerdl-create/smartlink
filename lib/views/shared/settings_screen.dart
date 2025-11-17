@@ -26,7 +26,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   final _locationController = TextEditingController();
   final _bioController = TextEditingController();
   final ImagePicker _picker = ImagePicker();
-  
+
   File? _profileImage;
   bool _isLoading = false;
   bool _notificationsEnabled = true;
@@ -40,7 +40,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   void _loadUserData() {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     final user = authProvider.currentUser;
-    
+
     if (user != null) {
       _nameController.text = user.name;
       _phoneController.text = user.phone ?? '';
@@ -117,7 +117,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
     try {
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
-      
+
       String? avatarUrl;
       if (_profileImage != null) {
         final uploadService = UploadService();
@@ -132,7 +132,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         'bio': _bioController.text.trim(),
         if (avatarUrl != null) 'avatar': avatarUrl,
       });
-      
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -191,12 +191,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         backgroundImage: _profileImage != null && !kIsWeb
                             ? FileImage(_profileImage!) as ImageProvider
                             : user?.profileImageUrl != null
-                                ? NetworkImage(user!.profileImageUrl!) as ImageProvider
+                                ? NetworkImage(user!.profileImageUrl!)
+                                    as ImageProvider
                                 : null,
-                        child: _profileImage == null && user?.profileImageUrl == null
+                        child: _profileImage == null &&
+                                user?.profileImageUrl == null
                             ? Text(
-                                user?.name.isNotEmpty == true ? user!.name[0].toUpperCase() : '?',
-                                style: AppTextStyles.heading1.copyWith(color: AppColors.white),
+                                user?.name.isNotEmpty == true
+                                    ? user!.name[0].toUpperCase()
+                                    : '?',
+                                style: AppTextStyles.heading1
+                                    .copyWith(color: AppColors.white),
                               )
                             : null,
                       ),
@@ -210,7 +215,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             decoration: BoxDecoration(
                               color: AppColors.gold,
                               shape: BoxShape.circle,
-                              border: Border.all(color: AppColors.white, width: 2),
+                              border:
+                                  Border.all(color: AppColors.white, width: 2),
                             ),
                             child: const Icon(
                               Icons.camera_alt,
@@ -259,7 +265,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 decoration: BoxDecoration(
                   color: AppColors.warningOrange.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(AppBorderRadius.md),
-                  border: Border.all(color: AppColors.warningOrange.withOpacity(0.3)),
+                  border: Border.all(
+                      color: AppColors.warningOrange.withOpacity(0.3)),
                 ),
                 child: Row(
                   children: [
@@ -283,7 +290,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             onPressed: () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => const KYCScreen()),
+                                MaterialPageRoute(
+                                    builder: (context) => const KYCScreen()),
                               );
                             },
                             style: ElevatedButton.styleFrom(
@@ -309,15 +317,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 children: [
                   const Text('Edit Profile', style: AppTextStyles.heading3),
                   const SizedBox(height: AppSpacing.md),
-                  
                   CustomTextField(
                     label: 'Full Name',
                     hint: 'Enter your full name',
                     controller: _nameController,
-                    validator: (value) => value?.isEmpty == true ? 'Name is required' : null,
+                    validator: (value) =>
+                        value?.isEmpty == true ? 'Name is required' : null,
                   ),
                   const SizedBox(height: AppSpacing.md),
-                  
                   CustomTextField(
                     label: 'Phone Number',
                     hint: 'Enter your phone number',
@@ -325,14 +332,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     keyboardType: TextInputType.phone,
                   ),
                   const SizedBox(height: AppSpacing.md),
-                  
                   CustomTextField(
                     label: 'Location',
                     hint: 'Enter your location',
                     controller: _locationController,
                   ),
                   const SizedBox(height: AppSpacing.md),
-                  
                   CustomTextField(
                     label: 'Bio',
                     hint: 'Tell us about yourself',
@@ -340,7 +345,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     maxLines: 3,
                   ),
                   const SizedBox(height: AppSpacing.xl),
-                  
                   CustomButton(
                     text: _isLoading ? 'Saving...' : 'Save Changes',
                     onPressed: _isLoading ? null : () => _saveSettings(),
@@ -358,7 +362,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 borderRadius: BorderRadius.circular(AppBorderRadius.md),
                 boxShadow: [
                   BoxShadow(
-                    color: (isDark ? Colors.white : Colors.black).withOpacity(0.05),
+                    color: (isDark ? Colors.white : Colors.black)
+                        .withOpacity(0.05),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
@@ -367,7 +372,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               child: Column(
                 children: [
                   ListTile(
-                    leading: const Icon(Icons.notifications, color: AppColors.primaryGreen),
+                    leading: const Icon(Icons.notifications,
+                        color: AppColors.primaryGreen),
                     title: const Text('Push Notifications'),
                     trailing: Switch(
                       value: _notificationsEnabled,
@@ -376,18 +382,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           _notificationsEnabled = value;
                         });
                       },
-                      activeThumbColor: AppColors.primaryGreen,
+                      thumbColor:
+                          MaterialStateProperty.all(AppColors.primaryGreen),
                     ),
                   ),
                   ListTile(
-                    leading: const Icon(Icons.dark_mode, color: AppColors.primaryGreen),
+                    leading: const Icon(Icons.dark_mode,
+                        color: AppColors.primaryGreen),
                     title: const Text('Dark Mode'),
                     trailing: Switch(
                       value: themeProvider.isDarkMode,
                       onChanged: (value) {
                         themeProvider.toggleTheme();
                       },
-                      activeThumbColor: AppColors.primaryGreen,
+                      thumbColor:
+                          MaterialStateProperty.all(AppColors.primaryGreen),
                     ),
                   ),
                 ],

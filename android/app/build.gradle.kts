@@ -8,7 +8,9 @@ plugins {
 android {
     namespace = "com.example.smartlink"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    // Pin the highest Android NDK required by plugins (they are backward compatible).
+    // This was changed from flutter.ndkVersion to the explicit version required by plugins.
+    ndkVersion = "27.0.12077973"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11

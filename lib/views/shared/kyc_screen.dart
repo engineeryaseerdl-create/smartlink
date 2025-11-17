@@ -19,7 +19,7 @@ class _KYCScreenState extends State<KYCScreen> {
   final _ninController = TextEditingController();
   final _addressController = TextEditingController();
   final ImagePicker _picker = ImagePicker();
-  
+
   File? _idCardFront;
   File? _idCardBack;
   File? _selfieImage;
@@ -66,9 +66,10 @@ class _KYCScreenState extends State<KYCScreen> {
     );
   }
 
-  Future<void> _pickImageFromSource(ImageSource source, String imageType) async {
+  Future<void> _pickImageFromSource(
+      ImageSource source, String imageType) async {
     Navigator.pop(context);
-    
+
     try {
       final XFile? image = await _picker.pickImage(
         source: source,
@@ -76,7 +77,7 @@ class _KYCScreenState extends State<KYCScreen> {
         maxHeight: 1024,
         imageQuality: 85,
       );
-      
+
       if (image != null) {
         setState(() {
           switch (imageType) {
@@ -102,16 +103,17 @@ class _KYCScreenState extends State<KYCScreen> {
     }
   }
 
-  Widget _buildImageUploadCard(String title, String description, File? image, String imageType) {
+  Widget _buildImageUploadCard(
+      String title, String description, File? image, String imageType) {
     return Container(
       padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
-        color: Theme.of(context).brightness == Brightness.dark 
-            ? AppColors.darkCard 
+        color: Theme.of(context).brightness == Brightness.dark
+            ? AppColors.darkCard
             : AppColors.lightGrey,
         borderRadius: BorderRadius.circular(AppBorderRadius.md),
         border: Border.all(
-          color: image != null 
+          color: image != null
               ? AppColors.successGreen.withOpacity(0.5)
               : Colors.grey.withOpacity(0.3),
         ),
@@ -165,7 +167,9 @@ class _KYCScreenState extends State<KYCScreen> {
             child: ElevatedButton(
               onPressed: () => _pickImage(imageType),
               style: ElevatedButton.styleFrom(
-                backgroundColor: image != null ? AppColors.successGreen : AppColors.primaryGreen,
+                backgroundColor: image != null
+                    ? AppColors.successGreen
+                    : AppColors.primaryGreen,
                 foregroundColor: AppColors.white,
               ),
               child: Text(image != null ? 'Change Image' : 'Upload Image'),
@@ -178,7 +182,7 @@ class _KYCScreenState extends State<KYCScreen> {
 
   Future<void> _submitKYC() async {
     if (!_formKey.currentState!.validate()) return;
-    
+
     if (_idCardFront == null || _idCardBack == null || _selfieImage == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -196,11 +200,12 @@ class _KYCScreenState extends State<KYCScreen> {
     try {
       // In a real app, you would upload documents to server and submit for verification
       await Future.delayed(const Duration(seconds: 2)); // Simulate API call
-      
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('KYC documents submitted successfully! Verification may take 24-48 hours.'),
+            content: Text(
+                'KYC documents submitted successfully! Verification may take 24-48 hours.'),
             backgroundColor: AppColors.successGreen,
             duration: Duration(seconds: 4),
           ),
@@ -277,12 +282,13 @@ class _KYCScreenState extends State<KYCScreen> {
               // Personal Information
               const Text('Personal Information', style: AppTextStyles.heading3),
               const SizedBox(height: AppSpacing.md),
-              
+
               CustomTextField(
                 label: 'Full Name (as on ID)',
                 hint: 'Enter your full legal name',
                 controller: _fullNameController,
-                validator: (value) => value?.isEmpty == true ? 'Full name is required' : null,
+                validator: (value) =>
+                    value?.isEmpty == true ? 'Full name is required' : null,
               ),
               const SizedBox(height: AppSpacing.md),
 
@@ -294,8 +300,8 @@ class _KYCScreenState extends State<KYCScreen> {
                   labelText: 'BVN (Optional)',
                   hintText: 'Enter your Bank Verification Number',
                   filled: true,
-                  fillColor: Theme.of(context).brightness == Brightness.dark 
-                      ? AppColors.darkCard 
+                  fillColor: Theme.of(context).brightness == Brightness.dark
+                      ? AppColors.darkCard
                       : AppColors.lightGrey,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(AppBorderRadius.md),
@@ -313,8 +319,8 @@ class _KYCScreenState extends State<KYCScreen> {
                   labelText: 'NIN (Optional)',
                   hintText: 'Enter your National Identification Number',
                   filled: true,
-                  fillColor: Theme.of(context).brightness == Brightness.dark 
-                      ? AppColors.darkCard 
+                  fillColor: Theme.of(context).brightness == Brightness.dark
+                      ? AppColors.darkCard
                       : AppColors.lightGrey,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(AppBorderRadius.md),
@@ -329,19 +335,22 @@ class _KYCScreenState extends State<KYCScreen> {
                 hint: 'Enter your full address',
                 controller: _addressController,
                 maxLines: 2,
-                validator: (value) => value?.isEmpty == true ? 'Address is required' : null,
+                validator: (value) =>
+                    value?.isEmpty == true ? 'Address is required' : null,
               ),
               const SizedBox(height: AppSpacing.md),
 
               // ID Type Selection
-              Text('ID Document Type', style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.w600)),
+              Text('ID Document Type',
+                  style: AppTextStyles.bodyMedium
+                      .copyWith(fontWeight: FontWeight.w600)),
               const SizedBox(height: AppSpacing.sm),
               DropdownButtonFormField<String>(
-                initialValue: _selectedIdType,
+                value: _selectedIdType,
                 decoration: InputDecoration(
                   filled: true,
-                  fillColor: Theme.of(context).brightness == Brightness.dark 
-                      ? AppColors.darkCard 
+                  fillColor: Theme.of(context).brightness == Brightness.dark
+                      ? AppColors.darkCard
                       : AppColors.lightGrey,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(AppBorderRadius.md),
@@ -365,7 +374,7 @@ class _KYCScreenState extends State<KYCScreen> {
               // Document Upload
               const Text('Document Upload', style: AppTextStyles.heading3),
               const SizedBox(height: AppSpacing.md),
-              
+
               _buildImageUploadCard(
                 'ID Document (Front)',
                 'Upload clear photo of the front of your $_selectedIdType',
@@ -373,7 +382,7 @@ class _KYCScreenState extends State<KYCScreen> {
                 'ID Card Front',
               ),
               const SizedBox(height: AppSpacing.md),
-              
+
               _buildImageUploadCard(
                 'ID Document (Back)',
                 'Upload clear photo of the back of your $_selectedIdType',
@@ -381,7 +390,7 @@ class _KYCScreenState extends State<KYCScreen> {
                 'ID Card Back',
               ),
               const SizedBox(height: AppSpacing.md),
-              
+
               _buildImageUploadCard(
                 'Selfie Verification',
                 'Take a clear selfie holding your ID document',
@@ -397,7 +406,7 @@ class _KYCScreenState extends State<KYCScreen> {
                 width: double.infinity,
               ),
               const SizedBox(height: AppSpacing.md),
-              
+
               const Text(
                 'By submitting these documents, you agree to our verification process. Your documents will be securely stored and used only for identity verification purposes.',
                 style: AppTextStyles.bodySmall,
