@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import '../../widgets/app_logo.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -98,13 +97,13 @@ class _OnboardingScreenState extends State<OnboardingScreen>
       backgroundColor: Colors.white,
       body: Stack(
         children: [
-          // TOP WAVE BACKGROUND LAYER (covers ~50% height)
+          // BOTTOM WAVE BACKGROUND LAYER
           Positioned(
-            top: 0,
+            bottom: 0,
             left: 0,
             right: 0,
             child: ClipPath(
-              clipper: TopWaveClipper(),
+              clipper: BottomWaveClipper(),
               child: Container(
                 height: MediaQuery.of(context).size.height * 0.50,
                 color: const Color(0xFFF88F3A),
@@ -272,31 +271,32 @@ class _OnboardingScreenState extends State<OnboardingScreen>
 // WAVE CLIPPER (BOTTOM WAVE)
 //////////////////////////////////
 
-class TopWaveClipper extends CustomClipper<Path> {
+class BottomWaveClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     final Path path = Path();
     final double w = size.width;
     final double h = size.height;
 
-    // Start at top-left
-    path.lineTo(0, h * 0.75);
+    // Start at bottom-left
+    path.moveTo(0, h);
+    path.lineTo(0, h * 0.4);
 
-    // Gentle wave going down then up towards the right
-    path.quadraticBezierTo(
-      w * 0.25, h * 0.65, // control point
-      w * 0.50, h * 0.72, // end point
+    // Create flowing wave with cubic curves
+    path.cubicTo(
+      w * 0.2, h * 0.2,
+      w * 0.4, h * 0.5,
+      w * 0.6, h * 0.3,
     );
 
-    path.quadraticBezierTo(
-      w * 0.75, h * 0.80,
-      w, h * 0.70,
+    path.cubicTo(
+      w * 0.8, h * 0.1,
+      w * 0.9, h * 0.4,
+      w, h * 0.25,
     );
 
-    // Right edge up to the top-right corner
-    path.lineTo(w, 0);
-
-    // Close back to origin
+    // Complete the path
+    path.lineTo(w, h);
     path.close();
     return path;
   }
