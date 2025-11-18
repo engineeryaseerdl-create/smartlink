@@ -594,16 +594,20 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
             Icon(
               icon,
               color: isSelected ? AppColors.white : AppColors.textPrimary,
-              size: 32,
+              size: 28,
             ),
-            const SizedBox(height: AppSpacing.xs),
-            Text(
-              label,
-              textAlign: TextAlign.center,
-              maxLines: 2,
-              style: AppTextStyles.bodySmall.copyWith(
-                color: isSelected ? AppColors.white : AppColors.textPrimary,
-                fontWeight: FontWeight.w600,
+            const SizedBox(height: 4),
+            Flexible(
+              child: Text(
+                label,
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: AppTextStyles.bodySmall.copyWith(
+                  color: isSelected ? AppColors.white : AppColors.textPrimary,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 10,
+                ),
               ),
             ),
           ],

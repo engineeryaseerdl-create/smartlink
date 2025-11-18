@@ -7,6 +7,7 @@ import '../../utils/constants.dart';
 import '../../utils/helpers.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/custom_text_field.dart';
+import '../../widgets/error_modal.dart';
 import '../../models/order_model.dart';
 
 class CheckoutScreen extends StatefulWidget {
@@ -246,12 +247,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error placing order: $e'),
-            backgroundColor: AppColors.errorRed,
-          ),
-        );
+        ErrorModal.show(context, 'Error placing order: $e');
       }
     } finally {
       if (mounted) {

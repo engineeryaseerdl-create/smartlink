@@ -204,7 +204,7 @@ class TopProductsWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Top Products', style: AppTextStyles.heading3),
+          const Text('Top Products', style: AppTextStyles.heading3),
           const SizedBox(height: AppSpacing.md),
           if (topProducts.isEmpty)
             const Center(child: Text('No products sold yet'))
@@ -318,7 +318,7 @@ class OrderStatusChartWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Order Status', style: AppTextStyles.heading3),
+          const Text('Order Status', style: AppTextStyles.heading3),
           const SizedBox(height: AppSpacing.md),
           ...orderStatus.map((status) {
             final percentage = (status['count'] / total * 100).round();

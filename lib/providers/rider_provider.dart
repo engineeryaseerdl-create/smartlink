@@ -1,23 +1,37 @@
 import 'package:flutter/foundation.dart';
 import '../models/rider_model.dart';
-import '../services/mock_data_service.dart';
+import '../services/api_service.dart';
 
 class RiderProvider with ChangeNotifier {
+  final ApiService _apiService = ApiService();
+  
   List<RiderModel> _riders = [];
   bool _isLoading = false;
+  String? _error;
 
   List<RiderModel> get riders => _riders;
   bool get isLoading => _isLoading;
 
   Future<void> loadRiders() async {
     _isLoading = true;
+    _error = null;
     notifyListeners();
 
-    await Future.delayed(const Duration(milliseconds: 500));
-    _riders = await MockDataService.loadRiders();
-
-    _isLoading = false;
-    notifyListeners();
+    try {
+      final response = await _apiService.get('/riders');
+      
+      if (response['success']) {
+        _riders = (response['riders'] as List)
+            .map((json) => RiderModel.fromJson(json))
+            .toList();
+      }
+    } catch (e) {
+      _error = e.toString();
+      debugPrint('Error loading riders: $e');
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
   }
 
   List<RiderModel> getAvailableRiders({VehicleType? vehicleType}) {
@@ -44,33 +58,58 @@ class RiderProvider with ChangeNotifier {
     }
   }
 
-  void updateRiderAvailability(String riderId, bool isAvailable) {
-    final index = _riders.indexWhere((r) => r.id == riderId);
-    if (index != -1) {
-      final rider = _riders[index];
-      _riders[index] = RiderModel(
-        id: rider.id,
-        name: rider.name,
-        phone: rider.phone,
-        email: rider.email,
-        vehicleType: rider.vehicleType,
-        vehiclePlate: rider.vehiclePlate,
-        location: rider.location,
-        profileImage: rider.profileImage,
-        rating: rider.rating,
-        totalDeliveries: rider.totalDeliveries,
-        isAvailable: isAvailable,
-        isVerified: rider.isVerified,
-        currentLat: rider.currentLat,
-        currentLng: rider.currentLng,
-      );
-      notifyListeners();
+  Future<void> updateRiderAvailability(String riderId, bool isAvailable) async {
+    try {
+      final response = await _apiService.put('/riders/$riderId/availability', data: {
+        'isAvailable': isAvailable,
+      });
+      
+      if (response['success']) {
+        final index = _riders.indexWhere((r) => r.id == riderId);
+        if (index != -1) {
+          _riders[index] = RiderModel.fromJson(response['rider']);
+          notifyListeners();
+        }
+      }
+    } catch (e) {
+      debugPrint('Error updating rider availability: $e');
+      rethrow;
     }
   }
 
   Future<void> loadAvailableRiders() async {
-    if (_riders.isEmpty) {
+    try {
+      final response = await _apiService.get('/riders/available');
+      
+      if (response['success']) {
+        _riders = (response['riders'] as List)
+            .map((json) => RiderModel.fromJson(json))
+            .toList();
+        notifyListeners();
+      }
+    } catch (e) {
+      debugPrint('Error loading available riders: $e');
+      // Fallback to loading all riders
       await loadRiders();
     }
+  }
+
+  Future<List<RiderModel>> getNearbyRiders(double lat, double lng, {double radiusKm = 10}) async {
+    try {
+      final response = await _apiService.get('/riders/nearby', queryParams: {
+        'lat': lat,
+        'lng': lng,
+        'radius': radiusKm,
+      });
+      
+      if (response['success']) {
+        return (response['riders'] as List)
+            .map((json) => RiderModel.fromJson(json))
+            .toList();
+      }
+    } catch (e) {
+      debugPrint('Error loading nearby riders: $e');
+    }
+    return [];
   }
 }

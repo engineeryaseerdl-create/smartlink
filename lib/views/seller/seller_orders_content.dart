@@ -179,8 +179,8 @@ class SellerOrdersContent extends StatelessWidget {
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(16),
+              const Padding(
+                padding: EdgeInsets.all(16),
                 child: Text(
                   'Select Rider Cluster',
                   style: AppTextStyles.heading3,

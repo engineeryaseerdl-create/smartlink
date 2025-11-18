@@ -148,7 +148,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
                 color: AppColors.primaryGreen,
               ),
               const SizedBox(height: AppSpacing.lg),
-              Text(
+              const Text(
                 'Verify Your Email',
                 style: AppTextStyles.heading2,
                 textAlign: TextAlign.center,
@@ -230,7 +230,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
+                  const Text(
                     "Didn't receive code? ",
                     style: AppTextStyles.bodyMedium,
                   ),

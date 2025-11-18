@@ -1,8 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../models/product_model.dart';
-import '../models/order_model.dart';
-import '../models/rider_model.dart';
 
 class ApiService {
   final Dio _dio = Dio();

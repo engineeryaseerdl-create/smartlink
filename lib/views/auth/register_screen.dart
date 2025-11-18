@@ -5,6 +5,7 @@ import '../../models/user_model.dart';
 import '../../utils/constants.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/custom_text_field.dart';
+import '../../widgets/error_modal.dart';
 import '../../services/otp_service.dart';
 import 'otp_verification_screen.dart';
 
@@ -315,6 +316,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   onPressed: () async {
                     if (!_formKey.currentState!.validate()) return;
                     
+                    final email = _emailController.text.trim();
+                    final phone = _phoneController.text.trim();
+                    
+                    // Send OTP directly - API will handle duplicate checking
+                    
                     // Show loading
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
@@ -336,7 +342,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                     );
                     
-                    final email = _emailController.text.trim();
                     final success = await OTPService.sendOTPToEmail(email);
                     
                     if (success && mounted) {
@@ -353,12 +358,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                       );
                     } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Failed to send OTP. Please try again.'),
-                          backgroundColor: AppColors.errorRed,
-                        ),
-                      );
+                      ErrorModal.show(context, 'Failed to send OTP. Please try again.');
                     }
                   },
                   isLoading: authProvider.isLoading,

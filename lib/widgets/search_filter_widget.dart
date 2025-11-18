@@ -142,7 +142,7 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Filters', style: AppTextStyles.heading2),
+                  const Text('Filters', style: AppTextStyles.heading2),
                   TextButton(
                     onPressed: () {
                       setState(() {
@@ -160,7 +160,7 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
               const SizedBox(height: AppSpacing.lg),
               
               // Price Range
-              Text('Price Range', style: AppTextStyles.bodyLarge),
+              const Text('Price Range', style: AppTextStyles.bodyLarge),
               RangeSlider(
                 values: _priceRange,
                 min: 0,
@@ -180,7 +180,7 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
               const SizedBox(height: AppSpacing.lg),
               
               // Rating Filter
-              Text('Minimum Rating', style: AppTextStyles.bodyLarge),
+              const Text('Minimum Rating', style: AppTextStyles.bodyLarge),
               Row(
                 children: List.generate(5, (index) {
                   return IconButton(
@@ -200,7 +200,7 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
               const SizedBox(height: AppSpacing.lg),
               
               // Sort Options
-              Text('Sort By', style: AppTextStyles.bodyLarge),
+              const Text('Sort By', style: AppTextStyles.bodyLarge),
               ..._sortOptions.map((option) => RadioListTile<String>(
                 title: Text(option['label']!),
                 value: option['value']!,

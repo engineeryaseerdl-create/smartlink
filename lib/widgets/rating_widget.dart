@@ -113,7 +113,7 @@ class _ReviewFormWidgetState extends State<ReviewFormWidget> {
   final _formKey = GlobalKey<FormState>();
   final _commentController = TextEditingController();
   double _rating = 0;
-  List<String> _images = [];
+  final List<String> _images = [];
   bool _isSubmitting = false;
 
   @override
@@ -126,11 +126,11 @@ class _ReviewFormWidgetState extends State<ReviewFormWidget> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('Write a Review', style: AppTextStyles.heading2),
+            const Text('Write a Review', style: AppTextStyles.heading2),
             const SizedBox(height: AppSpacing.lg),
             
             // Rating Input
-            Text('Rating', style: AppTextStyles.bodyLarge),
+            const Text('Rating', style: AppTextStyles.bodyLarge),
             const SizedBox(height: AppSpacing.sm),
             RatingInputWidget(
               onRatingChanged: (rating) {
@@ -160,7 +160,7 @@ class _ReviewFormWidgetState extends State<ReviewFormWidget> {
             const SizedBox(height: AppSpacing.lg),
             
             // Image Upload (placeholder)
-            Text('Photos (Optional)', style: AppTextStyles.bodyLarge),
+            const Text('Photos (Optional)', style: AppTextStyles.bodyLarge),
             const SizedBox(height: AppSpacing.sm),
             Container(
               height: 100,

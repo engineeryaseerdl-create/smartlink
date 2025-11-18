@@ -254,7 +254,7 @@ class _ChatInputWidgetState extends State<ChatInputWidget> {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(AppSpacing.md),
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: Colors.white,
         border: Border(
           top: BorderSide(color: AppColors.lightGrey),

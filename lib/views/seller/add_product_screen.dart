@@ -9,6 +9,7 @@ import '../../widgets/custom_button.dart';
 import '../../widgets/custom_text_field.dart';
 import '../../widgets/animated_widgets.dart';
 import '../../widgets/responsive_wrapper.dart';
+import '../../widgets/error_modal.dart';
 import '../../services/image_picker_service.dart';
 import '../../services/upload_service.dart';
 
@@ -73,12 +74,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
     if (!_formKey.currentState!.validate()) return;
     
     if (_selectedImages.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please add at least one product image'),
-          backgroundColor: AppColors.warningOrange,
-        ),
-      );
+      ErrorModal.show(context, 'Please add at least one product image');
       return;
     }
 
@@ -122,12 +118,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
     } catch (e) {
       if (!mounted) return;
       
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error adding product: $e'),
-          backgroundColor: AppColors.errorRed,
-        ),
-      );
+      ErrorModal.show(context, 'Error adding product: $e');
     } finally {
       if (mounted) {
         setState(() {

@@ -135,11 +135,11 @@ class RiderAssignmentCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
+                      const Row(
                         children: [
-                          const Icon(Icons.group, size: 16, color: AppColors.textSecondary),
-                          const SizedBox(width: 4),
-                          const Text(
+                          Icon(Icons.group, size: 16, color: AppColors.textSecondary),
+                          SizedBox(width: 4),
+                          Text(
                             'Cluster Leader',
                             style: TextStyle(
                               fontWeight: FontWeight.w600,

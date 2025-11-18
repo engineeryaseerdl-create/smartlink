@@ -341,7 +341,7 @@ class DeliveryFeeWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Delivery Information', style: AppTextStyles.bodyLarge),
+          const Text('Delivery Information', style: AppTextStyles.bodyLarge),
           const SizedBox(height: AppSpacing.sm),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

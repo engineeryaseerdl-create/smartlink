@@ -6,7 +6,6 @@ import 'package:image_picker/image_picker.dart';
 import '../../providers/auth_provider.dart';
 import '../../services/upload_service.dart';
 import '../../providers/theme_provider.dart';
-import '../../models/user_model.dart';
 import '../../utils/constants.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/custom_text_field.dart';

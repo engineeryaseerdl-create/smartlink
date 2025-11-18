@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import '../utils/constants.dart';
+import '../services/upload_service.dart';
 
 class ImageUploadWidget extends StatefulWidget {
   final List<String> initialImages;
@@ -113,7 +114,7 @@ class _ImageUploadWidgetState extends State<ImageUploadWidget> {
                   : Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(
+                        const Icon(
                           Icons.add_photo_alternate,
                           size: 32,
                           color: AppColors.textSecondary,
@@ -169,36 +170,37 @@ class _ImageUploadWidgetState extends State<ImageUploadWidget> {
         _isUploading = true;
       });
 
+      final uploadService = UploadService();
+
       if (widget.allowMultiple && source == ImageSource.gallery) {
         final List<XFile> images = await _picker.pickMultiImage();
         if (images.isNotEmpty) {
           final remainingSlots = widget.maxImages - _images.length;
           final imagesToAdd = images.take(remainingSlots).toList();
           
-          for (final image in imagesToAdd) {
-            // In a real app, you would upload to your server here
-            // For now, we'll just add the local path
-            _images.add(image.path);
-          }
+          final files = imagesToAdd.map((xfile) => File(xfile.path)).toList();
+          final uploadedUrls = await uploadService.uploadImages(files);
           
+          _images.addAll(uploadedUrls);
           widget.onImagesChanged(_images);
         }
       } else {
         final XFile? image = await _picker.pickImage(source: source);
         if (image != null) {
-          // In a real app, you would upload to your server here
-          // For now, we'll just add the local path
+          final file = File(image.path);
+          final uploadedUrl = await uploadService.uploadSingleImage(file);
+          
           if (widget.allowMultiple) {
-            _images.add(image.path);
+            _images.add(uploadedUrl);
           } else {
-            _images = [image.path];
+            _images = [uploadedUrl];
           }
           widget.onImagesChanged(_images);
         }
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error picking image: $e')),
+        SnackBar(content: Text('Upload failed: $e')),
       );
     } finally {
       setState(() {
@@ -349,15 +351,18 @@ class _SingleImageUploadWidgetState extends State<SingleImageUploadWidget> {
 
       final XFile? image = await _picker.pickImage(source: source);
       if (image != null) {
-        // In a real app, you would upload to your server here
+        final uploadService = UploadService();
+        final file = File(image.path);
+        final uploadedUrl = await uploadService.uploadSingleImage(file);
+        
         setState(() {
-          _image = image.path;
+          _image = uploadedUrl;
         });
         widget.onImageChanged(_image);
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error picking image: $e')),
+        SnackBar(content: Text('Upload failed: $e')),
       );
     } finally {
       setState(() {
