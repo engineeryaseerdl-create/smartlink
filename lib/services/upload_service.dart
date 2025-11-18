@@ -66,7 +66,15 @@ class UploadService {
       if (response.data['success']) {
         final fileUrls = List<String>.from(response.data['fileUrls']);
         debugPrint('Upload successful: $fileUrls');
-        return fileUrls.map((url) => url.startsWith('http') ? url : '$baseUrl$url').toList();
+        // Convert relative URLs to full URLs
+        final fullUrls = fileUrls.map((url) {
+          if (url.startsWith('http')) return url;
+          // Remove /api from baseUrl for static files and add the relative URL
+          final staticBaseUrl = baseUrl.replaceAll('/api', '');
+          return '$staticBaseUrl$url';
+        }).toList();
+        debugPrint('Full URLs: $fullUrls');
+        return fullUrls;
       }
       
       throw Exception('Upload failed: ${response.data['message'] ?? 'Unknown error'}');

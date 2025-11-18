@@ -7,7 +7,7 @@ import '../../utils/constants.dart';
 import '../../widgets/order_card.dart';
 import '../../widgets/cluster_selector.dart';
 import '../../models/order_model.dart';
-import '../buyer/order_detail_screen.dart';
+import '../shared/order_detail_screen.dart';
 
 class SellerOrdersScreen extends StatefulWidget {
   const SellerOrdersScreen({super.key});
@@ -20,7 +20,10 @@ class _SellerOrdersScreenState extends State<SellerOrdersScreen> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() => context.read<RiderProvider>().loadRiders());
+    Future.microtask(() {
+      context.read<OrderProvider>().loadOrders(role: 'seller');
+      context.read<RiderProvider>().loadRiders();
+    });
   }
 
   @override
@@ -66,19 +69,8 @@ class _SellerOrdersScreenState extends State<SellerOrdersScreen> {
                     return OrderCard(
                       order: order,
                       isSellerView: true,
-                      onTap: () {
-                        if (order.status == OrderStatus.pending) {
-                          _showAssignRiderDialog(context, order);
-                        } else {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  OrderDetailScreen(order: order),
-                            ),
-                          );
-                        }
-                      },
+                      onTap: () {},
+                      showSellerActions: true,
                     );
                   },
                 ),

@@ -26,7 +26,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
   final _descriptionController = TextEditingController();
   final _priceController = TextEditingController();
   final _stockController = TextEditingController();
-  ProductCategory _selectedCategory = ProductCategory.groceries;
+  ProductCategory _selectedCategory = ProductCategory.electronics;
   List<File> _selectedImages = [];
   bool _isLoading = false;
 

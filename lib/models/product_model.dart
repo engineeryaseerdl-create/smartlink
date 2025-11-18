@@ -1,12 +1,12 @@
 enum ProductCategory {
-  groceries,
   electronics,
-  cars,
-  phones,
-  appliances,
   fashion,
-  furniture,
-  other
+  food,
+  home,
+  books,
+  sports,
+  beauty,
+  automotive
 }
 
 class ProductModel {
@@ -79,7 +79,7 @@ class ProductModel {
       price: (json['price'] ?? 0).toDouble(),
       category: ProductCategory.values.firstWhere(
         (e) => e.toString() == 'ProductCategory.${json['category']}',
-        orElse: () => ProductCategory.other,
+        orElse: () => ProductCategory.home,
       ),
       sellerId: sellerId.isNotEmpty ? sellerId : (json['sellerId'] ?? ''),
       sellerName: sellerName.isNotEmpty ? sellerName : (json['sellerName'] ?? ''),

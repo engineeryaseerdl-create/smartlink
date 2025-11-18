@@ -68,7 +68,6 @@ class ProfileContent extends StatelessWidget {
           width: 100,
           height: 100,
           decoration: BoxDecoration(
-            color: AppColors.primaryGreen,
             shape: BoxShape.circle,
             boxShadow: [
               BoxShadow(
@@ -78,10 +77,19 @@ class ProfileContent extends StatelessWidget {
               ),
             ],
           ),
-          child: Icon(
-            _getUserIcon(user),
-            color: AppColors.white,
-            size: 48,
+          child: CircleAvatar(
+            radius: 50,
+            backgroundColor: AppColors.primaryGreen,
+            backgroundImage: (user?.profileImage != null || user?.profileImageUrl != null)
+                ? NetworkImage(user!.profileImage ?? user!.profileImageUrl!) as ImageProvider
+                : null,
+            child: user?.profileImage == null && user?.profileImageUrl == null
+                ? Icon(
+                    _getUserIcon(user),
+                    color: AppColors.white,
+                    size: 48,
+                  )
+                : null,
           ),
         ),
         const SizedBox(width: AppSpacing.xl),
@@ -137,18 +145,19 @@ class ProfileContent extends StatelessWidget {
   Widget _buildMobileUserInfo(BuildContext context, user) {
     return Column(
       children: [
-        Container(
-          width: 80,
-          height: 80,
-          decoration: const BoxDecoration(
-            color: AppColors.primaryGreen,
-            shape: BoxShape.circle,
-          ),
-          child: Icon(
-            _getUserIcon(user),
-            color: AppColors.white,
-            size: 40,
-          ),
+        CircleAvatar(
+          radius: 40,
+          backgroundColor: AppColors.primaryGreen,
+          backgroundImage: (user?.profileImage != null || user?.profileImageUrl != null)
+              ? NetworkImage(user!.profileImage ?? user!.profileImageUrl!) as ImageProvider
+              : null,
+          child: user?.profileImage == null && user?.profileImageUrl == null
+              ? Icon(
+                  _getUserIcon(user),
+                  color: AppColors.white,
+                  size: 40,
+                )
+              : null,
         ),
         const SizedBox(height: AppSpacing.md),
         Text(

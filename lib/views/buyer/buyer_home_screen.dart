@@ -443,7 +443,7 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
                         _buildCategoryChip(
                           'Groceries',
                           Icons.shopping_basket,
-                          ProductCategory.groceries,
+                          ProductCategory.food,
                         ),
                         _buildCategoryChip(
                           'Electronics',
@@ -453,17 +453,17 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
                         _buildCategoryChip(
                           'Phones',
                           Icons.smartphone,
-                          ProductCategory.phones,
+                          ProductCategory.electronics,
                         ),
                         _buildCategoryChip(
                           'Cars',
                           Icons.directions_car,
-                          ProductCategory.cars,
+                          ProductCategory.automotive,
                         ),
                         _buildCategoryChip(
                           'Appliances',
                           Icons.kitchen,
-                          ProductCategory.appliances,
+                          ProductCategory.home,
                         ),
                         _buildCategoryChip(
                           'Fashion',
@@ -635,21 +635,21 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
                 mainAxisSpacing: AppSpacing.md,
                 children: [
                   _buildFullCategoryCard(
-                      'Groceries', Icons.shopping_basket, ProductCategory.groceries),
+                      'Food', Icons.shopping_basket, ProductCategory.food),
                   _buildFullCategoryCard(
                       'Electronics', Icons.devices, ProductCategory.electronics),
                   _buildFullCategoryCard(
-                      'Phones', Icons.smartphone, ProductCategory.phones),
+                      'Electronics', Icons.smartphone, ProductCategory.electronics),
                   _buildFullCategoryCard(
-                      'Cars', Icons.directions_car, ProductCategory.cars),
+                      'Automotive', Icons.directions_car, ProductCategory.automotive),
                   _buildFullCategoryCard(
-                      'Appliances', Icons.kitchen, ProductCategory.appliances),
+                      'Home', Icons.kitchen, ProductCategory.home),
                   _buildFullCategoryCard(
                       'Fashion', Icons.checkroom, ProductCategory.fashion),
                   _buildFullCategoryCard(
-                      'Furniture', Icons.chair, ProductCategory.furniture),
+                      'Home', Icons.chair, ProductCategory.home),
                   _buildFullCategoryCard(
-                      'Other', Icons.more_horiz, ProductCategory.other),
+                      'Books', Icons.more_horiz, ProductCategory.books),
                 ],
               ),
             ),

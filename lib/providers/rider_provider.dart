@@ -18,7 +18,9 @@ class RiderProvider with ChangeNotifier {
     notifyListeners();
 
     try {
-      final response = await _apiService.get('/riders');
+      // Only sellers can access /riders/available endpoint
+      // For other roles, use mock data or skip loading
+      final response = await _apiService.get('/riders/available');
       
       if (response['success']) {
         _riders = (response['riders'] as List)
@@ -28,6 +30,8 @@ class RiderProvider with ChangeNotifier {
     } catch (e) {
       _error = e.toString();
       debugPrint('Error loading riders: $e');
+      // Set empty list on error to prevent UI issues
+      _riders = [];
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -89,18 +93,15 @@ class RiderProvider with ChangeNotifier {
       }
     } catch (e) {
       debugPrint('Error loading available riders: $e');
-      // Fallback to loading all riders
-      await loadRiders();
+      // Set empty list on error
+      _riders = [];
+      notifyListeners();
     }
   }
 
   Future<List<RiderModel>> getNearbyRiders(double lat, double lng, {double radiusKm = 10}) async {
     try {
-      final response = await _apiService.get('/riders/nearby', queryParams: {
-        'lat': lat,
-        'lng': lng,
-        'radius': radiusKm,
-      });
+      final response = await _apiService.get('/riders/available');
       
       if (response['success']) {
         return (response['riders'] as List)

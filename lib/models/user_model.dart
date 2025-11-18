@@ -44,10 +44,7 @@ class UserModel {
       name: json['name'] ?? '',
       email: json['email'] ?? '',
       phone: json['phone'],
-      role: UserRole.values.firstWhere(
-        (e) => e.toString() == 'UserRole.${json['role']}',
-        orElse: () => UserRole.buyer,
-      ),
+      role: _parseUserRole(json['role']),
       location: locationStr,
       profileImage: json['avatar'] ?? json['profileImage'],
       profileImageUrl: json['profileImageUrl'],
@@ -68,6 +65,7 @@ class UserModel {
       'phone': phone,
       'role': role.toString().split('.').last,
       'location': location,
+      'avatar': profileImage,
       'profileImage': profileImage,
       'profileImageUrl': profileImageUrl,
       'bio': bio,
@@ -105,5 +103,19 @@ class UserModel {
       isVerified: isVerified ?? this.isVerified,
       createdAt: createdAt ?? this.createdAt,
     );
+  }
+
+  static UserRole _parseUserRole(dynamic role) {
+    if (role == null) return UserRole.buyer;
+    
+    final roleStr = role.toString().toLowerCase();
+    switch (roleStr) {
+      case 'seller':
+        return UserRole.seller;
+      case 'rider':
+        return UserRole.rider;
+      default:
+        return UserRole.buyer;
+    }
   }
 }

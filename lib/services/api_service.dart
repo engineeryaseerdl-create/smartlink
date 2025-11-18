@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ApiService {
   final Dio _dio = Dio();
   static const String baseUrl = String.fromEnvironment('API_URL', 
-    defaultValue: 'https://smartlink-backend-2-v3mb.onrender.com/api');
+    defaultValue: 'https://backend-smartlink.onrender.com/api');
   
   String? _token;
 
@@ -53,6 +53,7 @@ class ApiService {
   // Generic methods
   Future<Map<String, dynamic>> get(String path, {Map<String, dynamic>? queryParams}) async {
     try {
+      await _ensureTokenLoaded();
       final response = await _dio.get(path, queryParameters: queryParams);
       return response.data;
     } catch (e) {
@@ -62,6 +63,7 @@ class ApiService {
 
   Future<Map<String, dynamic>> post(String path, {Map<String, dynamic>? data}) async {
     try {
+      await _ensureTokenLoaded();
       final response = await _dio.post(path, data: data);
       return response.data;
     } catch (e) {
@@ -71,6 +73,7 @@ class ApiService {
 
   Future<Map<String, dynamic>> put(String path, {Map<String, dynamic>? data}) async {
     try {
+      await _ensureTokenLoaded();
       final response = await _dio.put(path, data: data);
       return response.data;
     } catch (e) {
@@ -80,10 +83,17 @@ class ApiService {
 
   Future<Map<String, dynamic>> delete(String path) async {
     try {
+      await _ensureTokenLoaded();
       final response = await _dio.delete(path);
       return response.data;
     } catch (e) {
       throw _handleError(e);
+    }
+  }
+
+  Future<void> _ensureTokenLoaded() async {
+    if (_token == null) {
+      await _loadToken();
     }
   }
 

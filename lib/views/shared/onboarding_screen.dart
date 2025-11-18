@@ -97,15 +97,15 @@ class _OnboardingScreenState extends State<OnboardingScreen>
       backgroundColor: Colors.white,
       body: Stack(
         children: [
-          // TOP WAVE BACKGROUND LAYER (covers ~50% height)
+          // BOTTOM WAVE BACKGROUND LAYER
           Positioned(
-            top: 0,
+            bottom: 0,
             left: 0,
             right: 0,
             child: ClipPath(
-              clipper: TopWaveClipper(),
+              clipper: WaveClipper(),
               child: Container(
-                height: MediaQuery.of(context).size.height * 0.50,
+                height: MediaQuery.of(context).size.height * 0.3,
                 color: const Color(0xFFF88F3A),
               ),
             ),
@@ -151,15 +151,16 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                               : const SizedBox(height: 40),
                         ),
 
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 40),
 
                         // IMAGE with floating effect
-                        Flexible(
+                        Container(
+                          height: 250,
                           child: AnimatedScale(
                             scale: currentIndex == index ? 1.0 : 0.8,
                             duration: const Duration(milliseconds: 300),
                             child: Image.asset(
-                              item["image"]!,
+                              'assets/${item["image"]!}',
                               fit: BoxFit.contain,
                               errorBuilder: (context, error, stackTrace) {
                                 return Container(
@@ -311,27 +312,30 @@ class WaveClipper extends CustomClipper<Path> {
     double h = size.height;
     double w = size.width;
 
-    path.lineTo(0, h - 60);
-
-    // First wave
-    path.quadraticBezierTo(
-      w * 0.25,
-      h,
-      w * 0.5,
-      h - 40,
-    );
-
-    // Second wave
+    // Start from bottom-left
+    path.lineTo(0, h);
+    path.lineTo(w, h);
+    
+    // Create wave from right to left (bottom wave)
+    path.lineTo(w, h * 0.3);
+    
+    // First wave curve
     path.quadraticBezierTo(
       w * 0.75,
-      h - 80,
-      w,
-      h - 30,
+      h * 0.1,
+      w * 0.5,
+      h * 0.25,
     );
-
-    path.lineTo(w, 0);
+    
+    // Second wave curve
+    path.quadraticBezierTo(
+      w * 0.25,
+      h * 0.4,
+      0,
+      h * 0.2,
+    );
+    
     path.close();
-
     return path;
   }
 

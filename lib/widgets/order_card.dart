@@ -6,6 +6,7 @@ import '../providers/order_provider.dart';
 import '../widgets/status_indicator.dart';
 import '../utils/constants.dart';
 import '../utils/helpers.dart';
+import '../views/shared/order_detail_screen.dart';
 import 'rider_selection_sheet.dart';
 
 class OrderCard extends StatelessWidget {
@@ -60,7 +61,14 @@ class OrderCard extends StatelessWidget {
     final isDesktop = ResponsiveUtils.isDesktop(context);
     
     return GestureDetector(
-      onTap: onTap,
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => OrderDetailScreen(order: order),
+          ),
+        );
+      },
       child: Container(
         margin: const EdgeInsets.only(bottom: AppSpacing.md),
         padding: EdgeInsets.all(isDesktop ? AppSpacing.lg : AppSpacing.md),

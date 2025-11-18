@@ -344,12 +344,12 @@ class _BuyerHomeContentState extends State<BuyerHomeContent> {
 
   Widget _buildDesktopCategories() {
     final categories = [
-      {'name': 'Groceries', 'icon': Icons.shopping_basket, 'category': ProductCategory.groceries},
+      {'name': 'Food', 'icon': Icons.shopping_basket, 'category': ProductCategory.food},
       {'name': 'Electronics', 'icon': Icons.devices, 'category': ProductCategory.electronics},
-      {'name': 'Phones', 'icon': Icons.smartphone, 'category': ProductCategory.phones},
-      {'name': 'Cars', 'icon': Icons.directions_car, 'category': ProductCategory.cars},
-      {'name': 'Appliances', 'icon': Icons.kitchen, 'category': ProductCategory.appliances},
       {'name': 'Fashion', 'icon': Icons.checkroom, 'category': ProductCategory.fashion},
+      {'name': 'Home', 'icon': Icons.home, 'category': ProductCategory.home},
+      {'name': 'Books', 'icon': Icons.book, 'category': ProductCategory.books},
+      {'name': 'Sports', 'icon': Icons.sports, 'category': ProductCategory.sports},
     ];
 
     return GridView.builder(
@@ -378,12 +378,12 @@ class _BuyerHomeContentState extends State<BuyerHomeContent> {
 
   Widget _buildMobileCategories() {
     final categories = [
-      {'name': 'Groceries', 'icon': Icons.shopping_basket, 'category': ProductCategory.groceries},
+      {'name': 'Food', 'icon': Icons.shopping_basket, 'category': ProductCategory.food},
       {'name': 'Electronics', 'icon': Icons.devices, 'category': ProductCategory.electronics},
-      {'name': 'Phones', 'icon': Icons.smartphone, 'category': ProductCategory.phones},
-      {'name': 'Cars', 'icon': Icons.directions_car, 'category': ProductCategory.cars},
-      {'name': 'Appliances', 'icon': Icons.kitchen, 'category': ProductCategory.appliances},
       {'name': 'Fashion', 'icon': Icons.checkroom, 'category': ProductCategory.fashion},
+      {'name': 'Home', 'icon': Icons.home, 'category': ProductCategory.home},
+      {'name': 'Books', 'icon': Icons.book, 'category': ProductCategory.books},
+      {'name': 'Sports', 'icon': Icons.sports, 'category': ProductCategory.sports},
     ];
 
     return SizedBox(

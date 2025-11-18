@@ -1,13 +1,8 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/theme_provider.dart';
 import '../../utils/constants.dart';
-import '../../services/image_picker_service.dart';
-import '../../services/upload_service.dart';
-import '../../widgets/error_modal.dart';
-import '../../widgets/success_modal.dart';
 import 'onboarding_screen.dart';
 import 'settings_screen.dart';
 
@@ -31,50 +26,26 @@ class ProfileScreen extends StatelessWidget {
         child: Column(
           children: [
             const SizedBox(height: AppSpacing.lg),
-            GestureDetector(
-              onTap: () => _showImagePicker(context),
-              child: Stack(
-                children: [
-                  Container(
-                    width: 100,
-                    height: 100,
-                    decoration: BoxDecoration(
-                      color: AppColors.primaryGreen,
-                      shape: BoxShape.circle,
-                      image: (user?.profileImage ?? user?.profileImageUrl) != null
-                          ? DecorationImage(
-                              image: NetworkImage(user?.profileImage ?? user!.profileImageUrl!),
-                              fit: BoxFit.cover,
-                            )
-                          : null,
-                    ),
-                    child: (user?.profileImage ?? user?.profileImageUrl) == null
-                        ? Icon(
-                            _getRoleIcon(user?.role),
-                            size: 50,
-                            color: AppColors.white,
-                          )
-                        : null,
-                  ),
-                  Positioned(
-                    bottom: 0,
-                    right: 0,
-                    child: Container(
-                      width: 30,
-                      height: 30,
-                      decoration: const BoxDecoration(
-                        color: AppColors.primaryGreen,
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Icon(
-                        Icons.camera_alt,
-                        size: 16,
-                        color: AppColors.white,
-                      ),
-                    ),
-                  ),
-                ],
+            Container(
+              width: 100,
+              height: 100,
+              decoration: BoxDecoration(
+                color: AppColors.primaryGreen,
+                shape: BoxShape.circle,
+                image: (user?.profileImage ?? user?.profileImageUrl) != null
+                    ? DecorationImage(
+                        image: NetworkImage(user?.profileImage ?? user!.profileImageUrl!),
+                        fit: BoxFit.cover,
+                      )
+                    : null,
               ),
+              child: (user?.profileImage ?? user?.profileImageUrl) == null
+                  ? Icon(
+                      _getRoleIcon(user?.role),
+                      size: 50,
+                      color: AppColors.white,
+                    )
+                  : null,
             ),
             const SizedBox(height: AppSpacing.md),
             Text(user?.name ?? 'User', style: AppTextStyles.heading2),
@@ -221,60 +192,5 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  void _showImagePicker(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              leading: const Icon(Icons.camera_alt),
-              title: const Text('Take Photo'),
-              onTap: () {
-                Navigator.pop(context);
-                _pickImage(context, true);
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.photo_library),
-              title: const Text('Choose from Gallery'),
-              onTap: () {
-                Navigator.pop(context);
-                _pickImage(context, false);
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 
-  Future<void> _pickImage(BuildContext context, bool fromCamera) async {
-    try {
-      final File? image = fromCamera
-          ? await ImagePickerService.pickImageFromCamera()
-          : await ImagePickerService.pickImageFromGallery();
-
-      if (image != null) {
-        final uploadService = UploadService();
-        final imageUrls = await uploadService.uploadImages([image]);
-        
-        if (imageUrls.isNotEmpty && context.mounted) {
-          final authProvider = Provider.of<AuthProvider>(context, listen: false);
-          final user = authProvider.currentUser;
-          
-          if (user != null) {
-            final updatedUser = user.copyWith(profileImage: imageUrls.first);
-            await authProvider.updateUserProfile(updatedUser.toJson());
-            SuccessModal.show(context, 'Profile picture updated successfully!');
-          }
-        }
-      }
-    } catch (e) {
-      if (context.mounted) {
-        ErrorModal.show(context, 'Failed to update profile picture: $e');
-      }
-    }
-  }
 }

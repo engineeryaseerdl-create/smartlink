@@ -96,4 +96,21 @@ class AuthService {
       throw Exception('Failed to update profile');
     }
   }
+
+  Future<UserModel?> refreshUserData() async {
+    try {
+      final response = await _apiService.get('/auth/me');
+      
+      if (response['success']) {
+        final user = UserModel.fromJson(response['user']);
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString(_userKey, json.encode(user.toJson()));
+        return user;
+      }
+    } catch (e) {
+      // If refresh fails, return cached user
+      return getCurrentUser();
+    }
+    return null;
+  }
 }

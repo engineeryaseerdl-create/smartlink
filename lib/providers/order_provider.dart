@@ -1,7 +1,9 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import '../models/order_model.dart';
 import '../models/product_model.dart';
 import '../services/api_service.dart';
+import '../services/notification_service.dart';
 
 class OrderProvider with ChangeNotifier {
   final ApiService _apiService = ApiService();
@@ -44,7 +46,9 @@ class OrderProvider with ChangeNotifier {
   }
 
   List<OrderModel> getOrdersForSeller(String sellerId) {
-    return _orders.where((order) => order.sellerId == sellerId).toList();
+    // If orders were loaded with role='seller', they're already filtered
+    // Just return all orders since backend already filtered by seller
+    return _orders;
   }
 
   List<OrderModel> getOrdersForRider(String riderId) {
@@ -78,7 +82,7 @@ class OrderProvider with ChangeNotifier {
     return null;
   }
 
-  Future<void> updateOrderStatus(String orderId, String status, {Map<String, double>? location, String? note}) async {
+  Future<void> updateOrderStatus(String orderId, String status, {Map<String, double>? location, String? note, BuildContext? context}) async {
     try {
       final response = await _apiService.put('/orders/$orderId/status', data: {
         'status': status,
@@ -90,8 +94,18 @@ class OrderProvider with ChangeNotifier {
         final updatedOrder = OrderModel.fromJson(response['order']);
         final index = _orders.indexWhere((o) => o.id == orderId);
         if (index != -1) {
+          final oldOrder = _orders[index];
           _orders[index] = updatedOrder;
           notifyListeners();
+          
+          // Show notification if context is provided
+          if (context != null && context.mounted) {
+            NotificationService.showOrderStatusUpdate(
+              context,
+              updatedOrder,
+              updatedOrder.status,
+            );
+          }
         }
       }
     } catch (e) {
@@ -100,7 +114,7 @@ class OrderProvider with ChangeNotifier {
     }
   }
 
-  Future<void> assignRider(String orderId, String riderId) async {
+  Future<void> assignRider(String orderId, String riderId, {BuildContext? context}) async {
     try {
       final response = await _apiService.put('/orders/$orderId/assign-rider', data: {
         'riderId': riderId,
@@ -112,6 +126,15 @@ class OrderProvider with ChangeNotifier {
         if (index != -1) {
           _orders[index] = updatedOrder;
           notifyListeners();
+          
+          // Show notification if context is provided
+          if (context != null && context.mounted) {
+            NotificationService.showOrderStatusUpdate(
+              context,
+              updatedOrder,
+              OrderStatus.pickupReady,
+            );
+          }
         }
       }
     } catch (e) {

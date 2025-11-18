@@ -10,8 +10,22 @@ import '../../utils/helpers.dart';
 import '../../widgets/animated_widgets.dart';
 import '../demo/cluster_demo_screen.dart';
 
-class SellerDashboardContent extends StatelessWidget {
+class SellerDashboardContent extends StatefulWidget {
   const SellerDashboardContent({super.key});
+
+  @override
+  State<SellerDashboardContent> createState() => _SellerDashboardContentState();
+}
+
+class _SellerDashboardContentState extends State<SellerDashboardContent> {
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      context.read<OrderProvider>().loadOrders(role: 'seller');
+      context.read<ProductProvider>().loadProducts();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

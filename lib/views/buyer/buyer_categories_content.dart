@@ -32,14 +32,14 @@ class BuyerCategoriesContent extends StatelessWidget {
 
   Widget _buildCategoriesGrid(BuildContext context) {
     final categories = [
-      {'name': 'Groceries', 'icon': Icons.shopping_basket, 'category': ProductCategory.groceries, 'color': AppColors.successGreen},
+      {'name': 'Food', 'icon': Icons.shopping_basket, 'category': ProductCategory.food, 'color': AppColors.successGreen},
       {'name': 'Electronics', 'icon': Icons.devices, 'category': ProductCategory.electronics, 'color': AppColors.infoBlue},
-      {'name': 'Phones', 'icon': Icons.smartphone, 'category': ProductCategory.phones, 'color': AppColors.primaryGreen},
-      {'name': 'Cars', 'icon': Icons.directions_car, 'category': ProductCategory.cars, 'color': AppColors.errorRed},
-      {'name': 'Appliances', 'icon': Icons.kitchen, 'category': ProductCategory.appliances, 'color': AppColors.warningOrange},
+      {'name': 'Electronics', 'icon': Icons.smartphone, 'category': ProductCategory.electronics, 'color': AppColors.primaryGreen},
+      {'name': 'Automotive', 'icon': Icons.directions_car, 'category': ProductCategory.automotive, 'color': AppColors.errorRed},
+      {'name': 'Home', 'icon': Icons.kitchen, 'category': ProductCategory.home, 'color': AppColors.warningOrange},
       {'name': 'Fashion', 'icon': Icons.checkroom, 'category': ProductCategory.fashion, 'color': AppColors.gold},
-      {'name': 'Furniture', 'icon': Icons.chair, 'category': ProductCategory.furniture, 'color': AppColors.darkGreen},
-      {'name': 'Other', 'icon': Icons.more_horiz, 'category': ProductCategory.other, 'color': AppColors.grey},
+      {'name': 'Books', 'icon': Icons.book, 'category': ProductCategory.books, 'color': AppColors.darkGreen},
+      {'name': 'Sports', 'icon': Icons.sports, 'category': ProductCategory.sports, 'color': AppColors.grey},
     ];
 
     return GridView.builder(

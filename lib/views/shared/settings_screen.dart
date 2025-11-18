@@ -42,7 +42,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
     
     if (user != null) {
       _nameController.text = user.name;
-      _phoneController.text = user.phone ?? '';
+      // Handle phone number properly - don't show default phone if it's the placeholder
+      final phone = user.phone;
+      _phoneController.text = (phone == null || phone == '0800000000') ? '' : phone;
       _locationController.text = user.location ?? '';
       _bioController.text = user.bio ?? '';
     }
@@ -129,7 +131,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         'phone': _phoneController.text.trim(),
         'location': {'address': _locationController.text.trim()},
         'bio': _bioController.text.trim(),
-        if (avatarUrl != null) 'avatar': avatarUrl,
+        if (avatarUrl != null) 'profileImage': avatarUrl,
       });
       
       if (mounted) {
@@ -157,6 +159,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
         });
       }
     }
+  }
+
+  ImageProvider? _getProfileImageProvider(user) {
+    // Check for uploaded avatar first, then fallback to other fields
+    String? imageUrl;
+    
+    if (user?.profileImage != null) {
+      imageUrl = user!.profileImage;
+    } else if (user?.profileImageUrl != null) {
+      imageUrl = user!.profileImageUrl;
+    }
+    
+    return imageUrl != null ? NetworkImage(imageUrl) : null;
   }
 
   @override
@@ -189,10 +204,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         backgroundColor: AppColors.primaryGreen,
                         backgroundImage: _profileImage != null && !kIsWeb
                             ? FileImage(_profileImage!) as ImageProvider
-                            : user?.profileImageUrl != null
-                                ? NetworkImage(user!.profileImageUrl!) as ImageProvider
-                                : null,
-                        child: _profileImage == null && user?.profileImageUrl == null
+                            : _getProfileImageProvider(user),
+                        child: _profileImage == null && _getProfileImageProvider(user) == null
                             ? Text(
                                 user?.name.isNotEmpty == true ? user!.name[0].toUpperCase() : '?',
                                 style: AppTextStyles.heading1.copyWith(color: AppColors.white),

@@ -77,28 +77,29 @@ class ProductCardSkeleton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(8),
+        padding: const EdgeInsets.all(6),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
             Expanded(
               flex: 3,
-              child: SkeletonLoader(width: double.infinity, height: 100),
+              child: SkeletonLoader(width: double.infinity, height: 80),
             ),
-            const SizedBox(height: 6),
-            const SkeletonLoader(width: double.infinity, height: 14),
             const SizedBox(height: 4),
-            const SkeletonLoader(width: 80, height: 12),
-            const SizedBox(height: 6),
-            const Row(
+            const SkeletonLoader(width: double.infinity, height: 12),
+            const SizedBox(height: 2),
+            const SkeletonLoader(width: 60, height: 10),
+            const SizedBox(height: 4),
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Flexible(
-                  child: SkeletonLoader(width: 50, height: 16),
+                Expanded(
+                  child: SkeletonLoader(width: 40, height: 14),
                 ),
-                Flexible(
-                  child: SkeletonLoader(width: 40, height: 24),
+                const SizedBox(width: 4),
+                Expanded(
+                  child: SkeletonLoader(width: 30, height: 20),
                 ),
               ],
             ),
