@@ -8,7 +8,15 @@
       "Bash(npm install --legacy-peer-deps)",
       "Bash(npm run dev)",
       "Bash(flutter clean)",
-      "Bash(flutter pub get)"
+      "Bash(flutter pub get)",
+      "Bash(curl -X POST http://localhost:5000/api/auth/login -H \"Content-Type: application/json\" -d \"{\"\"email\"\":\"\"test@example.com\"\",\"\"password\"\":\"\"test123\"\"}\")",
+      "Bash(netstat -ano)",
+      "Bash(findstr :5000)",
+      "Bash(taskkill /PID 9876 /F)",
+      "Bash(taskkill //PID 9876 //F)",
+      "Bash(curl -X POST http://localhost:5000/api/auth/check-exists -H \"Content-Type: application/json\" -d \"{\"\"email\"\":\"\"test@example.com\"\",\"\"phone\"\":\"\"1234567890\"\"}\")",
+      "Bash(curl -X POST http://localhost:5000/api/auth/check-exists -H \"Content-Type: application/json\" -d \"{\"\"email\"\":\"\"newuser@example.com\"\",\"\"phone\"\":\"\"9999999999\"\"}\")",
+      "Bash(curl -X POST http://localhost:5000/api/auth/register -H \"Content-Type: application/json\" -d \"{\"\"name\"\":\"\"Test New User\"\",\"\"email\"\":\"\"newuser@test.com\"\",\"\"password\"\":\"\"test123\"\",\"\"phone\"\":\"\"9999999999\"\",\"\"role\"\":\"\"buyer\"\"}\")"
     ],
     "deny": [],
     "ask": []

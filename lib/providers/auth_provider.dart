@@ -155,9 +155,28 @@ class AuthProvider with ChangeNotifier {
     await prefs.setBool(_isLoggedInKey, false);
   }
 
+  Future<Map<String, dynamic>?> checkEmailPhoneExists(String email, String phone) async {
+    try {
+      final response = await _apiService.post('/auth/check-exists', data: {
+        'email': email,
+        'phone': phone,
+      });
+      return response;
+    } catch (e) {
+      // Parse error response to get specific error codes
+      final errorStr = e.toString();
+      if (errorStr.contains('EMAIL_EXISTS')) {
+        return {'errorCode': 'EMAIL_EXISTS', 'message': 'Email already exists'};
+      } else if (errorStr.contains('PHONE_EXISTS')) {
+        return {'errorCode': 'PHONE_EXISTS', 'message': 'Phone number already exists'};
+      }
+      return null;
+    }
+  }
+
   Future<void> refreshUserData() async {
     if (_currentUser == null) return;
-    
+
     try {
       final response = await _apiService.get('/auth/me');
       if (response['success']) {

@@ -315,12 +315,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   text: 'Create Account',
                   onPressed: () async {
                     if (!_formKey.currentState!.validate()) return;
-                    
+
                     final email = _emailController.text.trim();
                     final phone = _phoneController.text.trim();
-                    
-                    // Send OTP directly - API will handle duplicate checking
-                    
+
                     // Show loading
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
@@ -335,15 +333,27 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               ),
                             ),
                             SizedBox(width: 16),
-                            Text('Sending OTP to your email...'),
+                            Text('Checking availability...'),
                           ],
                         ),
                         duration: Duration(seconds: 2),
                       ),
                     );
-                    
+
+                    // First check if email/phone already exists
+                    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+                    final checkResult = await authProvider.checkEmailPhoneExists(email, phone);
+
+                    if (checkResult != null && checkResult['errorCode'] != null) {
+                      // Show modal error for duplicate email/phone
+                      ErrorModal.show(context, checkResult['message']);
+                      return;
+                    }
+
+                    // If we got here, email and phone are available
+                    // Send OTP
                     final success = await OTPService.sendOTPToEmail(email);
-                    
+
                     if (success && mounted) {
                       Navigator.push(
                         context,
