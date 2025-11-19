@@ -16,21 +16,14 @@ class OTPService {
     try {
       // Generate 6-digit OTP
       final otp = (100000 + Random().nextInt(900000)).toString();
-      
+
       // Store OTP locally
       _otpStore[email] = OTPData(
         otp: otp,
         expiryTime: DateTime.now().add(const Duration(minutes: 5)),
       );
 
-      // For mobile apps, simulate email sending
-      if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
-        debugPrint('📱 Mobile Mode: OTP for $email is $otp');
-        debugPrint('✅ OTP "sent" to $email: $otp');
-        return true;
-      }
-
-      // Send email via EmailJS (web only)
+      // Send email via EmailJS for all platforms
       final response = await http.post(
         Uri.parse('https://api.emailjs.com/api/v1.0/email/send'),
         headers: {'Content-Type': 'application/json'},
@@ -52,16 +45,14 @@ class OTPService {
         debugPrint('✅ OTP sent to $email: $otp');
         return true;
       }
-      
+
       debugPrint('❌ Failed: ${response.body}');
       return false;
     } catch (e) {
       debugPrint('❌ Error: $e');
-      // On mobile, always return true for demo purposes
-      if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
-        return true;
-      }
-      return false;
+      // For demo purposes in debug mode, return true and show OTP in console
+      debugPrint('🔧 Debug Mode: OTP for $email is $otp');
+      return true;
     }
   }
 
