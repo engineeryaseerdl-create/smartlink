@@ -7,7 +7,6 @@ import '../../utils/constants.dart';
 import '../../widgets/order_card.dart';
 import '../../widgets/cluster_selector.dart';
 import '../../models/order_model.dart';
-import '../shared/order_detail_screen.dart';
 
 class SellerOrdersScreen extends StatefulWidget {
   const SellerOrdersScreen({super.key});

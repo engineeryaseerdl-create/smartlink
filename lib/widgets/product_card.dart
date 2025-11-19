@@ -68,11 +68,32 @@ class ProductCard extends StatelessWidget {
                         height: imageHeight,
                         width: double.infinity,
                         fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) return child;
                           return Container(
                             height: imageHeight,
                             color: AppColors.backgroundLight,
-                            child: const Icon(Icons.image_outlined, size: 50, color: AppColors.mutedGreen),
+                            child: const Center(
+                              child: CircularProgressIndicator(
+                                color: AppColors.primaryGreen,
+                                strokeWidth: 2,
+                              ),
+                            ),
+                          );
+                        },
+                        errorBuilder: (context, error, stackTrace) {
+                          print('Image loading error: $error');
+                          return Container(
+                            height: imageHeight,
+                            color: AppColors.backgroundLight,
+                            child: const Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.image_not_supported, size: 40, color: AppColors.mutedGreen),
+                                SizedBox(height: 4),
+                                Text('Image not available', style: TextStyle(fontSize: 10, color: AppColors.textSecondary)),
+                              ],
+                            ),
                           );
                         },
                       ),
@@ -235,142 +256,58 @@ class ProductCard extends StatelessWidget {
                   ),
               ],
             ),
-            Flexible(
+            Expanded(
               child: Padding(
-                padding: EdgeInsets.all(isDesktop ? AppSpacing.sm : AppSpacing.xs),
+                padding: const EdgeInsets.all(4.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
                       product.title,
-                      maxLines: 2,
+                      maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: isDesktop
-                        ? AppTextStyles.bodyLarge.copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.textPrimary,
-                            height: 1.3,
-                          )
-                        : AppTextStyles.bodyMedium.copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.textPrimary,
-                            height: 1.3,
-                          ),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 12,
+                        color: AppColors.textPrimary,
+                      ),
                     ),
                     const SizedBox(height: 2),
-                    // Price section
                     Text(
                       Helpers.formatCurrency(product.price),
-                      style: isDesktop
-                        ? AppTextStyles.heading3.copyWith(
-                            color: AppColors.primaryGreen,
-                            fontWeight: FontWeight.bold,
-                          )
-                        : AppTextStyles.bodyLarge.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.primaryGreen,
-                          ),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 13,
+                        color: AppColors.primaryGreen,
+                      ),
                     ),
-
                     const SizedBox(height: 2),
-                    // Rating and location in one row
                     Row(
                       children: [
-                        // Rating
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                          decoration: BoxDecoration(
-                            color: AppColors.gold.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const Icon(
-                                Icons.star,
-                                size: 12,
-                                color: AppColors.gold,
-                              ),
-                              const SizedBox(width: 2),
-                              Text(
-                                '${product.rating}',
-                                style: AppTextStyles.bodySmall.copyWith(
-                                  color: AppColors.gold,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 11,
-                                ),
-                              ),
-                            ],
+                        const Icon(Icons.star, size: 10, color: AppColors.gold),
+                        const SizedBox(width: 2),
+                        Text(
+                          '${product.rating}',
+                          style: const TextStyle(
+                            fontSize: 9,
+                            color: AppColors.gold,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
-                        const SizedBox(width: 8),
-                        // Location
+                        const SizedBox(width: 4),
                         Expanded(
-                          child: Row(
-                            children: [
-                              const Icon(
-                                Icons.location_on_outlined,
-                                size: 12,
-                                color: AppColors.textSecondary,
-                              ),
-                              const SizedBox(width: 2),
-                              Expanded(
-                                child: Text(
-                                  product.sellerLocation,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: AppTextStyles.bodySmall.copyWith(
-                                    color: AppColors.textSecondary,
-                                    fontSize: 11,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 2),
-                    // Quick add to cart button
-                    Container(
-                        width: double.infinity,
-                        height: 24,
-                        decoration: BoxDecoration(
-                          color: AppColors.primaryGreen.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(6),
-                          border: Border.all(
-                            color: AppColors.primaryGreen.withOpacity(0.3),
-                            width: 1,
-                          ),
-                        ),
-                        child: Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                            borderRadius: BorderRadius.circular(6),
-                            onTap: isOwnProduct ? null : () {
-                              HapticFeedback.lightImpact();
-                              context.read<CartProvider>().addToCart(product);
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text('${product.title} added to cart'),
-                                  backgroundColor: AppColors.successGreen,
-                                  duration: const Duration(seconds: 2),
-                                ),
-                              );
-                            },
-                            child: Center(
-                              child: Text(
-                                isOwnProduct ? 'Your Product' : 'Add to Cart',
-                                style: AppTextStyles.bodySmall.copyWith(
-                                  color: isOwnProduct ? AppColors.textSecondary : AppColors.primaryGreen,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 10,
-                                ),
-                              ),
+                          child: Text(
+                            product.sellerLocation,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontSize: 9,
+                              color: AppColors.textSecondary,
                             ),
                           ),
                         ),
+                      ],
                     ),
                   ],
                 ),

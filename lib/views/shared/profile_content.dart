@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 import '../../providers/auth_provider.dart';
 import '../../providers/theme_provider.dart';
 import '../../utils/constants.dart';
+import '../../services/upload_service.dart';
 import 'settings_screen.dart';
 
 class ProfileContent extends StatelessWidget {
@@ -64,32 +67,53 @@ class ProfileContent extends StatelessWidget {
   Widget _buildDesktopUserInfo(BuildContext context, user) {
     return Row(
       children: [
-        Container(
-          width: 100,
-          height: 100,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.primaryGreen.withOpacity(0.3),
-                blurRadius: 20,
-                offset: const Offset(0, 8),
-              ),
-            ],
-          ),
-          child: CircleAvatar(
-            radius: 50,
-            backgroundColor: AppColors.primaryGreen,
-            backgroundImage: (user?.profileImage != null || user?.profileImageUrl != null)
-                ? NetworkImage(user!.profileImage ?? user!.profileImageUrl!) as ImageProvider
-                : null,
-            child: user?.profileImage == null && user?.profileImageUrl == null
-                ? Icon(
-                    _getUserIcon(user),
-                    color: AppColors.white,
-                    size: 48,
-                  )
-                : null,
+        GestureDetector(
+          onTap: () => _showImagePicker(context),
+          child: Container(
+            width: 100,
+            height: 100,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.primaryGreen.withOpacity(0.3),
+                  blurRadius: 20,
+                  offset: const Offset(0, 8),
+                ),
+              ],
+            ),
+            child: Stack(
+              children: [
+                CircleAvatar(
+                  radius: 50,
+                  backgroundColor: AppColors.primaryGreen,
+                  backgroundImage: _getProfileImage(user),
+                  child: _getProfileImage(user) == null
+                      ? Icon(
+                          _getUserIcon(user),
+                          color: AppColors.white,
+                          size: 48,
+                        )
+                      : null,
+                ),
+                Positioned(
+                  bottom: 0,
+                  right: 0,
+                  child: Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: const BoxDecoration(
+                      color: AppColors.primaryGreen,
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.camera_alt,
+                      color: Colors.white,
+                      size: 16,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
         const SizedBox(width: AppSpacing.xl),
@@ -145,19 +169,40 @@ class ProfileContent extends StatelessWidget {
   Widget _buildMobileUserInfo(BuildContext context, user) {
     return Column(
       children: [
-        CircleAvatar(
-          radius: 40,
-          backgroundColor: AppColors.primaryGreen,
-          backgroundImage: (user?.profileImage != null || user?.profileImageUrl != null)
-              ? NetworkImage(user!.profileImage ?? user!.profileImageUrl!) as ImageProvider
-              : null,
-          child: user?.profileImage == null && user?.profileImageUrl == null
-              ? Icon(
-                  _getUserIcon(user),
-                  color: AppColors.white,
-                  size: 40,
-                )
-              : null,
+        GestureDetector(
+          onTap: () => _showImagePicker(context),
+          child: Stack(
+            children: [
+              CircleAvatar(
+                radius: 40,
+                backgroundColor: AppColors.primaryGreen,
+                backgroundImage: _getProfileImage(user),
+                child: _getProfileImage(user) == null
+                    ? Icon(
+                        _getUserIcon(user),
+                        color: AppColors.white,
+                        size: 40,
+                      )
+                    : null,
+              ),
+              Positioned(
+                bottom: 0,
+                right: 0,
+                child: Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: const BoxDecoration(
+                    color: AppColors.primaryGreen,
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.camera_alt,
+                    color: Colors.white,
+                    size: 12,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
         const SizedBox(height: AppSpacing.md),
         Text(
@@ -325,5 +370,75 @@ class ProfileContent extends StatelessWidget {
       return 'Rider';
     }
     return 'Buyer';
+  }
+
+  void _showImagePicker(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => SafeArea(
+        child: Wrap(
+          children: [
+            ListTile(
+              leading: const Icon(Icons.photo_camera),
+              title: const Text('Camera'),
+              onTap: () {
+                Navigator.pop(context);
+                _pickImage(context, ImageSource.camera);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.photo_library),
+              title: const Text('Gallery'),
+              onTap: () {
+                Navigator.pop(context);
+                _pickImage(context, ImageSource.gallery);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  ImageProvider? _getProfileImage(user) {
+    final profileImage = user?.profileImage ?? user?.profileImageUrl;
+    if (profileImage == null || profileImage.isEmpty) return null;
+    
+    // Only use network images - ignore local file paths
+    if (profileImage.startsWith('http://') || profileImage.startsWith('https://')) {
+      return NetworkImage(profileImage);
+    }
+    
+    // If it's a relative path, make it a full URL
+    if (profileImage.startsWith('/uploads/')) {
+      return NetworkImage('https://backend-smartlink.onrender.com$profileImage');
+    }
+    
+    // Ignore local file paths
+    return null;
+  }
+
+  Future<void> _pickImage(BuildContext context, ImageSource source) async {
+    try {
+      final picker = ImagePicker();
+      final image = await picker.pickImage(source: source);
+      
+      if (image != null) {
+        final uploadService = UploadService();
+        final file = File(image.path);
+        final uploadedUrl = await uploadService.uploadSingleImage(file);
+        
+        final authProvider = Provider.of<AuthProvider>(context, listen: false);
+        await authProvider.updateProfilePicture(uploadedUrl);
+        
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Profile picture updated successfully')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Upload failed: $e')),
+      );
+    }
   }
 }

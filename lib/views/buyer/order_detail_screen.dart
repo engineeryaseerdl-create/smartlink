@@ -23,6 +23,8 @@ class OrderDetailScreen extends StatelessWidget {
         return AppColors.successGreen;
       case OrderStatus.cancelled:
         return AppColors.errorRed;
+      case OrderStatus.modification_requested:
+        return AppColors.warningOrange;
     }
   }
 
@@ -145,6 +147,8 @@ class OrderDetailScreen extends StatelessWidget {
         return Icons.done_all;
       case OrderStatus.cancelled:
         return Icons.cancel;
+      case OrderStatus.modification_requested:
+        return Icons.edit;
     }
   }
 

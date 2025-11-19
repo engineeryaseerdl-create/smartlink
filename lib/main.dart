@@ -14,6 +14,8 @@ import 'utils/constants.dart';
 import 'views/shared/splash_screen.dart';
 import 'views/shared/auth_wrapper.dart';
 import 'views/auth/login_screen.dart';
+import 'views/auth/forgot_password_screen.dart';
+import 'views/auth/reset_password_screen.dart';
 import 'views/shared/ux_showcase_screen.dart';
 import 'views/buyer/enhanced_buyer_home_screen.dart';
 
@@ -131,12 +133,35 @@ class SmartLinkApp extends StatelessWidget {
           ),
         ),
         initialRoute: '/',
-        routes: {
-          '/': (context) => const SplashScreen(),
-          '/auth': (context) => const AuthWrapper(),
-          '/login': (context) => const LoginScreen(),
-          '/ux-showcase': (context) => const UXShowcaseScreen(),
-          '/enhanced-home': (context) => const EnhancedBuyerHomeScreen(),
+        onGenerateRoute: (settings) {
+          switch (settings.name) {
+            case '/':
+              return MaterialPageRoute(builder: (context) => const SplashScreen());
+            case '/auth':
+              return MaterialPageRoute(builder: (context) => const AuthWrapper());
+            case '/login':
+              return MaterialPageRoute(builder: (context) => const LoginScreen());
+            case '/ux-showcase':
+              return MaterialPageRoute(builder: (context) => const UXShowcaseScreen());
+            case '/enhanced-home':
+              return MaterialPageRoute(builder: (context) => const EnhancedBuyerHomeScreen());
+            case '/forgot-password':
+              final email = settings.arguments as String? ?? '';
+              return MaterialPageRoute(
+                builder: (context) => ForgotPasswordScreen(email: email),
+              );
+            case '/reset-password':
+              final email = settings.arguments as String? ?? '';
+              return MaterialPageRoute(
+                builder: (context) => ResetPasswordScreen(email: email),
+              );
+            default:
+              return MaterialPageRoute(
+                builder: (context) => const Scaffold(
+                  body: Center(child: Text('Page not found')),
+                ),
+              );
+          }
         },
         ),
       ),

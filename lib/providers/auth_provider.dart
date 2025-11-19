@@ -188,4 +188,38 @@ class AuthProvider with ChangeNotifier {
       debugPrint('Failed to refresh user data: $e');
     }
   }
+
+  Future<void> updateProfilePicture(String avatarUrl) async {
+    try {
+      await updateUserProfile({'avatar': avatarUrl});
+      await _saveUserToPrefs(_currentUser!);
+      notifyListeners();
+    } catch (e) {
+      debugPrint('Failed to update profile picture: $e');
+      rethrow;
+    }
+  }
+
+  Future<void> resetPassword(String email, String newPassword) async {
+    _isLoading = true;
+    _error = null;
+    notifyListeners();
+
+    try {
+      final response = await _apiService.post('/auth/reset-password', data: {
+        'email': email,
+        'password': newPassword,
+      });
+
+      if (!response['success']) {
+        throw Exception(response['message'] ?? 'Failed to reset password');
+      }
+    } catch (e) {
+      _error = e.toString();
+      rethrow;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
 }

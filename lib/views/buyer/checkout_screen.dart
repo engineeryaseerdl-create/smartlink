@@ -21,14 +21,101 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   final _formKey = GlobalKey<FormState>();
   final _addressController = TextEditingController();
   final _phoneController = TextEditingController();
+  final _emailController = TextEditingController();
   String _paymentMethod = 'card';
   bool _isProcessing = false;
+  bool _isExpressDelivery = false;
+  DateTime? _selectedDeliveryDate;
 
   @override
   void dispose() {
     _addressController.dispose();
     _phoneController.dispose();
+    _emailController.dispose();
     super.dispose();
+  }
+
+  Widget _buildProgressStep(int stepNumber, String title, bool isCompleted) {
+    return Container(
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: isCompleted ? AppColors.primaryGreen : AppColors.grey.withOpacity(0.3),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Column(
+        children: [
+          CircleAvatar(
+            radius: 16,
+            backgroundColor: isCompleted ? AppColors.white : AppColors.primaryGreen,
+            child: Text(
+              '$stepNumber',
+              style: TextStyle(
+                color: isCompleted ? AppColors.primaryGreen : Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 12,
+              ),
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            title,
+            style: AppTextStyles.bodySmall.copyWith(
+              color: isCompleted ? AppColors.primaryGreen : AppColors.textSecondary,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPriceRow(String label, double amount, {bool isTotal = false}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            label,
+            style: isTotal
+                ? AppTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.bold)
+                : AppTextStyles.bodyMedium,
+          ),
+          Text(
+            Helpers.formatCurrency(amount),
+            style: isTotal
+                ? AppTextStyles.bodyLarge.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.primaryGreen,
+                  )
+                : AppTextStyles.bodyMedium,
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _formatDate(DateTime date) {
+    return '${date.day}/${date.month}/${date.year}';
+  }
+
+  Future<void> _selectDeliveryDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: _selectedDeliveryDate ?? DateTime.now().add(const Duration(days: 1)),
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(const Duration(days: 30)),
+    );
+
+    if (picked != null && mounted) {
+      setState(() => _selectedDeliveryDate = picked);
+    }
+  }
+
+  void _updateQuantity(String productId, int newQuantity) {
+    if (newQuantity > 0) {
+      context.read<CartProvider>().updateQuantity(productId, newQuantity);
+    }
   }
 
   @override
@@ -95,32 +182,128 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         const SizedBox(height: AppSpacing.xl),
                         
                         // Delivery Information
-                        const Text('Delivery Information', style: AppTextStyles.heading3),
-                        const SizedBox(height: AppSpacing.md),
-                        CustomTextField(
-                          controller: _addressController,
-                          label: 'Delivery Address',
-                          hint: 'Enter your delivery address',
-                          maxLines: 3,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter delivery address';
-                            }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height: AppSpacing.md),
-                        CustomTextField(
-                          controller: _phoneController,
-                          label: 'Phone Number',
-                          hint: 'Enter your phone number',
-                          keyboardType: TextInputType.phone,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter phone number';
-                            }
-                            return null;
-                          },
+                        Container(
+                          padding: const EdgeInsets.all(AppSpacing.md),
+                          decoration: BoxDecoration(
+                            color: AppColors.backgroundLight,
+                            borderRadius: BorderRadius.circular(AppBorderRadius.md),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  const Icon(Icons.local_shipping, color: AppColors.primaryGreen),
+                                  const SizedBox(width: AppSpacing.sm),
+                                  const Text('Delivery Options', style: AppTextStyles.heading3),
+                                ],
+                              ),
+                              const SizedBox(height: AppSpacing.sm),
+
+                              // Express Delivery Toggle
+                              Container(
+                                padding: const EdgeInsets.all(AppSpacing.md),
+                                decoration: BoxDecoration(
+                                  color: AppColors.white,
+                                  borderRadius: BorderRadius.circular(AppBorderRadius.sm),
+                                  border: Border.all(color: AppColors.grey.withOpacity(0.2)),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          const Text('Express Delivery', style: AppTextStyles.bodyMedium),
+                                          const SizedBox(height: 4),
+                                          Text('Get your order in 24 hours', style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary)),
+                                        ],
+                                      ),
+                                    ),
+                                    Switch(
+                                      value: _isExpressDelivery,
+                                      onChanged: (value) => setState(() => _isExpressDelivery = value),
+                                      activeColor: AppColors.primaryGreen,
+                                    ),
+                                  ],
+                                ),
+                              ),
+
+                              const SizedBox(height: AppSpacing.md),
+
+                              // Delivery Date Selection
+                              if (!_isExpressDelivery) ...[
+                                Text('Preferred Delivery Date', style: AppTextStyles.bodyMedium),
+                                const SizedBox(height: AppSpacing.sm),
+                                InkWell(
+                                  onTap: () => _selectDeliveryDate(context),
+                                  child: Container(
+                                    padding: const EdgeInsets.all(AppSpacing.md),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.white,
+                                      borderRadius: BorderRadius.circular(AppBorderRadius.sm),
+                                      border: Border.all(color: AppColors.grey.withOpacity(0.3)),
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          _selectedDeliveryDate != null
+                                              ? 'Deliver on ${_formatDate(_selectedDeliveryDate!)}'
+                                              : 'Select delivery date',
+                                          style: AppTextStyles.bodyMedium,
+                                        ),
+                                        const Icon(Icons.calendar_month_outlined, color: AppColors.primaryGreen),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: AppSpacing.md),
+                              ],
+
+                              CustomTextField(
+                                controller: _addressController,
+                                label: 'Delivery Address',
+                                hint: 'Enter your delivery address',
+                                maxLines: 3,
+                                prefixIcon: Icons.location_on_outlined,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please enter delivery address';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              const SizedBox(height: AppSpacing.md),
+                              CustomTextField(
+                                controller: _phoneController,
+                                label: 'Phone Number',
+                                hint: 'Enter your phone number',
+                                keyboardType: TextInputType.phone,
+                                prefixIcon: Icons.phone_outlined,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please enter phone number';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              const SizedBox(height: AppSpacing.md),
+                              CustomTextField(
+                                controller: _emailController,
+                                label: 'Email Address (Optional)',
+                                hint: 'Enter your email for order updates',
+                                keyboardType: TextInputType.emailAddress,
+                                prefixIcon: Icons.email_outlined,
+                                validator: (value) {
+                                  if (value != null && value.isNotEmpty && !value.contains('@')) {
+                                    return 'Please enter a valid email';
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ],
+                          ),
                         ),
                         
                         const SizedBox(height: AppSpacing.xl),

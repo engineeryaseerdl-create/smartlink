@@ -154,7 +154,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                         const SizedBox(height: 40),
 
                         // IMAGE with floating effect
-                        Container(
+                        SizedBox(
                           height: 250,
                           child: AnimatedScale(
                             scale: currentIndex == index ? 1.0 : 0.8,

@@ -7,6 +7,7 @@ import '../../widgets/custom_text_field.dart';
 import '../../widgets/app_logo.dart';
 import '../../widgets/error_modal.dart';
 import 'register_screen.dart';
+import 'package:smartlink/views/auth/forgot_password_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -47,6 +48,28 @@ class _LoginScreenState extends State<LoginScreen> {
 
       ErrorModal.show(context, e.toString());
     }
+  }
+
+  Future<void> _handleForgotPassword() async {
+    final email = _emailController.text.trim();
+
+    if (email.isEmpty) {
+      ErrorModal.show(context, 'Please enter your email address first');
+      return;
+    }
+
+    if (!email.contains('@')) {
+      ErrorModal.show(context, 'Please enter a valid email address');
+      return;
+    }
+
+    if (!mounted) return;
+
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => ForgotPasswordScreen(email: email),
+      ),
+    );
   }
 
   @override
@@ -184,6 +207,21 @@ class _LoginScreenState extends State<LoginScreen> {
                   onPressed: _handleLogin,
                   isLoading: authProvider.isLoading,
                   width: double.infinity,
+                ),
+                const SizedBox(height: AppSpacing.md),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      onPressed: _handleForgotPassword,
+                      child: Text(
+                        'Forgot Password?',
+                        style: AppTextStyles.bodyMedium.copyWith(
+                          color: AppColors.primaryGreen,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: AppSpacing.md),
                 Row(

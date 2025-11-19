@@ -37,6 +37,8 @@ class OrderCard extends StatelessWidget {
         return AppColors.successGreen;
       case OrderStatus.cancelled:
         return AppColors.errorRed;
+      case OrderStatus.modification_requested:
+        return AppColors.warningOrange;
     }
   }
 
@@ -285,6 +287,8 @@ class OrderCard extends StatelessWidget {
         return 1.0;
       case OrderStatus.cancelled:
         return 0.0;
+      case OrderStatus.modification_requested:
+        return 0.1;
     }
   }
 }

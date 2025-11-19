@@ -299,6 +299,8 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
         return 'Delivered';
       case OrderStatus.cancelled:
         return 'Cancelled';
+      case OrderStatus.modification_requested:
+        return 'Modification Requested';
     }
   }
 

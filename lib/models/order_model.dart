@@ -1,4 +1,4 @@
-enum OrderStatus { pending, confirmed, pickupReady, inTransit, delivered, cancelled }
+enum OrderStatus { pending, confirmed, pickupReady, inTransit, delivered, cancelled, modification_requested }
 
 class OrderTracking {
   final String id;
@@ -69,6 +69,10 @@ class OrderModel {
   final String deliveryType;
   final List<OrderTracking> trackingHistory;
   final String? trackingCode;
+  final DateTime? cancellationRequestedAt;
+  final String? cancellationReason;
+  final DateTime? modificationRequestedAt;
+  final String? modificationReason;
 
   OrderModel({
     required this.id,
@@ -90,6 +94,10 @@ class OrderModel {
     this.deliveryType = 'okada',
     this.trackingHistory = const [],
     this.trackingCode,
+    this.cancellationRequestedAt,
+    this.cancellationReason,
+    this.modificationRequestedAt,
+    this.modificationReason,
   });
 
   factory OrderModel.fromJson(Map<String, dynamic> json) {

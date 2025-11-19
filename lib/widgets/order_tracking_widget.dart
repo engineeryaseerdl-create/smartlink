@@ -301,6 +301,8 @@ class OrderTrackingWidget extends StatelessWidget {
         return 4;
       case OrderStatus.cancelled:
         return -1; // Special case for cancelled orders
+      case OrderStatus.modification_requested:
+        return 0; // Back to pending state
     }
   }
 
@@ -318,6 +320,8 @@ class OrderTrackingWidget extends StatelessWidget {
         return AppColors.successGreen;
       case OrderStatus.cancelled:
         return AppColors.errorRed;
+      case OrderStatus.modification_requested:
+        return AppColors.warningOrange;
     }
   }
 
@@ -335,6 +339,8 @@ class OrderTrackingWidget extends StatelessWidget {
         return Icons.done_all;
       case OrderStatus.cancelled:
         return Icons.cancel;
+      case OrderStatus.modification_requested:
+        return Icons.edit;
     }
   }
 

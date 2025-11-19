@@ -6,7 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as path;
 
 class UploadService {
-  static const String baseUrl = 'https://smartlink-backend-2-v3mb.onrender.com/api';
+  static const String baseUrl = 'https://backend-smartlink.onrender.com/api';
 
   Future<List<String>> uploadImages(List<File> images) async {
     try {
@@ -24,7 +24,7 @@ class UploadService {
         final fileName = path.basename(image.path);
         final extension = path.extension(fileName).toLowerCase();
         debugPrint('Uploading file: $fileName, extension: $extension');
-        
+
         MediaType contentType;
         switch (extension) {
           case '.png':
@@ -43,9 +43,9 @@ class UploadService {
           default:
             contentType = MediaType('image', 'jpeg');
         }
-        
+
         formData.files.add(MapEntry(
-          'images',
+          'image',
           await MultipartFile.fromFile(
             image.path,
             filename: fileName,
@@ -60,21 +60,23 @@ class UploadService {
       dio.options.receiveTimeout = const Duration(seconds: 30);
       dio.options.headers['Authorization'] = 'Bearer $token';
 
-      debugPrint('Making upload request to: $baseUrl/upload/multiple');
-      final response = await dio.post('/upload/multiple', data: formData);
+      debugPrint('Making upload request to: $baseUrl/upload/single');
+      final response = await dio.post('/upload/single', data: formData);
       
       if (response.data['success']) {
-        final fileUrls = List<String>.from(response.data['fileUrls']);
-        debugPrint('Upload successful: $fileUrls');
-        // Convert relative URLs to full URLs
-        final fullUrls = fileUrls.map((url) {
-          if (url.startsWith('http')) return url;
+        // Handle single image upload response
+        String fileUrl = response.data['fileUrl'];
+        debugPrint('Upload successful: $fileUrl');
+
+        // Convert relative URL to full URL
+        String fullUrl = fileUrl;
+        if (!fileUrl.startsWith('http')) {
           // Remove /api from baseUrl for static files and add the relative URL
           final staticBaseUrl = baseUrl.replaceAll('/api', '');
-          return '$staticBaseUrl$url';
-        }).toList();
-        debugPrint('Full URLs: $fullUrls');
-        return fullUrls;
+          fullUrl = '$staticBaseUrl$fileUrl';
+        }
+        debugPrint('Full URL: $fullUrl');
+        return [fullUrl];
       }
       
       throw Exception('Upload failed: ${response.data['message'] ?? 'Unknown error'}');

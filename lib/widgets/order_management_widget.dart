@@ -100,6 +100,8 @@ class _OrderManagementWidgetState extends State<OrderManagementWidget> {
         return _buildAssignRiderButton();
       case OrderStatus.pickupReady:
         return _buildTrackingInfo();
+      case OrderStatus.modification_requested:
+        return _buildConfirmOrderButton();
       default:
         return _buildTrackingInfo();
     }
@@ -113,6 +115,8 @@ class _OrderManagementWidgetState extends State<OrderManagementWidget> {
         return _buildPickupButton();
       case OrderStatus.inTransit:
         return _buildDeliveredButton();
+      case OrderStatus.modification_requested:
+        return _buildTrackingInfo();
       default:
         return _buildTrackingInfo();
     }
@@ -351,6 +355,8 @@ class _OrderManagementWidgetState extends State<OrderManagementWidget> {
         return AppColors.successGreen;
       case OrderStatus.cancelled:
         return AppColors.errorRed;
+      case OrderStatus.modification_requested:
+        return AppColors.warningOrange;
     }
   }
 
@@ -368,6 +374,8 @@ class _OrderManagementWidgetState extends State<OrderManagementWidget> {
         return Icons.check_circle;
       case OrderStatus.cancelled:
         return Icons.cancel;
+      case OrderStatus.modification_requested:
+        return Icons.edit;
     }
   }
 
@@ -385,6 +393,8 @@ class _OrderManagementWidgetState extends State<OrderManagementWidget> {
         return 'Delivered';
       case OrderStatus.cancelled:
         return 'Cancelled';
+      case OrderStatus.modification_requested:
+        return 'Modification Requested';
     }
   }
 

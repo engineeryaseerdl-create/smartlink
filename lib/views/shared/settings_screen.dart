@@ -131,7 +131,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         'phone': _phoneController.text.trim(),
         'location': {'address': _locationController.text.trim()},
         'bio': _bioController.text.trim(),
-        if (avatarUrl != null) 'profileImage': avatarUrl,
+        if (avatarUrl != null) 'avatar': avatarUrl,
       });
       
       if (mounted) {
@@ -164,14 +164,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
   ImageProvider? _getProfileImageProvider(user) {
     // Check for uploaded avatar first, then fallback to other fields
     String? imageUrl;
-    
-    if (user?.profileImage != null) {
+
+    if (user?.profileImage != null && user!.profileImage!.isNotEmpty) {
       imageUrl = user!.profileImage;
-    } else if (user?.profileImageUrl != null) {
+    } else if (user?.profileImageUrl != null && user!.profileImageUrl!.isNotEmpty) {
       imageUrl = user!.profileImageUrl;
     }
-    
-    return imageUrl != null ? NetworkImage(imageUrl) : null;
+
+    return imageUrl != null && imageUrl.isNotEmpty ? NetworkImage(imageUrl) : null;
   }
 
   @override

@@ -1,6 +1,6 @@
 const express = require('express');
 const { body, validationResult } = require('express-validator');
-const { register, login, getMe } = require('../controllers/authController');
+const { register, login, getMe, resetPassword } = require('../controllers/authController');
 const { auth } = require('../middleware/auth');
 const User = require('../models/User');
 
@@ -63,7 +63,45 @@ router.post('/check-exists', [
   }
 });
 
+// Reset password
+router.post('/reset-password', [
+  body('email').isEmail().withMessage('Please include a valid email'),
+  body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters')
+], resetPassword);
+
 // Get current user
 router.get('/me', auth, getMe);
+
+// Reset password
+router.post('/reset-password', [
+  body('email').isEmail().withMessage('Please include a valid email'),
+  body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters')
+], async (req, res) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { email, password } = req.body;
+
+    // Find user by email
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Update password
+    user.password = password;
+    await user.save();
+
+    res.json({
+      success: true,
+      message: 'Password reset successfully'
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
 
 module.exports = router;
