@@ -20,7 +20,7 @@ class OTPService {
       await initialize();
       await _supabase!.auth.signInWithOtp(
         email: email,
-        emailRedirectTo: null,
+        shouldCreateUser: true,
       );
       debugPrint('✅ OTP sent to $email');
       return true;

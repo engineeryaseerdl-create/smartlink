@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../models/product_model.dart';
 import '../providers/favorites_provider.dart';
 import '../providers/auth_provider.dart';
@@ -62,39 +63,33 @@ class ProductCard extends StatelessWidget {
                   ),
                   child: Stack(
                     children: [
-                      Image.network(
-                        product.images.first,
+                      CachedNetworkImage(
+                        imageUrl: product.images.first,
                         height: imageHeight,
                         width: double.infinity,
                         fit: BoxFit.cover,
-                        loadingBuilder: (context, child, loadingProgress) {
-                          if (loadingProgress == null) return child;
-                          return Container(
-                            height: imageHeight,
-                            color: AppColors.backgroundLight,
-                            child: const Center(
-                              child: CircularProgressIndicator(
-                                color: AppColors.primaryGreen,
-                                strokeWidth: 2,
-                              ),
+                        placeholder: (context, url) => Container(
+                          height: imageHeight,
+                          color: AppColors.backgroundLight,
+                          child: const Center(
+                            child: CircularProgressIndicator(
+                              color: AppColors.primaryGreen,
+                              strokeWidth: 2,
                             ),
-                          );
-                        },
-                        errorBuilder: (context, error, stackTrace) {
-                          print('Image loading error: $error');
-                          return Container(
-                            height: imageHeight,
-                            color: AppColors.backgroundLight,
-                            child: const Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(Icons.image_not_supported, size: 40, color: AppColors.mutedGreen),
-                                SizedBox(height: 4),
-                                Text('Image not available', style: TextStyle(fontSize: 10, color: AppColors.textSecondary)),
-                              ],
-                            ),
-                          );
-                        },
+                          ),
+                        ),
+                        errorWidget: (context, url, error) => Container(
+                          height: imageHeight,
+                          color: AppColors.backgroundLight,
+                          child: const Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.image_not_supported, size: 40, color: AppColors.mutedGreen),
+                              SizedBox(height: 4),
+                              Text('Image not available', style: TextStyle(fontSize: 10, color: AppColors.textSecondary)),
+                            ],
+                          ),
+                        ),
                       ),
                       // Gradient overlay for better text readability
                       Positioned(

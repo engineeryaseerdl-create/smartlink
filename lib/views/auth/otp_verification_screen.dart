@@ -144,11 +144,12 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
         ],
       ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.lg),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(AppSpacing.lg),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
               const SizedBox(height: AppSpacing.xl),
               const Icon(
                 Icons.email_outlined,
@@ -262,7 +263,8 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
                     ),
                 ],
               ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

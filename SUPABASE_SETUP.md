@@ -40,12 +40,16 @@ class SupabaseConfig {
 
 ## Step 4: Configure Email Settings (Important!)
 
-1. In Supabase dashboard, go to **Authentication** → **Email Templates**
-2. Customize the "Magic Link" template (this is used for OTP)
-3. Go to **Authentication** → **Settings**
-4. Under "Email Auth", ensure:
-   - ✅ Enable email confirmations is ON
-   - Set "Confirm email" to your preference
+1. In Supabase dashboard, go to **Authentication** → **Providers**
+2. Click on **Email** provider
+3. Enable **Email OTP** (NOT Magic Link)
+4. Go to **Authentication** → **Email Templates**
+5. Select **Magic Link** template and change `{{ .ConfirmationURL }}` to `{{ .Token }}`
+6. Or use this template:
+   ```
+   Your verification code is: {{ .Token }}
+   This code expires in 5 minutes.
+   ```
 
 ## Step 5: Install Dependencies
 
