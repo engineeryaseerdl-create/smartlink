@@ -6,7 +6,7 @@ import '../views/auth/otp_verification_screen.dart';
 
 /// Example 1: Send OTP from any screen
 void sendOTPExample(BuildContext context, String email) async {
-  final success = await OTPService.sendOTPToEmail(email);
+  final success = await OTPService.sendOTPToEmail(email, context: context);
   
   if (success) {
     Navigator.push(
@@ -26,7 +26,7 @@ void sendOTPExample(BuildContext context, String email) async {
 
 /// Example 2: Verify email during registration
 void registrationWithOTPExample(BuildContext context, String email) async {
-  final sent = await OTPService.sendOTPToEmail(email);
+  final sent = await OTPService.sendOTPToEmail(email, context: context);
   
   if (sent) {
     Navigator.push(
@@ -46,7 +46,7 @@ void registrationWithOTPExample(BuildContext context, String email) async {
 
 /// Example 3: Password reset with OTP
 void passwordResetExample(BuildContext context, String email) async {
-  final sent = await OTPService.sendOTPToEmail(email);
+  final sent = await OTPService.sendOTPToEmail(email, context: context);
   
   if (sent) {
     Navigator.push(

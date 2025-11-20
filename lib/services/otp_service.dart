@@ -1,92 +1,52 @@
-import 'dart:math';
-import 'dart:convert';
-import 'dart:io';
 import 'package:flutter/foundation.dart';
-import 'package:http/http.dart' as http;
+import 'package:supabase_flutter/supabase_flutter.dart';
+import '../config/supabase_config.dart';
 
 class OTPService {
-  // EmailJS Configuration - NO BACKEND NEEDED!
-  static const String serviceId = 'service_5p5j3xj';
-  static const String templateId = 'template_jqbwqxh';
-  static const String publicKey = 'P4wUtJC-FjeyTGrFq';
-  
-  static final Map<String, OTPData> _otpStore = {};
+  static SupabaseClient? _supabase;
+
+  static Future<void> initialize() async {
+    if (_supabase == null) {
+      await Supabase.initialize(
+        url: SupabaseConfig.supabaseUrl,
+        anonKey: SupabaseConfig.supabaseAnonKey,
+      );
+      _supabase = Supabase.instance.client;
+    }
+  }
 
   static Future<bool> sendOTPToEmail(String email) async {
     try {
-      // Generate 6-digit OTP
-      final otp = (100000 + Random().nextInt(900000)).toString();
-
-      // Store OTP locally
-      _otpStore[email] = OTPData(
-        otp: otp,
-        expiryTime: DateTime.now().add(const Duration(minutes: 5)),
+      await initialize();
+      await _supabase!.auth.signInWithOtp(
+        email: email,
+        emailRedirectTo: null,
       );
-
-      // Send email via EmailJS for all platforms
-      final response = await http.post(
-        Uri.parse('https://api.emailjs.com/api/v1.0/email/send'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'service_id': serviceId,
-          'template_id': templateId,
-          'user_id': publicKey,
-          'template_params': {
-            'to_name': email,
-            'to_email': email,
-            'user_email': email,
-            'passcode': otp,
-            'otp': otp,
-          },
-        }),
-      );
-
-      if (response.statusCode == 200) {
-        debugPrint('✅ OTP sent to $email: $otp');
-        return true;
-      }
-
-      debugPrint('❌ Failed: ${response.body}');
-      return false;
-    } catch (e) {
-      debugPrint('❌ Error: $e');
-      // For demo purposes in debug mode, return true and show OTP in console
-      debugPrint('🔧 Debug Mode: OTP for $email is $otp');
+      debugPrint('✅ OTP sent to $email');
       return true;
+    } catch (e) {
+      debugPrint('❌ Error sending OTP: $e');
+      return false;
     }
   }
 
   static Future<bool> verifyOTP(String email, String otp) async {
-    final stored = _otpStore[email];
-    
-    if (stored == null) {
-      debugPrint('❌ No OTP found for $email');
-      return false;
-    }
-
-    if (DateTime.now().isAfter(stored.expiryTime)) {
-      _otpStore.remove(email);
-      debugPrint('❌ OTP expired');
-      return false;
-    }
-
-    if (stored.otp == otp) {
-      _otpStore.remove(email);
+    try {
+      await initialize();
+      final response = await _supabase!.auth.verifyOTP(
+        type: OtpType.email,
+        email: email,
+        token: otp,
+      );
       debugPrint('✅ OTP verified!');
-      return true;
+      return response.session != null;
+    } catch (e) {
+      debugPrint('❌ Invalid or expired OTP: $e');
+      return false;
     }
-
-    debugPrint('❌ Invalid OTP');
-    return false;
   }
 
   static Future<bool> resendOTP(String email) async {
     return await sendOTPToEmail(email);
   }
-}
-
-class OTPData {
-  final String otp;
-  final DateTime expiryTime;
-  OTPData({required this.otp, required this.expiryTime});
 }

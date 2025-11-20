@@ -24,3 +24,31 @@
 -dontwarn com.google.android.play.core.splitcompat.SplitCompatApplication
 -dontwarn com.google.android.play.core.splitinstall.**
 -dontwarn com.google.android.play.core.tasks.**
+
+# HTTP and JSON for OTP service
+-keep class dart.** { *; }
+-keep class io.flutter.plugins.** { *; }
+-keepattributes *Annotation*
+-keepattributes Signature
+-keepattributes InnerClasses
+
+# HTTP package
+-keep class io.flutter.plugins.urllauncher.** { *; }
+-dontwarn okhttp3.**
+-dontwarn okio.**
+-keep class okhttp3.** { *; }
+-keep interface okhttp3.** { *; }
+
+# Preserve all native method names and the names of their classes
+-keepclasseswithmembernames class * {
+    native <methods>;
+}
+
+# Keep JSON serialization
+-keepclassmembers class * {
+    @com.google.gson.annotations.SerializedName <fields>;
+}
+
+# SharedPreferences
+-keep class androidx.preference.** { *; }
+-keep class * extends androidx.preference.PreferenceFragmentCompat { *; }

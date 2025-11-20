@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../models/product_model.dart';
 import '../providers/favorites_provider.dart';
-import '../providers/cart_provider.dart';
 import '../providers/auth_provider.dart';
 import '../widgets/swipe_action_card.dart';
 import '../utils/constants.dart';

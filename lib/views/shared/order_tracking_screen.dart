@@ -469,6 +469,8 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
         return AppColors.successGreen;
       case OrderStatus.cancelled:
         return AppColors.errorRed;
+      case OrderStatus.modification_requested:
+        return AppColors.warningOrange;
     }
   }
 
@@ -486,6 +488,8 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
         return 'Delivered';
       case OrderStatus.cancelled:
         return 'Cancelled';
+      case OrderStatus.modification_requested:
+        return 'Modification Requested';
     }
   }
 

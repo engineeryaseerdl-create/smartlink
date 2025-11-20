@@ -3,6 +3,7 @@ import 'dart:async';
 import '../../services/otp_service.dart';
 import '../../utils/constants.dart';
 import '../../widgets/custom_button.dart';
+import '../../utils/demo_helper.dart';
 
 class OTPVerificationScreen extends StatefulWidget {
   final String email;
@@ -134,6 +135,13 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Verify Email'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.help_outline),
+            onPressed: () => DemoHelper.showDemoInfo(context),
+            tooltip: 'Demo Help',
+          ),
+        ],
       ),
       body: SafeArea(
         child: Padding(

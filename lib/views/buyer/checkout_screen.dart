@@ -191,11 +191,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Row(
+                              const Row(
                                 children: [
-                                  const Icon(Icons.local_shipping, color: AppColors.primaryGreen),
-                                  const SizedBox(width: AppSpacing.sm),
-                                  const Text('Delivery Options', style: AppTextStyles.heading3),
+                                  Icon(Icons.local_shipping, color: AppColors.primaryGreen),
+                                  SizedBox(width: AppSpacing.sm),
+                                  Text('Delivery Options', style: AppTextStyles.heading3),
                                 ],
                               ),
                               const SizedBox(height: AppSpacing.sm),
@@ -223,7 +223,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                     Switch(
                                       value: _isExpressDelivery,
                                       onChanged: (value) => setState(() => _isExpressDelivery = value),
-                                      activeColor: AppColors.primaryGreen,
+                                      activeThumbColor: AppColors.primaryGreen,
                                     ),
                                   ],
                                 ),
@@ -233,7 +233,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
                               // Delivery Date Selection
                               if (!_isExpressDelivery) ...[
-                                Text('Preferred Delivery Date', style: AppTextStyles.bodyMedium),
+                                const Text('Preferred Delivery Date', style: AppTextStyles.bodyMedium),
                                 const SizedBox(height: AppSpacing.sm),
                                 InkWell(
                                   onTap: () => _selectDeliveryDate(context),
