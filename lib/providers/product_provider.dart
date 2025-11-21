@@ -90,9 +90,9 @@ class ProductProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> addProduct(ProductModel product) async {
+  Future<void> addProduct(ProductModel product, {String? customCategory}) async {
     try {
-      final response = await _apiService.post('/products', data: product.toJson());
+      final response = await _apiService.post('/products', data: product.toJson(customCategory: customCategory));
       
       if (response['success']) {
         final newProduct = ProductModel.fromJson(response['product']);

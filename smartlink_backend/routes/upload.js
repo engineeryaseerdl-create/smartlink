@@ -2,19 +2,12 @@ const express = require('express');
 const multer = require('multer');
 const path = require('path');
 const { auth } = require('../middleware/auth');
+const cloudinary = require('../config/cloudinary');
 
 const router = express.Router();
 
-// Configure multer for file uploads
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads/');
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
-  }
-});
+// Configure multer for memory storage
+const storage = multer.memoryStorage();
 
 const upload = multer({ 
   storage: storage,
@@ -22,20 +15,20 @@ const upload = multer({
     fileSize: 5 * 1024 * 1024 // 5MB limit
   },
   fileFilter: (req, file, cb) => {
-    const allowedTypes = /jpeg|jpg|png|gif|webp/;
-    const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
-    const mimetype = allowedTypes.test(file.mimetype);
-
-    if (mimetype && extname) {
+    const allowedMimeTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+    const allowedExtensions = /\.(jpg|jpeg|png|gif|webp)$/i;
+    
+    // Check MIME type or file extension
+    if (allowedMimeTypes.includes(file.mimetype) || allowedExtensions.test(file.originalname)) {
       return cb(null, true);
     } else {
-      cb(new Error('Only image files are allowed'));
+      cb(new Error(`Only image files are allowed. Received: ${file.mimetype} (${file.originalname})`));
     }
   }
 });
 
 // Single file upload
-router.post('/single', auth, upload.single('image'), (req, res) => {
+router.post('/single', auth, upload.single('image'), async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ 
@@ -44,15 +37,22 @@ router.post('/single', auth, upload.single('image'), (req, res) => {
       });
     }
 
-    const protocol = req.protocol;
-    const host = req.get('host');
-    const fileUrl = `${protocol}://${host}/uploads/${req.file.filename}`;
+    // Upload to Cloudinary
+    const result = await new Promise((resolve, reject) => {
+      cloudinary.uploader.upload_stream(
+        { folder: 'smartlink' },
+        (error, result) => {
+          if (error) reject(error);
+          else resolve(result);
+        }
+      ).end(req.file.buffer);
+    });
     
     res.json({
       success: true,
       message: 'File uploaded successfully',
-      fileUrl: fileUrl,
-      filename: req.file.filename
+      fileUrl: result.secure_url,
+      filename: result.public_id
     });
   } catch (error) {
     res.status(500).json({ 
@@ -63,7 +63,7 @@ router.post('/single', auth, upload.single('image'), (req, res) => {
 });
 
 // Multiple files upload
-router.post('/multiple', auth, upload.array('images', 5), (req, res) => {
+router.post('/multiple', auth, upload.array('images', 5), async (req, res) => {
   try {
     if (!req.files || req.files.length === 0) {
       return res.status(400).json({ 
@@ -72,9 +72,28 @@ router.post('/multiple', auth, upload.array('images', 5), (req, res) => {
       });
     }
 
-    const protocol = req.protocol;
-    const host = req.get('host');
-    const fileUrls = req.files.map(file => `${protocol}://${host}/uploads/${file.filename}`);
+    console.log(`Uploading ${req.files.length} files to Cloudinary`);
+
+    // Upload all files to Cloudinary
+    const uploadPromises = req.files.map((file, index) => {
+      return new Promise((resolve, reject) => {
+        console.log(`Uploading file ${index + 1}: ${file.originalname}`);
+        cloudinary.uploader.upload_stream(
+          { folder: 'smartlink' },
+          (error, result) => {
+            if (error) {
+              console.error(`Upload error for file ${index + 1}:`, error);
+              reject(error);
+            } else {
+              console.log(`File ${index + 1} uploaded: ${result.secure_url}`);
+              resolve(result.secure_url);
+            }
+          }
+        ).end(file.buffer);
+      });
+    });
+
+    const fileUrls = await Promise.all(uploadPromises);
     
     res.json({
       success: true,
@@ -82,9 +101,10 @@ router.post('/multiple', auth, upload.array('images', 5), (req, res) => {
       fileUrls: fileUrls
     });
   } catch (error) {
+    console.error('Upload error:', error);
     res.status(500).json({ 
       success: false, 
-      message: error.message 
+      message: error.message || 'Upload failed'
     });
   }
 });

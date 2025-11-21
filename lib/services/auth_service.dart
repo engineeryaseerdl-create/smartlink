@@ -9,24 +9,28 @@ class AuthService {
   final ApiService _apiService = ApiService();
 
   Future<UserModel?> login(String email, String password) async {
-    final response = await _apiService.post('/auth/login', data: {
-      'email': email,
-      'password': password,
-    });
+    try {
+      final response = await _apiService.post('/auth/login', data: {
+        'email': email,
+        'password': password,
+      });
 
-    if (response['success']) {
-      final token = response['token'];
-      await _apiService.setAuthToken(token);
+      if (response['success']) {
+        final token = response['token'];
+        await _apiService.setAuthToken(token);
+        
+        final user = UserModel.fromJson(response['user']);
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString(_userKey, json.encode(user.toJson()));
+        await prefs.setBool(_isLoggedInKey, true);
+        
+        return user;
+      }
       
-      final user = UserModel.fromJson(response['user']);
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString(_userKey, json.encode(user.toJson()));
-      await prefs.setBool(_isLoggedInKey, true);
-      
-      return user;
+      throw Exception(response['message'] ?? 'Invalid credentials');
+    } catch (e) {
+      rethrow;
     }
-    
-    throw Exception('Invalid credentials');
   }
 
   Future<UserModel> register({
@@ -39,30 +43,34 @@ class AuthService {
     String? businessName,
     String? vehicleType,
   }) async {
-    final response = await _apiService.post('/auth/register', data: {
-      'name': name,
-      'email': email,
-      'password': password,
-      'phone': phone ?? '0800000000',
-      'role': role.toString().split('.').last,
-      'location': {'address': location},
-      if (businessName != null) 'businessName': businessName,
-      if (vehicleType != null) 'vehicleType': vehicleType,
-    });
+    try {
+      final response = await _apiService.post('/auth/register', data: {
+        'name': name,
+        'email': email,
+        'password': password,
+        'phone': phone ?? '0800000000',
+        'role': role.toString().split('.').last,
+        'location': {'address': location},
+        if (businessName != null) 'businessName': businessName,
+        if (vehicleType != null) 'vehicleType': vehicleType,
+      });
 
-    if (response['success']) {
-      final token = response['token'];
-      await _apiService.setAuthToken(token);
+      if (response['success']) {
+        final token = response['token'];
+        await _apiService.setAuthToken(token);
+        
+        final user = UserModel.fromJson(response['user']);
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString(_userKey, json.encode(user.toJson()));
+        await prefs.setBool(_isLoggedInKey, true);
+        
+        return user;
+      }
       
-      final user = UserModel.fromJson(response['user']);
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString(_userKey, json.encode(user.toJson()));
-      await prefs.setBool(_isLoggedInKey, true);
-      
-      return user;
+      throw Exception(response['message'] ?? 'Registration failed');
+    } catch (e) {
+      rethrow;
     }
-    
-    throw Exception('Registration failed');
   }
 
   Future<void> logout() async {

@@ -129,8 +129,9 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                   opacity: fadeAnimation,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 24),
-                    child: Column(
-                      children: [
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
                         const SizedBox(height: 20),
 
                         // SKIP BUTTON
@@ -257,6 +258,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                         const SizedBox(height: 40),
                       ],
                     ),
+                  ),
                   ),
                 );
               },

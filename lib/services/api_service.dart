@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ApiService {
   final Dio _dio = Dio();
   static const String baseUrl = String.fromEnvironment('API_URL', 
-    defaultValue: 'https://backend-smartlink.onrender.com/api');
+    defaultValue: 'https://smartlink-backend-3eu4.onrender.com/api');
   
   String? _token;
 

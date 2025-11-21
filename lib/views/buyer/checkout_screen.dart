@@ -314,22 +314,25 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         Column(
                           children: [
                             RadioListTile<String>(
-                              title: const Text('Credit/Debit Card'),
-                              subtitle: const Text('Pay with Paystack'),
+                              contentPadding: EdgeInsets.zero,
+                              title: const Text('Credit/Debit Card', overflow: TextOverflow.ellipsis),
+                              subtitle: const Text('Pay with Paystack', overflow: TextOverflow.ellipsis),
                               value: 'card',
                               groupValue: _paymentMethod,
                               onChanged: (value) => setState(() => _paymentMethod = value!),
                             ),
                             RadioListTile<String>(
-                              title: const Text('Bank Transfer'),
-                              subtitle: const Text('Pay via bank transfer'),
+                              contentPadding: EdgeInsets.zero,
+                              title: const Text('Bank Transfer', overflow: TextOverflow.ellipsis),
+                              subtitle: const Text('Pay via bank transfer', overflow: TextOverflow.ellipsis),
                               value: 'transfer',
                               groupValue: _paymentMethod,
                               onChanged: (value) => setState(() => _paymentMethod = value!),
                             ),
                             RadioListTile<String>(
-                              title: const Text('Pay on Delivery'),
-                              subtitle: const Text('Cash payment on delivery'),
+                              contentPadding: EdgeInsets.zero,
+                              title: const Text('Pay on Delivery', overflow: TextOverflow.ellipsis),
+                              subtitle: const Text('Cash payment on delivery', overflow: TextOverflow.ellipsis),
                               value: 'cod',
                               groupValue: _paymentMethod,
                               onChanged: (value) => setState(() => _paymentMethod = value!),

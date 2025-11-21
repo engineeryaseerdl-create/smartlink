@@ -37,7 +37,8 @@ class _SellerDashboardContentState extends State<SellerDashboardContent> {
     final myProducts = productProvider.products
         .where((p) => p.sellerId == user?.id)
         .toList();
-    final myOrders = orderProvider.getOrdersForSeller(user?.id ?? '');
+    // Backend already filters by seller, so just use all orders
+    final myOrders = orderProvider.orders;
     final pendingOrders =
         myOrders.where((o) => o.status == OrderStatus.pending).toList();
 

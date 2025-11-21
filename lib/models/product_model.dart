@@ -6,7 +6,23 @@ enum ProductCategory {
   books,
   sports,
   beauty,
-  automotive
+  automotive,
+  phones,
+  computers,
+  furniture,
+  appliances,
+  toys,
+  jewelry,
+  health,
+  groceries,
+  pets,
+  garden,
+  tools,
+  music,
+  art,
+  baby,
+  office,
+  others
 }
 
 class ProductModel {
@@ -95,7 +111,7 @@ class ProductModel {
     );
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toJson({String? customCategory}) {
     return {
       'name': title,
       'description': description,
@@ -103,6 +119,7 @@ class ProductModel {
       'category': category.toString().split('.').last,
       'images': images,
       'stock': stockQuantity,
+      if (customCategory != null && customCategory.isNotEmpty) 'customCategory': customCategory,
     };
   }
 }

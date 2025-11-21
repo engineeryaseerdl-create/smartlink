@@ -38,28 +38,38 @@ class UploadService {
   }
 
   Future<List<String>> uploadImages(List<File> imageFiles) async {
-    final token = await _getToken();
-    if (token == null) throw Exception('Not authenticated');
+    try {
+      final token = await _getToken();
+      if (token == null) throw Exception('Not authenticated');
 
-    final request = http.MultipartRequest(
-      'POST',
-      Uri.parse('${ApiService.baseUrl}/upload/multiple'),
-    );
+      print('Uploading ${imageFiles.length} images to ${ApiService.baseUrl}/upload/multiple');
 
-    request.headers['Authorization'] = 'Bearer $token';
-    
-    for (var file in imageFiles) {
-      request.files.add(await http.MultipartFile.fromPath('images', file.path));
-    }
+      final request = http.MultipartRequest(
+        'POST',
+        Uri.parse('${ApiService.baseUrl}/upload/multiple'),
+      );
 
-    final response = await request.send();
-    final responseData = await response.stream.bytesToString();
-    final jsonData = json.decode(responseData);
+      request.headers['Authorization'] = 'Bearer $token';
+      
+      for (var file in imageFiles) {
+        print('Adding file: ${file.path}');
+        request.files.add(await http.MultipartFile.fromPath('images', file.path));
+      }
 
-    if (response.statusCode == 200) {
-      return List<String>.from(jsonData['fileUrls']);
-    } else {
-      throw Exception(jsonData['message'] ?? 'Upload failed');
+      final response = await request.send();
+      final responseData = await response.stream.bytesToString();
+      print('Upload response (${response.statusCode}): $responseData');
+      
+      final jsonData = json.decode(responseData);
+
+      if (response.statusCode == 200 && jsonData['success'] == true) {
+        return List<String>.from(jsonData['fileUrls']);
+      } else {
+        throw Exception(jsonData['message'] ?? 'Upload failed with status ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Upload error: $e');
+      rethrow;
     }
   }
 }

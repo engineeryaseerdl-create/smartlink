@@ -16,7 +16,9 @@
       "Bash(taskkill //PID 9876 //F)",
       "Bash(curl -X POST http://localhost:5000/api/auth/check-exists -H \"Content-Type: application/json\" -d \"{\"\"email\"\":\"\"test@example.com\"\",\"\"phone\"\":\"\"1234567890\"\"}\")",
       "Bash(curl -X POST http://localhost:5000/api/auth/check-exists -H \"Content-Type: application/json\" -d \"{\"\"email\"\":\"\"newuser@example.com\"\",\"\"phone\"\":\"\"9999999999\"\"}\")",
-      "Bash(curl -X POST http://localhost:5000/api/auth/register -H \"Content-Type: application/json\" -d \"{\"\"name\"\":\"\"Test New User\"\",\"\"email\"\":\"\"newuser@test.com\"\",\"\"password\"\":\"\"test123\"\",\"\"phone\"\":\"\"9999999999\"\",\"\"role\"\":\"\"buyer\"\"}\")"
+      "Bash(curl -X POST http://localhost:5000/api/auth/register -H \"Content-Type: application/json\" -d \"{\"\"name\"\":\"\"Test New User\"\",\"\"email\"\":\"\"newuser@test.com\"\",\"\"password\"\":\"\"test123\"\",\"\"phone\"\":\"\"9999999999\"\",\"\"role\"\":\"\"buyer\"\"}\")",
+      "Bash(taskkill //PID 3216 //F)",
+      "Bash(curl -X POST http://localhost:5000/api/auth/register -H \"Content-Type: application/json\" -d \"{\"\"name\"\":\"\"Test Seller\"\",\"\"email\"\":\"\"testseller@example.com\"\",\"\"password\"\":\"\"test123\"\",\"\"phone\"\":\"\"9999999999\"\",\"\"role\"\":\"\"seller\"\"}\")"
     ],
     "deny": [],
     "ask": []

@@ -5,10 +5,63 @@ import '../../providers/auth_provider.dart';
 import '../../utils/constants.dart';
 import '../../widgets/product_card.dart';
 import 'add_product_screen.dart';
+import 'edit_product_screen.dart';
 import '../buyer/product_detail_screen.dart';
+import '../../models/product_model.dart';
 
 class SellerProductsContent extends StatelessWidget {
   const SellerProductsContent({super.key});
+
+  void _editProduct(BuildContext context, ProductModel product) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EditProductScreen(product: product),
+      ),
+    );
+  }
+
+  void _deleteProduct(BuildContext context, ProductModel product) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete Product'),
+        content: Text('Are you sure you want to delete "${product.title}"?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.pop(context);
+              try {
+                await context.read<ProductProvider>().deleteProduct(product.id);
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Product deleted successfully'),
+                      backgroundColor: AppColors.successGreen,
+                    ),
+                  );
+                }
+              } catch (e) {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Error deleting product: $e'),
+                      backgroundColor: AppColors.errorRed,
+                    ),
+                  );
+                }
+              }
+            },
+            child: const Text('Delete', style: TextStyle(color: AppColors.errorRed)),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -132,7 +185,9 @@ class SellerProductsContent extends StatelessWidget {
                           ),
                         );
                       },
-                      showActions: true, // Show edit/delete actions for seller
+                      showActions: true,
+                      onEdit: () => _editProduct(context, product),
+                      onDelete: () => _deleteProduct(context, product),
                     );
                   },
                   childCount: myProducts.length,

@@ -26,6 +26,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
   final _descriptionController = TextEditingController();
   final _priceController = TextEditingController();
   final _stockController = TextEditingController();
+  final _customCategoryController = TextEditingController();
   ProductCategory _selectedCategory = ProductCategory.electronics;
   final List<File> _selectedImages = [];
   bool _isLoading = false;
@@ -36,6 +37,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
     _descriptionController.dispose();
     _priceController.dispose();
     _stockController.dispose();
+    _customCategoryController.dispose();
     super.dispose();
   }
 
@@ -88,6 +90,11 @@ class _AddProductScreenState extends State<AddProductScreen> {
       return;
     }
 
+    if (_selectedCategory == ProductCategory.others && _customCategoryController.text.trim().isEmpty) {
+      ErrorModal.show(context, 'Please specify the category');
+      return;
+    }
+
     setState(() {
       _isLoading = true;
     });
@@ -114,7 +121,12 @@ class _AddProductScreenState extends State<AddProductScreen> {
         createdAt: DateTime.now(),
       );
 
-      await context.read<ProductProvider>().addProduct(product);
+      await context.read<ProductProvider>().addProduct(
+        product,
+        customCategory: _selectedCategory == ProductCategory.others 
+          ? _customCategoryController.text.trim() 
+          : null,
+      );
       
       if (!mounted) return;
       
@@ -364,9 +376,10 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   ),
                 ),
                 items: ProductCategory.values.map((category) {
+                  String label = category.toString().split('.').last;
                   return DropdownMenuItem(
                     value: category,
-                    child: Text(category.toString().split('.').last),
+                    child: Text(label[0].toUpperCase() + label.substring(1)),
                   );
                 }).toList(),
                 onChanged: (value) {
@@ -375,6 +388,16 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   }
                 },
               ),
+              if (_selectedCategory == ProductCategory.others) ...[
+                const SizedBox(height: AppSpacing.md),
+                CustomTextField(
+                  label: 'Specify Category',
+                  hint: 'Enter custom category',
+                  controller: _customCategoryController,
+                  validator: (value) =>
+                      value?.isEmpty ?? true ? 'Please specify category' : null,
+                ),
+              ],
               const SizedBox(height: AppSpacing.xl),
               CustomButton(
                 text: _isLoading ? 'Adding Product...' : 'Add Product',
