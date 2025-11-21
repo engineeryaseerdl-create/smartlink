@@ -1,4 +1,4 @@
-enum OrderStatus { pending, confirmed, pickupReady, inTransit, delivered, cancelled, modification_requested }
+enum OrderStatus { pending, confirmed, assigned, pickedUp, inTransit, delivered, completed, refunded, cancelled, modification_requested }
 
 class OrderTracking {
   final String id;
@@ -177,16 +177,23 @@ class OrderModel {
       case 'preparing':
         orderStatus = OrderStatus.confirmed;
         break;
-      case 'ready':
       case 'assigned':
-        orderStatus = OrderStatus.pickupReady;
+        orderStatus = OrderStatus.assigned;
         break;
       case 'picked_up':
+        orderStatus = OrderStatus.pickedUp;
+        break;
       case 'in_transit':
         orderStatus = OrderStatus.inTransit;
         break;
       case 'delivered':
         orderStatus = OrderStatus.delivered;
+        break;
+      case 'completed':
+        orderStatus = OrderStatus.completed;
+        break;
+      case 'refunded':
+        orderStatus = OrderStatus.refunded;
         break;
       case 'cancelled':
         orderStatus = OrderStatus.cancelled;

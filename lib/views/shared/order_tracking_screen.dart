@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../models/order_model.dart';
 import '../../utils/constants.dart';
 import '../../widgets/animated_widgets.dart';
 import '../../widgets/responsive_wrapper.dart';
 import '../../widgets/order_tracking_widget.dart';
+import '../../providers/auth_provider.dart';
+import '../buyer/rate_order_screen.dart';
+import '../buyer/dispute_order_screen.dart';
 
 class OrderTrackingScreen extends StatefulWidget {
   final OrderModel order;
@@ -74,6 +78,13 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
                 
                 // Items Card
                 _buildItemsCard(),
+                
+                // Action Buttons for Buyers
+                if (_isBuyer() && widget.order.status == OrderStatus.delivered) ...[
+                  SizedBox(height: ResponsiveUtils.isDesktop(context) 
+                    ? AppSpacing.xl : AppSpacing.lg),
+                  _buildActionButtons(),
+                ],
               ],
             ),
           ),
@@ -455,18 +466,80 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
     );
   }
 
+  bool _isBuyer() {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    return authProvider.currentUser?.role.toString().contains('buyer') ?? false;
+  }
+
+  Widget _buildActionButtons() {
+    return Row(
+      children: [
+        Expanded(
+          child: ElevatedButton.icon(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => RateOrderScreen(order: widget.order),
+                ),
+              );
+            },
+            icon: const Icon(Icons.star),
+            label: const Text('Rate Order'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primaryGreen,
+              padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(AppBorderRadius.md),
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(width: AppSpacing.md),
+        Expanded(
+          child: OutlinedButton.icon(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DisputeOrderScreen(order: widget.order),
+                ),
+              );
+            },
+            icon: const Icon(Icons.report_problem),
+            label: const Text('Report Issue'),
+            style: OutlinedButton.styleFrom(
+              foregroundColor: AppColors.errorRed,
+              side: const BorderSide(color: AppColors.errorRed),
+              padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(AppBorderRadius.md),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   Color _getStatusColor() {
     switch (widget.order.status) {
       case OrderStatus.pending:
         return AppColors.warningOrange;
       case OrderStatus.confirmed:
         return AppColors.infoBlue;
-      case OrderStatus.pickupReady:
+      case OrderStatus.assigned:
+        return AppColors.primaryGreen;
+      case OrderStatus.pickedUp:
         return AppColors.primaryGreen;
       case OrderStatus.inTransit:
         return AppColors.primaryGreen;
       case OrderStatus.delivered:
         return AppColors.successGreen;
+      case OrderStatus.completed:
+        return AppColors.successGreen;
+      case OrderStatus.refunded:
+        return AppColors.warningOrange;
       case OrderStatus.cancelled:
         return AppColors.errorRed;
       case OrderStatus.modification_requested:
@@ -480,12 +553,18 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
         return 'Pending';
       case OrderStatus.confirmed:
         return 'Confirmed';
-      case OrderStatus.pickupReady:
-        return 'Ready for Pickup';
+      case OrderStatus.assigned:
+        return 'Assigned to Rider';
+      case OrderStatus.pickedUp:
+        return 'Picked Up';
       case OrderStatus.inTransit:
         return 'In Transit';
       case OrderStatus.delivered:
         return 'Delivered';
+      case OrderStatus.completed:
+        return 'Completed';
+      case OrderStatus.refunded:
+        return 'Refunded';
       case OrderStatus.cancelled:
         return 'Cancelled';
       case OrderStatus.modification_requested:

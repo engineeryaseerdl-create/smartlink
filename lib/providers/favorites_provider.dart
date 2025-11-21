@@ -15,7 +15,11 @@ class FavoritesProvider with ChangeNotifier {
   Future<void> loadFavorites() async {
     try {
       final userId = _supabase.auth.currentUser?.id;
-      if (userId == null) return;
+      if (userId == null) {
+        _favorites.clear();
+        notifyListeners();
+        return;
+      }
 
       final response = await _supabase
           .from('favorites')
@@ -26,6 +30,7 @@ class FavoritesProvider with ChangeNotifier {
       for (var item in response) {
         _favorites.add(ProductModel.fromJson(item['product_data']));
       }
+      debugPrint('Loaded ${_favorites.length} favorites for user $userId');
       notifyListeners();
     } catch (e) {
       debugPrint('Error loading favorites: $e');

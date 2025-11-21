@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
+import '../../providers/favorites_provider.dart';
+import '../../providers/cart_provider.dart';
 import '../../models/user_model.dart';
 import '../../utils/constants.dart';
 import '../../widgets/responsive_wrapper.dart';
@@ -29,6 +31,15 @@ class HomeWrapper extends StatefulWidget {
 class _HomeWrapperState extends State<HomeWrapper> {
   int _selectedIndex = 0;
   UserRole? _lastUserRole;
+
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      context.read<FavoritesProvider>().loadFavorites();
+      context.read<CartProvider>().loadCart();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

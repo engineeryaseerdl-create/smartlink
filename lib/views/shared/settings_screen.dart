@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../providers/auth_provider.dart';
-import '../../services/upload_service.dart';
 import '../../providers/theme_provider.dart';
+import '../../services/upload_service.dart';
 import '../../utils/constants.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/custom_text_field.dart';
@@ -119,20 +119,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
     try {
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
       
-      String? avatarUrl;
-      if (_profileImage != null) {
-        final uploadService = UploadService();
-        final urls = await uploadService.uploadImages([_profileImage!]);
-        avatarUrl = urls.first;
-      }
-
-      await authProvider.updateUserProfile({
+      final updates = {
         'name': _nameController.text.trim(),
         'phone': _phoneController.text.trim(),
-        'location': {'address': _locationController.text.trim()},
+        'location': _locationController.text.trim(),
         'bio': _bioController.text.trim(),
-        if (avatarUrl != null) 'avatar': avatarUrl,
-      });
+      };
+      
+      if (_profileImage != null && !kIsWeb) {
+        final avatarUrl = await UploadService.uploadProfilePicture(_profileImage!);
+        updates['avatar'] = avatarUrl;
+      }
+
+      await authProvider.updateUserProfile(updates);
+      await authProvider.refreshUserData();
       
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -147,7 +147,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error updating profile: $e'),
+            content: Text('Error: ${e.toString().replaceAll('Exception: ', '')}'),
             backgroundColor: AppColors.errorRed,
           ),
         );
@@ -156,22 +156,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
       if (mounted) {
         setState(() {
           _isLoading = false;
+          _profileImage = null;
         });
       }
     }
   }
 
   ImageProvider? _getProfileImageProvider(user) {
-    // Check for uploaded avatar first, then fallback to other fields
-    String? imageUrl;
-
-    if (user?.profileImage != null && user!.profileImage!.isNotEmpty) {
-      imageUrl = user!.profileImage;
-    } else if (user?.profileImageUrl != null && user!.profileImageUrl!.isNotEmpty) {
-      imageUrl = user!.profileImageUrl;
+    final imageUrl = user?.avatar;
+    if (imageUrl != null && imageUrl.isNotEmpty && imageUrl.startsWith('http')) {
+      return NetworkImage(imageUrl);
     }
-
-    return imageUrl != null && imageUrl.isNotEmpty ? NetworkImage(imageUrl) : null;
+    return null;
   }
 
   @override

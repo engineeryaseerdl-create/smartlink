@@ -40,19 +40,29 @@ class _AddProductScreenState extends State<AddProductScreen> {
   }
 
   Future<void> _pickImages() async {
+    if (_selectedImages.length >= 10) {
+      ErrorModal.show(context, 'Maximum 10 images allowed');
+      return;
+    }
+    
     final List<File> images = await ImagePickerService.pickMultipleImages(
-      maxImages: 5,
+      maxImages: 10 - _selectedImages.length,
       imageQuality: 85,
     );
     
     if (images.isNotEmpty) {
       setState(() {
-        _selectedImages = images;
+        _selectedImages.addAll(images);
       });
     }
   }
 
   Future<void> _takePicture() async {
+    if (_selectedImages.length >= 10) {
+      ErrorModal.show(context, 'Maximum 10 images allowed');
+      return;
+    }
+    
     final File? image = await ImagePickerService.pickImageFromCamera(
       imageQuality: 85,
     );
@@ -236,27 +246,22 @@ class _AddProductScreenState extends State<AddProductScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            '${_selectedImages.length} image(s) selected',
+                            '${_selectedImages.length}/10 images',
                             style: AppTextStyles.bodyMedium.copyWith(
                               fontWeight: FontWeight.w600,
                               color: AppColors.primaryGreen,
                             ),
                           ),
-                          Row(
-                            children: [
-                              TextButton.icon(
-                                onPressed: _pickImages,
-                                icon: const Icon(Icons.photo_library),
-                                label: const Text('Gallery'),
-                              ),
-                              const SizedBox(width: AppSpacing.xs),
-                              TextButton.icon(
-                                onPressed: _takePicture,
-                                icon: const Icon(Icons.camera_alt),
-                                label: const Text('Camera'),
-                              ),
-                            ],
-                          ),
+                          if (_selectedImages.length < 10)
+                            Row(
+                              children: [
+                                TextButton.icon(
+                                  onPressed: _pickImages,
+                                  icon: const Icon(Icons.add_photo_alternate, size: 18),
+                                  label: const Text('Add'),
+                                ),
+                              ],
+                            ),
                         ],
                       ),
                       const SizedBox(height: AppSpacing.sm),

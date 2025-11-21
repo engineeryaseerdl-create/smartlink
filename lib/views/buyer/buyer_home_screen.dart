@@ -4,6 +4,7 @@ import '../../providers/auth_provider.dart';
 import '../../providers/product_provider.dart';
 import '../../providers/order_provider.dart';
 import '../../providers/cart_provider.dart';
+import '../../providers/favorites_provider.dart';
 import '../../models/product_model.dart';
 import '../../utils/constants.dart';
 import '../../widgets/product_card.dart';
@@ -501,7 +502,7 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
               sliver: SliverGrid(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
-                  childAspectRatio: 0.7,
+                  childAspectRatio: 0.62,
                   crossAxisSpacing: AppSpacing.md,
                   mainAxisSpacing: AppSpacing.md,
                 ),
@@ -517,18 +518,44 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(
-                      Icons.search_off,
+                    Icon(
+                      productProvider.error != null ? Icons.error_outline : Icons.search_off,
                       size: 80,
                       color: AppColors.mutedGreen,
                     ),
                     const SizedBox(height: AppSpacing.md),
                     Text(
-                      'No products found',
+                      productProvider.error != null 
+                        ? 'Failed to load products'
+                        : 'No products found',
                       style: AppTextStyles.bodyLarge.copyWith(
                         color: AppColors.textSecondary,
                       ),
                     ),
+                    if (productProvider.error != null)
+                      const SizedBox(height: AppSpacing.sm),
+                    if (productProvider.error != null)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl),
+                        child: Text(
+                          productProvider.error!,
+                          textAlign: TextAlign.center,
+                          style: AppTextStyles.bodySmall.copyWith(
+                            color: AppColors.errorRed,
+                          ),
+                        ),
+                      ),
+                    if (productProvider.error != null)
+                      const SizedBox(height: AppSpacing.md),
+                    if (productProvider.error != null)
+                      ElevatedButton.icon(
+                        onPressed: () => context.read<ProductProvider>().loadProducts(),
+                        icon: const Icon(Icons.refresh),
+                        label: const Text('Retry'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primaryGreen,
+                        ),
+                      ),
                   ],
                 ),
               ),
@@ -539,7 +566,7 @@ class _BuyerHomeScreenState extends State<BuyerHomeScreen> {
               sliver: SliverGrid(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
-                  childAspectRatio: 0.7,
+                  childAspectRatio: 0.62,
                   crossAxisSpacing: AppSpacing.md,
                   mainAxisSpacing: AppSpacing.md,
                 ),

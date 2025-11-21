@@ -76,10 +76,17 @@ class CustomButton extends StatelessWidget {
     if (icon != null) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 20),
-          const SizedBox(width: AppSpacing.sm),
-          Text(text, style: AppTextStyles.button),
+          Icon(icon, size: 18),
+          const SizedBox(width: 6),
+          Flexible(
+            child: Text(
+              text,
+              style: AppTextStyles.button,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
         ],
       );
     }

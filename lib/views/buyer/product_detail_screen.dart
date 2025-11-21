@@ -162,59 +162,85 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           ),
         ],
       ),
-      bottomNavigationBar: SafeArea(
+      bottomNavigationBar: _buildBottomBar(context),
+    );
+  }
+
+  Widget _buildBottomBar(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
+    final isOwnProduct = authProvider.currentUser?.id == widget.product.sellerId;
+
+    if (isOwnProduct) {
+      return SafeArea(
         child: Container(
           padding: const EdgeInsets.all(AppSpacing.md),
-          decoration: BoxDecoration(
-            color: AppColors.white,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                blurRadius: 8,
-                offset: const Offset(0, -2),
-              ),
-            ],
-          ),
           child: Row(
             children: [
               Expanded(
                 child: CustomButton(
-                  text: 'Add to Cart',
-                  onPressed: () {
-                    context.read<CartProvider>().addToCart(widget.product);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Added to cart!'),
-                        backgroundColor: AppColors.successGreen,
-                        duration: Duration(seconds: 1),
-                      ),
-                    );
-                  },
-                  isOutlined: true,
-                  backgroundColor: AppColors.primaryGreen,
-                  icon: Icons.add_shopping_cart,
+                  text: 'Edit',
+                  onPressed: () {},
+                  icon: Icons.edit,
+                  backgroundColor: AppColors.infoBlue,
                 ),
               ),
               const SizedBox(width: AppSpacing.md),
               Expanded(
                 child: CustomButton(
-                  text: 'Buy Now',
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => PaymentScreen(
-                          product: widget.product,
-                          quantity: 1,
-                        ),
-                      ),
-                    );
-                  },
-                  icon: Icons.shopping_cart,
+                  text: 'Delete',
+                  onPressed: () {},
+                  icon: Icons.delete,
+                  backgroundColor: AppColors.errorRed,
                 ),
               ),
             ],
           ),
+        ),
+      );
+    }
+
+    return SafeArea(
+      child: Container(
+        padding: const EdgeInsets.all(AppSpacing.md),
+        child: Row(
+          children: [
+            Expanded(
+              child: CustomButton(
+                text: 'Add to Cart',
+                onPressed: () {
+                  context.read<CartProvider>().addToCart(widget.product);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Added to cart!'),
+                      backgroundColor: AppColors.successGreen,
+                      duration: Duration(seconds: 1),
+                    ),
+                  );
+                },
+                isOutlined: true,
+                backgroundColor: AppColors.primaryGreen,
+                icon: Icons.add_shopping_cart,
+              ),
+            ),
+            const SizedBox(width: AppSpacing.md),
+            Expanded(
+              child: CustomButton(
+                text: 'Buy Now',
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => PaymentScreen(
+                        product: widget.product,
+                        quantity: 1,
+                      ),
+                    ),
+                  );
+                },
+                icon: Icons.shopping_cart,
+              ),
+            ),
+          ],
         ),
       ),
     );

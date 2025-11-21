@@ -22,6 +22,7 @@ class ProductProvider with ChangeNotifier {
   ProductCategory? get selectedCategory => _selectedCategory;
   String? get sortBy => _sortByFilter;
   bool get freeDeliveryOnly => _freeDeliveryOnly;
+  String? get error => _error;
 
   Future<void> loadProducts({String? category, String? search}) async {
     _isLoading = true;
@@ -33,17 +34,26 @@ class ProductProvider with ChangeNotifier {
       if (category != null) queryParams['category'] = category;
       if (search != null) queryParams['q'] = search;
       
+      debugPrint('Loading products from API...');
       final response = await _apiService.get('/products', queryParams: queryParams);
+      debugPrint('API Response: $response');
       
-      if (response['success']) {
-        _products = (response['products'] as List)
-            .map((json) => ProductModel.fromJson(json))
-            .toList();
-        _filteredProducts = _products;
+      if (response['success'] == true) {
+        final productsList = response['products'] as List?;
+        if (productsList != null) {
+          _products = productsList
+              .map((json) => ProductModel.fromJson(json))
+              .toList();
+          _filteredProducts = _products;
+          debugPrint('Loaded ${_products.length} products');
+        }
+      } else {
+        debugPrint('API returned success=false');
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
       _error = e.toString();
       debugPrint('Error loading products: $e');
+      debugPrint('Stack trace: $stackTrace');
     } finally {
       _isLoading = false;
       notifyListeners();

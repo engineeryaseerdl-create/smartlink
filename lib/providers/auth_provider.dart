@@ -123,6 +123,10 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void onUserLoggedIn() {
+    notifyListeners();
+  }
+
   Future<void> updateUserProfile(Map<String, dynamic> updates) async {
     _isLoading = true;
     notifyListeners();

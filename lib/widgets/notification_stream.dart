@@ -12,22 +12,12 @@ class NotificationStream extends StatefulWidget {
 
 class _NotificationStreamState extends State<NotificationStream> {
   late StreamController<int> _controller;
-  int _notificationCount = 3;
+  int _notificationCount = 0;
 
   @override
   void initState() {
     super.initState();
     _controller = StreamController<int>.broadcast();
-    _simulateNotifications();
-  }
-
-  void _simulateNotifications() {
-    Timer.periodic(const Duration(seconds: 30), (timer) {
-      if (mounted) {
-        _notificationCount++;
-        _controller.add(_notificationCount);
-      }
-    });
   }
 
   @override

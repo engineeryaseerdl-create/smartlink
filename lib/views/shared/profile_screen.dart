@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/theme_provider.dart';
+import '../../providers/favorites_provider.dart';
+import '../../providers/cart_provider.dart';
 import '../../utils/constants.dart';
 import 'onboarding_screen.dart';
 import 'settings_screen.dart';
@@ -26,27 +29,7 @@ class ProfileScreen extends StatelessWidget {
         child: Column(
           children: [
             const SizedBox(height: AppSpacing.lg),
-            Container(
-              width: 100,
-              height: 100,
-              decoration: BoxDecoration(
-                color: AppColors.primaryGreen,
-                shape: BoxShape.circle,
-                image: (user?.profileImage ?? user?.profileImageUrl) != null
-                    ? DecorationImage(
-                        image: NetworkImage(user?.profileImage ?? user!.profileImageUrl!),
-                        fit: BoxFit.cover,
-                      )
-                    : null,
-              ),
-              child: (user?.profileImage ?? user?.profileImageUrl) == null
-                  ? Icon(
-                      _getRoleIcon(user?.role),
-                      size: 50,
-                      color: AppColors.white,
-                    )
-                  : null,
-            ),
+            _buildProfileAvatar(user),
             const SizedBox(height: AppSpacing.md),
             Text(user?.name ?? 'User', style: AppTextStyles.heading2),
             Text(user?.email ?? '',
@@ -136,6 +119,8 @@ class ProfileScreen extends StatelessWidget {
             const SizedBox(height: AppSpacing.lg),
             ElevatedButton(
               onPressed: () async {
+                context.read<FavoritesProvider>().clearFavorites();
+                context.read<CartProvider>().clearCart();
                 await authProvider.logout();
                 if (!context.mounted) return;
                 Navigator.of(context).pushAndRemoveUntil(
@@ -155,6 +140,58 @@ class ProfileScreen extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildProfileAvatar(user) {
+    final imageUrl = user?.avatar;
+    final isValidUrl = imageUrl != null && 
+                       imageUrl.isNotEmpty && 
+                       (imageUrl.startsWith('http://') || imageUrl.startsWith('https://'));
+
+    if (isValidUrl) {
+      return CachedNetworkImage(
+        imageUrl: imageUrl,
+        imageBuilder: (context, imageProvider) => Container(
+          width: 100,
+          height: 100,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            image: DecorationImage(
+              image: imageProvider,
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+        placeholder: (context, url) => Container(
+          width: 100,
+          height: 100,
+          decoration: const BoxDecoration(
+            color: AppColors.primaryGreen,
+            shape: BoxShape.circle,
+          ),
+          child: const CircularProgressIndicator(color: AppColors.white, strokeWidth: 2),
+        ),
+        errorWidget: (context, url, error) => _buildDefaultAvatar(user),
+      );
+    }
+    
+    return _buildDefaultAvatar(user);
+  }
+
+  Widget _buildDefaultAvatar(user) {
+    return Container(
+      width: 100,
+      height: 100,
+      decoration: const BoxDecoration(
+        color: AppColors.primaryGreen,
+        shape: BoxShape.circle,
+      ),
+      child: Icon(
+        _getRoleIcon(user?.role),
+        size: 50,
+        color: AppColors.white,
       ),
     );
   }
