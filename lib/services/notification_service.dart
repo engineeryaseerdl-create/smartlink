@@ -66,7 +66,7 @@ class NotificationService {
         icon = Icons.check_circle;
         backgroundColor = AppColors.successGreen;
         break;
-      case OrderStatus.pickupReady:
+      case OrderStatus.assigned:
         title = 'Order Ready';
         message = 'Your order is ready for pickup';
         icon = Icons.inventory;

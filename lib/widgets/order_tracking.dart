@@ -276,9 +276,6 @@ class OrderTrackingWidget extends StatelessWidget {
     );
   }
 
-  // -----------------------------------------------------------------------------------------
-  // HELPERS
-  // -----------------------------------------------------------------------------------------
 
   String _safeId(String? id) {
     if (id == null || id.isEmpty) return "N/A";
@@ -291,12 +288,18 @@ class OrderTrackingWidget extends StatelessWidget {
         return AppColors.warningOrange;
       case OrderStatus.confirmed:
         return AppColors.infoBlue;
-      case OrderStatus.pickupReady:
+      case OrderStatus.assigned:
         return AppColors.infoBlue;
+      case OrderStatus.pickedUp:
+        return AppColors.primaryOrange;
       case OrderStatus.inTransit:
         return AppColors.primaryGreen;
       case OrderStatus.delivered:
         return AppColors.successGreen;
+      case OrderStatus.completed:
+        return AppColors.successGreen;
+      case OrderStatus.refunded:
+        return AppColors.warningOrange;
       case OrderStatus.cancelled:
         return AppColors.errorRed;
       case OrderStatus.modification_requested:
@@ -310,12 +313,18 @@ class OrderTrackingWidget extends StatelessWidget {
         return 'Pending';
       case OrderStatus.confirmed:
         return 'Confirmed';
-      case OrderStatus.pickupReady:
+      case OrderStatus.assigned:
         return 'Ready for Pickup';
+      case OrderStatus.pickedUp:
+        return 'Picked Up';
       case OrderStatus.inTransit:
         return 'In Transit';
       case OrderStatus.delivered:
         return 'Delivered';
+      case OrderStatus.completed:
+        return 'Completed';
+      case OrderStatus.refunded:
+        return 'Refunded';
       case OrderStatus.cancelled:
         return 'Cancelled';
       case OrderStatus.modification_requested:

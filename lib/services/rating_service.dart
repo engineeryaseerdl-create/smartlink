@@ -2,7 +2,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/rating_model.dart';
-import '../utils/constants.dart';
+import 'api_service.dart';
 
 class RatingService {
   static Future<String?> _getToken() async {
@@ -26,7 +26,7 @@ class RatingService {
     final user = json.decode(userJson);
     
     final response = await http.post(
-      Uri.parse('${ApiConstants.baseUrl}/ratings'),
+      Uri.parse('${ApiService.baseUrl}/ratings'),
       headers: {
         'Content-Type': 'application/json',
         if (token != null) 'Authorization': 'Bearer $token',
@@ -51,7 +51,7 @@ class RatingService {
     final token = await _getToken();
     
     final response = await http.get(
-      Uri.parse('${ApiConstants.baseUrl}/ratings/$userId'),
+      Uri.parse('${ApiService.baseUrl}/ratings/$userId'),
       headers: {
         'Content-Type': 'application/json',
         if (token != null) 'Authorization': 'Bearer $token',
@@ -81,7 +81,7 @@ class RatingService {
     final user = json.decode(userJson);
     
     final response = await http.post(
-      Uri.parse('${ApiConstants.baseUrl}/disputes'),
+      Uri.parse('${ApiService.baseUrl}/disputes'),
       headers: {
         'Content-Type': 'application/json',
         if (token != null) 'Authorization': 'Bearer $token',

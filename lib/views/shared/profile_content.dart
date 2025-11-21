@@ -401,20 +401,13 @@ class ProfileContent extends StatelessWidget {
   }
 
   ImageProvider? _getProfileImage(user) {
-    final profileImage = user?.profileImage ?? user?.profileImageUrl;
+    final profileImage = user?.avatar;
     if (profileImage == null || profileImage.isEmpty) return null;
     
-    // Only use network images - ignore local file paths
     if (profileImage.startsWith('http://') || profileImage.startsWith('https://')) {
       return NetworkImage(profileImage);
     }
     
-    // If it's a relative path, make it a full URL
-    if (profileImage.startsWith('/uploads/')) {
-      return NetworkImage('https://backend-smartlink.onrender.com$profileImage');
-    }
-    
-    // Ignore local file paths
     return null;
   }
 
@@ -424,21 +417,31 @@ class ProfileContent extends StatelessWidget {
       final image = await picker.pickImage(source: source);
       
       if (image != null) {
-        final uploadService = UploadService();
         final file = File(image.path);
-        final uploadedUrl = await uploadService.uploadSingleImage(file);
+        final uploadedUrl = await UploadService.uploadProfilePicture(file);
         
         final authProvider = Provider.of<AuthProvider>(context, listen: false);
-        await authProvider.updateProfilePicture(uploadedUrl);
+        await authProvider.updateUserProfile({'avatar': uploadedUrl});
+        await authProvider.refreshUserData();
         
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Profile picture updated successfully')),
-        );
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Profile picture updated successfully'),
+              backgroundColor: AppColors.successGreen,
+            ),
+          );
+        }
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Upload failed: $e')),
-      );
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Upload failed: ${e.toString().replaceAll('Exception: ', '')}'),
+            backgroundColor: AppColors.errorRed,
+          ),
+        );
+      }
     }
   }
 }

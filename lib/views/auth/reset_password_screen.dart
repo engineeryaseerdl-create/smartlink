@@ -5,7 +5,6 @@ import '../../utils/constants.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/custom_text_field.dart';
 import '../../widgets/error_modal.dart';
-import '../../widgets/app_logo.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
   final String email;

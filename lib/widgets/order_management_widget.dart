@@ -98,7 +98,7 @@ class _OrderManagementWidgetState extends State<OrderManagementWidget> {
         return _buildConfirmOrderButton();
       case OrderStatus.confirmed:
         return _buildAssignRiderButton();
-      case OrderStatus.pickupReady:
+      case OrderStatus.assigned:
         return _buildTrackingInfo();
       case OrderStatus.modification_requested:
         return _buildConfirmOrderButton();
@@ -111,7 +111,7 @@ class _OrderManagementWidgetState extends State<OrderManagementWidget> {
     if (widget.order.riderId == null) return const SizedBox.shrink();
     
     switch (widget.order.status) {
-      case OrderStatus.pickupReady:
+      case OrderStatus.assigned:
         return _buildPickupButton();
       case OrderStatus.inTransit:
         return _buildDeliveredButton();
@@ -156,7 +156,7 @@ class _OrderManagementWidgetState extends State<OrderManagementWidget> {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton.icon(
-        onPressed: _isUpdating ? null : () => _updateOrderStatus(OrderStatus.pickupReady),
+        onPressed: _isUpdating ? null : () => _updateOrderStatus(OrderStatus.assigned),
         icon: const Icon(Icons.inventory),
         label: const Text('Mark as Ready'),
         style: ElevatedButton.styleFrom(
@@ -348,11 +348,15 @@ class _OrderManagementWidgetState extends State<OrderManagementWidget> {
       case OrderStatus.pending:
         return AppColors.warningOrange;
       case OrderStatus.confirmed:
-      case OrderStatus.pickupReady:
+      case OrderStatus.assigned:
+      case OrderStatus.pickedUp:
       case OrderStatus.inTransit:
         return AppColors.primaryOrange;
       case OrderStatus.delivered:
+      case OrderStatus.completed:
         return AppColors.successGreen;
+      case OrderStatus.refunded:
+        return AppColors.warningOrange;
       case OrderStatus.cancelled:
         return AppColors.errorRed;
       case OrderStatus.modification_requested:
@@ -366,12 +370,18 @@ class _OrderManagementWidgetState extends State<OrderManagementWidget> {
         return Icons.pending;
       case OrderStatus.confirmed:
         return Icons.check_circle;
-      case OrderStatus.pickupReady:
+      case OrderStatus.assigned:
         return Icons.inventory;
+      case OrderStatus.pickedUp:
+        return Icons.local_shipping;
       case OrderStatus.inTransit:
         return Icons.directions_bike;
       case OrderStatus.delivered:
         return Icons.check_circle;
+      case OrderStatus.completed:
+        return Icons.check_circle_outline;
+      case OrderStatus.refunded:
+        return Icons.money_off;
       case OrderStatus.cancelled:
         return Icons.cancel;
       case OrderStatus.modification_requested:
@@ -385,12 +395,18 @@ class _OrderManagementWidgetState extends State<OrderManagementWidget> {
         return 'Pending Confirmation';
       case OrderStatus.confirmed:
         return 'Confirmed';
-      case OrderStatus.pickupReady:
-        return 'Ready for Pickup';
+      case OrderStatus.assigned:
+        return 'Assigned to Rider';
+      case OrderStatus.pickedUp:
+        return 'Picked Up';
       case OrderStatus.inTransit:
         return 'In Transit';
       case OrderStatus.delivered:
         return 'Delivered';
+      case OrderStatus.completed:
+        return 'Completed';
+      case OrderStatus.refunded:
+        return 'Refunded';
       case OrderStatus.cancelled:
         return 'Cancelled';
       case OrderStatus.modification_requested:

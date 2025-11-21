@@ -4,7 +4,6 @@ import '../../providers/auth_provider.dart';
 import '../../providers/product_provider.dart';
 import '../../providers/order_provider.dart';
 import '../../providers/cart_provider.dart';
-import '../../providers/favorites_provider.dart';
 import '../../models/product_model.dart';
 import '../../utils/constants.dart';
 import '../../widgets/product_card.dart';

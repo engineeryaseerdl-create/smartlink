@@ -1,0 +1,12 @@
+Files to fix:
+1. lib/providers/order_provider.dart
+2. lib/services/notification_service.dart
+3. lib/views/rider/rider_home_screen.dart
+4. lib/widgets/order_card.dart (already fixed)
+5. lib/widgets/order_tracking_widget.dart
+6. lib/views/buyer/order_detail_screen.dart
+7. lib/views/shared/order_detail_screen.dart
+8. lib/widgets/order_management_widget.dart
+
+Replace: OrderStatus.pickupReady
+With: OrderStatus.assigned (or OrderStatus.pickedUp depending on context)

@@ -284,7 +284,7 @@ class _RiderHomeScreenState extends State<RiderHomeScreen> {
             ],
           ),
           const SizedBox(height: AppSpacing.md),
-          if (delivery.status == OrderStatus.pickupReady)
+          if (delivery.status == OrderStatus.assigned)
             CustomButton(
               text: 'Start Delivery',
               onPressed: () {

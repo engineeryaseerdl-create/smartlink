@@ -29,12 +29,18 @@ class OrderCard extends StatelessWidget {
         return AppColors.warningOrange;
       case OrderStatus.confirmed:
         return AppColors.infoBlue;
-      case OrderStatus.pickupReady:
+      case OrderStatus.assigned:
         return AppColors.infoBlue;
+      case OrderStatus.pickedUp:
+        return AppColors.primaryGreen;
       case OrderStatus.inTransit:
         return AppColors.primaryGreen;
       case OrderStatus.delivered:
         return AppColors.successGreen;
+      case OrderStatus.completed:
+        return AppColors.successGreen;
+      case OrderStatus.refunded:
+        return AppColors.warningOrange;
       case OrderStatus.cancelled:
         return AppColors.errorRed;
       case OrderStatus.modification_requested:
@@ -279,12 +285,18 @@ class OrderCard extends StatelessWidget {
         return 0.2;
       case OrderStatus.confirmed:
         return 0.4;
-      case OrderStatus.pickupReady:
+      case OrderStatus.assigned:
+        return 0.5;
+      case OrderStatus.pickedUp:
         return 0.6;
       case OrderStatus.inTransit:
         return 0.8;
       case OrderStatus.delivered:
         return 1.0;
+      case OrderStatus.completed:
+        return 1.0;
+      case OrderStatus.refunded:
+        return 0.5;
       case OrderStatus.cancelled:
         return 0.0;
       case OrderStatus.modification_requested:

@@ -227,8 +227,10 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
             _buildTimelineItem('Order Placed', currentOrder.createdAt, true),
             if (_isStatusReached(OrderStatus.confirmed))
               _buildTimelineItem('Order Confirmed', currentOrder.createdAt, true),
-            if (_isStatusReached(OrderStatus.pickupReady))
-              _buildTimelineItem('Ready for Pickup', currentOrder.createdAt, true),
+            if (_isStatusReached(OrderStatus.assigned))
+              _buildTimelineItem('Assigned to Rider', currentOrder.createdAt, true),
+            if (_isStatusReached(OrderStatus.pickedUp))
+              _buildTimelineItem('Picked Up', currentOrder.createdAt, true),
             if (_isStatusReached(OrderStatus.inTransit))
               _buildTimelineItem('In Transit', currentOrder.createdAt, true),
             if (_isStatusReached(OrderStatus.delivered))
@@ -274,7 +276,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     final statusOrder = [
       OrderStatus.pending,
       OrderStatus.confirmed,
-      OrderStatus.pickupReady,
+      OrderStatus.assigned,
       OrderStatus.inTransit,
       OrderStatus.delivered,
     ];
@@ -291,12 +293,18 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
         return 'Pending';
       case OrderStatus.confirmed:
         return 'Confirmed';
-      case OrderStatus.pickupReady:
+      case OrderStatus.assigned:
         return 'Ready for Pickup';
+      case OrderStatus.pickedUp:
+        return 'Picked Up';
       case OrderStatus.inTransit:
         return 'In Transit';
       case OrderStatus.delivered:
         return 'Delivered';
+      case OrderStatus.completed:
+        return 'Completed';
+      case OrderStatus.refunded:
+        return 'Refunded';
       case OrderStatus.cancelled:
         return 'Cancelled';
       case OrderStatus.modification_requested:

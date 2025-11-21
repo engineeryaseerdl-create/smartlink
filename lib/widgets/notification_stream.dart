@@ -12,7 +12,7 @@ class NotificationStream extends StatefulWidget {
 
 class _NotificationStreamState extends State<NotificationStream> {
   late StreamController<int> _controller;
-  int _notificationCount = 0;
+  final int _notificationCount = 0;
 
   @override
   void initState() {

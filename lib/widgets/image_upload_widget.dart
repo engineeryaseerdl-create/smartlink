@@ -33,6 +33,17 @@ class _ImageUploadWidgetState extends State<ImageUploadWidget> {
     _images = List.from(widget.initialImages);
   }
 
+  // This fixes the issue when parent widget updates initialImages
+  @override
+  void didUpdateWidget(ImageUploadWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.initialImages != widget.initialImages) {
+      setState(() {
+        _images = List.from(widget.initialImages);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -42,31 +53,19 @@ class _ImageUploadWidgetState extends State<ImageUploadWidget> {
         if (_images.isNotEmpty)
           Container(
             height: 120,
-            margin: const EdgeInsets.only(bottom: AppSpacing.md),
+            margin: const EdgeInsets.only(bottom: 16),
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: _images.length,
               itemBuilder: (context, index) {
                 return Container(
                   width: 120,
-                  margin: const EdgeInsets.only(right: AppSpacing.sm),
+                  margin: const EdgeInsets.only(right: 8),
                   child: Stack(
                     children: [
                       ClipRRect(
                         borderRadius: BorderRadius.circular(8),
-                        child: _images[index].startsWith('http')
-                            ? Image.network(
-                                _images[index],
-                                width: 120,
-                                height: 120,
-                                fit: BoxFit.cover,
-                              )
-                            : Image.file(
-                                File(_images[index]),
-                                width: 120,
-                                height: 120,
-                                fit: BoxFit.cover,
-                              ),
+                        child: _buildImage(_images[index]),
                       ),
                       Positioned(
                         top: 4,
@@ -103,29 +102,30 @@ class _ImageUploadWidgetState extends State<ImageUploadWidget> {
               width: double.infinity,
               decoration: BoxDecoration(
                 border: Border.all(
-                  color: AppColors.lightGrey,
+                  color: Colors.grey.shade300,
                   style: BorderStyle.solid,
                 ),
                 borderRadius: BorderRadius.circular(8),
-                color: AppColors.backgroundLight,
+                color: Colors.grey.shade50,
               ),
               child: _isUploading
                   ? const Center(child: CircularProgressIndicator())
                   : Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(
+                        Icon(
                           Icons.add_photo_alternate,
                           size: 32,
-                          color: AppColors.textSecondary,
+                          color: Colors.grey.shade600,
                         ),
-                        const SizedBox(height: AppSpacing.sm),
+                        const SizedBox(height: 8),
                         Text(
                           widget.allowMultiple
                               ? 'Add Photos (${_images.length}/${widget.maxImages})'
                               : 'Add Photo',
-                          style: AppTextStyles.bodyMedium.copyWith(
-                            color: AppColors.textSecondary,
+                          style: TextStyle(
+                            color: Colors.grey.shade600,
+                            fontSize: 14,
                           ),
                         ),
                       ],
@@ -134,6 +134,52 @@ class _ImageUploadWidgetState extends State<ImageUploadWidget> {
           ),
       ],
     );
+  }
+
+  // Helper method to build image with error handling
+  Widget _buildImage(String imagePath) {
+    if (imagePath.startsWith('http')) {
+      return Image.network(
+        imagePath,
+        width: 120,
+        height: 120,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return Container(
+            color: Colors.grey.shade300,
+            child: const Center(
+              child: Icon(Icons.broken_image, size: 40, color: Colors.grey),
+            ),
+          );
+        },
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) return child;
+          return Center(
+            child: CircularProgressIndicator(
+              value: loadingProgress.expectedTotalBytes != null
+                  ? loadingProgress.cumulativeBytesLoaded /
+                      loadingProgress.expectedTotalBytes!
+                  : null,
+            ),
+          );
+        },
+      );
+    } else {
+      return Image.file(
+        File(imagePath),
+        width: 120,
+        height: 120,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return Container(
+            color: Colors.grey.shade300,
+            child: const Center(
+              child: Icon(Icons.broken_image, size: 40, color: Colors.grey),
+            ),
+          );
+        },
+      );
+    }
   }
 
   void _showImageSourceDialog() {
@@ -170,8 +216,6 @@ class _ImageUploadWidgetState extends State<ImageUploadWidget> {
         _isUploading = true;
       });
 
-      final uploadService = UploadService();
-
       if (widget.allowMultiple && source == ImageSource.gallery) {
         final List<XFile> images = await _picker.pickMultiImage();
         if (images.isNotEmpty) {
@@ -179,33 +223,42 @@ class _ImageUploadWidgetState extends State<ImageUploadWidget> {
           final imagesToAdd = images.take(remainingSlots).toList();
           
           final files = imagesToAdd.map((xfile) => File(xfile.path)).toList();
+          final uploadService = UploadService();
           final uploadedUrls = await uploadService.uploadImages(files);
           
-          _images.addAll(uploadedUrls);
+          setState(() {
+            _images.addAll(uploadedUrls);
+          });
           widget.onImagesChanged(_images);
         }
       } else {
         final XFile? image = await _picker.pickImage(source: source);
         if (image != null) {
           final file = File(image.path);
-          final uploadedUrl = await uploadService.uploadSingleImage(file);
+          final uploadedUrl = await UploadService.uploadProfilePicture(file);
           
-          if (widget.allowMultiple) {
-            _images.add(uploadedUrl);
-          } else {
-            _images = [uploadedUrl];
-          }
+          setState(() {
+            if (widget.allowMultiple) {
+              _images.add(uploadedUrl);
+            } else {
+              _images = [uploadedUrl];
+            }
+          });
           widget.onImagesChanged(_images);
         }
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Upload failed: $e')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Upload failed: $e')),
+        );
+      }
     } finally {
-      setState(() {
-        _isUploading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isUploading = false;
+        });
+      }
     }
   }
 
@@ -230,7 +283,8 @@ class SingleImageUploadWidget extends StatefulWidget {
   });
 
   @override
-  State<SingleImageUploadWidget> createState() => _SingleImageUploadWidgetState();
+  State<SingleImageUploadWidget> createState() =>
+      _SingleImageUploadWidgetState();
 }
 
 class _SingleImageUploadWidgetState extends State<SingleImageUploadWidget> {
@@ -245,6 +299,16 @@ class _SingleImageUploadWidgetState extends State<SingleImageUploadWidget> {
   }
 
   @override
+  void didUpdateWidget(SingleImageUploadWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.initialImage != widget.initialImage) {
+      setState(() {
+        _image = widget.initialImage;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: _isUploading ? null : _showImageSourceDialog,
@@ -252,9 +316,9 @@ class _SingleImageUploadWidgetState extends State<SingleImageUploadWidget> {
         width: widget.size,
         height: widget.size,
         decoration: BoxDecoration(
-          border: Border.all(color: AppColors.lightGrey),
+          border: Border.all(color: Colors.grey.shade300),
           borderRadius: BorderRadius.circular(8),
-          color: AppColors.backgroundLight,
+          color: Colors.grey.shade50,
         ),
         child: _isUploading
             ? const Center(child: CircularProgressIndicator())
@@ -263,19 +327,7 @@ class _SingleImageUploadWidgetState extends State<SingleImageUploadWidget> {
                     children: [
                       ClipRRect(
                         borderRadius: BorderRadius.circular(8),
-                        child: _image!.startsWith('http')
-                            ? Image.network(
-                                _image!,
-                                width: widget.size,
-                                height: widget.size,
-                                fit: BoxFit.cover,
-                              )
-                            : Image.file(
-                                File(_image!),
-                                width: widget.size,
-                                height: widget.size,
-                                fit: BoxFit.cover,
-                              ),
+                        child: _buildImage(_image!),
                       ),
                       Positioned(
                         top: 4,
@@ -315,6 +367,51 @@ class _SingleImageUploadWidgetState extends State<SingleImageUploadWidget> {
     );
   }
 
+  Widget _buildImage(String imagePath) {
+    if (imagePath.startsWith('http')) {
+      return Image.network(
+        imagePath,
+        width: widget.size,
+        height: widget.size,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return Container(
+            color: Colors.grey.shade300,
+            child: const Center(
+              child: Icon(Icons.broken_image, size: 40, color: Colors.grey),
+            ),
+          );
+        },
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) return child;
+          return Center(
+            child: CircularProgressIndicator(
+              value: loadingProgress.expectedTotalBytes != null
+                  ? loadingProgress.cumulativeBytesLoaded /
+                      loadingProgress.expectedTotalBytes!
+                  : null,
+            ),
+          );
+        },
+      );
+    } else {
+      return Image.file(
+        File(imagePath),
+        width: widget.size,
+        height: widget.size,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return Container(
+            color: Colors.grey.shade300,
+            child: const Center(
+              child: Icon(Icons.broken_image, size: 40, color: Colors.grey),
+            ),
+          );
+        },
+      );
+    }
+  }
+
   void _showImageSourceDialog() {
     showModalBottomSheet(
       context: context,
@@ -351,9 +448,8 @@ class _SingleImageUploadWidgetState extends State<SingleImageUploadWidget> {
 
       final XFile? image = await _picker.pickImage(source: source);
       if (image != null) {
-        final uploadService = UploadService();
         final file = File(image.path);
-        final uploadedUrl = await uploadService.uploadSingleImage(file);
+        final uploadedUrl = await UploadService.uploadProfilePicture(file);
         
         setState(() {
           _image = uploadedUrl;
@@ -361,13 +457,17 @@ class _SingleImageUploadWidgetState extends State<SingleImageUploadWidget> {
         widget.onImageChanged(_image);
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Upload failed: $e')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Upload failed: $e')),
+        );
+      }
     } finally {
-      setState(() {
-        _isUploading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isUploading = false;
+        });
+      }
     }
   }
 }

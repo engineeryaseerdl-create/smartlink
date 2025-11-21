@@ -131,7 +131,7 @@ class OrderProvider with ChangeNotifier {
             NotificationService.showOrderStatusUpdate(
               context,
               updatedOrder,
-              OrderStatus.pickupReady,
+              OrderStatus.assigned,
             );
           }
         }

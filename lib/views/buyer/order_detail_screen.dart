@@ -15,12 +15,18 @@ class OrderDetailScreen extends StatelessWidget {
         return AppColors.warningOrange;
       case OrderStatus.confirmed:
         return AppColors.infoBlue;
-      case OrderStatus.pickupReady:
+      case OrderStatus.assigned:
         return AppColors.infoBlue;
+      case OrderStatus.pickedUp:
+        return AppColors.primaryOrange;
       case OrderStatus.inTransit:
         return AppColors.primaryGreen;
       case OrderStatus.delivered:
         return AppColors.successGreen;
+      case OrderStatus.completed:
+        return AppColors.successGreen;
+      case OrderStatus.refunded:
+        return AppColors.warningOrange;
       case OrderStatus.cancelled:
         return AppColors.errorRed;
       case OrderStatus.modification_requested:
@@ -139,12 +145,18 @@ class OrderDetailScreen extends StatelessWidget {
         return Icons.pending;
       case OrderStatus.confirmed:
         return Icons.check_circle;
-      case OrderStatus.pickupReady:
+      case OrderStatus.assigned:
         return Icons.inventory;
+      case OrderStatus.pickedUp:
+        return Icons.local_shipping;
       case OrderStatus.inTransit:
         return Icons.local_shipping;
       case OrderStatus.delivered:
         return Icons.done_all;
+      case OrderStatus.completed:
+        return Icons.check_circle_outline;
+      case OrderStatus.refunded:
+        return Icons.money_off;
       case OrderStatus.cancelled:
         return Icons.cancel;
       case OrderStatus.modification_requested:
