@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../utils/constants.dart';
 import '../../providers/auth_provider.dart';
 import '../../widgets/app_logo.dart';
@@ -50,9 +51,17 @@ class _SplashScreenState extends State<SplashScreen>
     if (authProvider.isLoggedIn) {
       Navigator.of(context).pushReplacementNamed('/auth');
     } else {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const OnboardingScreen()),
-      );
+      // Check if user has seen onboarding before
+      final prefs = await SharedPreferences.getInstance();
+      final hasSeenOnboarding = prefs.getBool('has_seen_onboarding') ?? false;
+      
+      if (hasSeenOnboarding) {
+        Navigator.of(context).pushReplacementNamed('/login');
+      } else {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => const OnboardingScreen()),
+        );
+      }
     }
   }
 

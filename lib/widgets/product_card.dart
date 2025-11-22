@@ -168,86 +168,84 @@ class ProductCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                // Favorite and comparison buttons
+                // Show edit/delete actions for own products, favorite button for others
                 Positioned(
                   top: AppSpacing.sm,
                   right: AppSpacing.sm,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.9),
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
-                          blurRadius: 4,
-                          offset: const Offset(0, 2),
+                  child: showActions && isOwnProduct
+                    ? Container(
+                        decoration: BoxDecoration(
+                          color: AppColors.white,
+                          borderRadius: BorderRadius.circular(AppBorderRadius.sm),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 4,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                    child: Consumer<FavoritesProvider>(
-                      builder: (context, favorites, child) {
-                        final isFavorite = favorites.isFavorite(product.id);
-                        return IconButton(
-                          onPressed: () {
-                            favorites.toggleFavorite(product);
-                          },
-                          icon: Icon(isFavorite ? Icons.favorite : Icons.favorite_border),
-                          color: isFavorite ? Colors.red : AppColors.textSecondary,
-                          iconSize: 18,
-                          padding: const EdgeInsets.all(8),
-                          constraints: const BoxConstraints(
-                            minWidth: 32,
-                            minHeight: 32,
-                          ),
-                        );
-                      },
-                    ),
-                  ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              onPressed: onEdit,
+                              icon: const Icon(Icons.edit, size: 18),
+                              color: AppColors.infoBlue,
+                              padding: const EdgeInsets.all(4),
+                              constraints: const BoxConstraints(
+                                minWidth: 30,
+                                minHeight: 30,
+                              ),
+                            ),
+                            IconButton(
+                              onPressed: onDelete,
+                              icon: const Icon(Icons.delete, size: 18),
+                              color: AppColors.errorRed,
+                              padding: const EdgeInsets.all(4),
+                              constraints: const BoxConstraints(
+                                minWidth: 30,
+                                minHeight: 30,
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    : !isOwnProduct
+                        ? Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.9),
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.1),
+                                  blurRadius: 4,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            child: Consumer<FavoritesProvider>(
+                              builder: (context, favorites, child) {
+                                final isFavorite = favorites.isFavorite(product.id);
+                                return IconButton(
+                                  onPressed: () {
+                                    favorites.toggleFavorite(product);
+                                  },
+                                  icon: Icon(isFavorite ? Icons.favorite : Icons.favorite_border),
+                                  color: isFavorite ? Colors.red : AppColors.textSecondary,
+                                  iconSize: 18,
+                                  padding: const EdgeInsets.all(8),
+                                  constraints: const BoxConstraints(
+                                    minWidth: 32,
+                                    minHeight: 32,
+                                  ),
+                                );
+                              },
+                            ),
+                          )
+                        : const SizedBox.shrink(),
                 ),
 
-                if (showActions)
-                  Positioned(
-                    top: AppSpacing.sm,
-                    right: AppSpacing.sm,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: AppColors.white,
-                        borderRadius: BorderRadius.circular(AppBorderRadius.sm),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
-                            blurRadius: 4,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(
-                            onPressed: onEdit,
-                            icon: const Icon(Icons.edit, size: 18),
-                            color: AppColors.infoBlue,
-                            padding: const EdgeInsets.all(4),
-                            constraints: const BoxConstraints(
-                              minWidth: 30,
-                              minHeight: 30,
-                            ),
-                          ),
-                          IconButton(
-                            onPressed: onDelete,
-                            icon: const Icon(Icons.delete, size: 18),
-                            color: AppColors.errorRed,
-                            padding: const EdgeInsets.all(4),
-                            constraints: const BoxConstraints(
-                              minWidth: 30,
-                              minHeight: 30,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
               ],
             ),
             Padding(

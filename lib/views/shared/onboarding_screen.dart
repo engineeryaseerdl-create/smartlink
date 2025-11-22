@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -70,7 +71,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
     },
   ];
 
-  void nextPage({bool auto = false}) {
+  void nextPage({bool auto = false}) async {
     if (!mounted) return;
 
     fadeController.reset();
@@ -82,11 +83,17 @@ class _OnboardingScreenState extends State<OnboardingScreen>
         curve: Curves.easeOut,
       );
     } else if (!auto) {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('has_seen_onboarding', true);
+      if (!mounted) return;
       Navigator.pushReplacementNamed(context, '/login');
     }
   }
 
-  void skip() {
+  void skip() async {
+    if (!mounted) return;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('has_seen_onboarding', true);
     if (!mounted) return;
     Navigator.pushReplacementNamed(context, '/login');
   }
